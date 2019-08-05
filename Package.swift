@@ -6,21 +6,29 @@ import PackageDescription
 let package = Package(
     name: "Tapestry",
     products: [
-        // Products define the executables and libraries produced by a package, and make them visible to other packages.
-        .library(
+        .library(name: "TapestryGen",
+                 targets: ["TapestryGen"]),
+        .executable(
             name: "Tapestry",
             targets: ["Tapestry"]),
     ],
     dependencies: [
-        // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
+        .package(url: "https://github.com/jakeheis/SwiftCLI", .upToNextMinor(from: "5.3.2")),
+        .package(url: "https://github.com/kylef/PathKit.git", .upToNextMinor(from: "1.0.0")),
     ],
     targets: [
-        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "Tapestry",
-            dependencies: []),
+            dependencies: [
+                "SwiftCLI",
+                .target(name: "TapestryGen")
+            ]),
+        .target(
+            name: "TapestryGen",
+            dependencies: [
+                "SwiftCLI",
+                "PathKit",
+            ]),
         .testTarget(
             name: "TapestryTests",
             dependencies: ["Tapestry"]),
