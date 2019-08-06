@@ -14,15 +14,16 @@ import Basic
 
 class TapestryModelLoader: GeneratorModelLoading {
     func loadProject(at path: AbsolutePath) throws -> Project {
-        return Project(path: path, name: "Puff", settings: .default, filesGroup: .group(name: "mello"), targets: [], schemes: [])
+        return Project(path: path, name: "<Name>", settings: .default, filesGroup: .group(name: "Sources"), targets: [], schemes: [])
     }
 
+    /// We do not use workspace
     func loadWorkspace(at path: AbsolutePath) throws -> Workspace {
-        return Workspace(name: "hello", projects: [])
+        return Workspace(name: "", projects: [])
     }
 
     func loadTuistConfig(at path: AbsolutePath) throws -> TuistConfig {
-        return TuistConfig(generationOptions: [])
+        return TuistConfig(generationOptions: [.generateManifest])
     }
 }
 
@@ -39,7 +40,8 @@ open class GenerateCommand: SwiftCLI.Command {
         _ = listOptions(["CLI Tool", "Framework"], prompt: "What type of project do you want to create?")
 
         let generator = Generator(modelLoader: TapestryModelLoader())
-        try generator.generateProject(at: AbsolutePath("/Users/marekfort/Development/ackee/TapestryTests"))
+        // TODO: Find generated project and do something with files group
+        let path = try generator.generateProject(at: AbsolutePath("/Users/marekfort/Development/ackee/TapestryTests"))
     }
 
     /**
