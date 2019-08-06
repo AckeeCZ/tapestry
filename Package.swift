@@ -30,6 +30,7 @@ let package = Package(
             dependencies: [
                 "SwiftCLI",
                 "PathKit",
+                "TuistGenerator",
             ]),
         .testTarget(
             name: "TapestryTests",

@@ -8,6 +8,23 @@
 import Foundation
 import SwiftCLI
 import PathKit
+import TuistGenerator
+import SPMUtility
+import Basic
+
+class TapestryModelLoader: GeneratorModelLoading {
+    func loadProject(at path: AbsolutePath) throws -> Project {
+        return Project(path: path, name: "Puff", settings: .default, filesGroup: .group(name: "mello"), targets: [], schemes: [])
+    }
+
+    func loadWorkspace(at path: AbsolutePath) throws -> Workspace {
+        return Workspace(name: "hello", projects: [])
+    }
+
+    func loadTuistConfig(at path: AbsolutePath) throws -> TuistConfig {
+        return TuistConfig(generationOptions: [])
+    }
+}
 
 open class GenerateCommand: SwiftCLI.Command {
 
@@ -19,7 +36,10 @@ open class GenerateCommand: SwiftCLI.Command {
     }
 
     public func execute() throws {
-        listOptions(["CLI Tool", "Framework"], prompt: "What type of project do you want to create?")
+        _ = listOptions(["CLI Tool", "Framework"], prompt: "What type of project do you want to create?")
+
+        let generator = Generator(modelLoader: TapestryModelLoader())
+        try generator.generateProject(at: AbsolutePath("/Users/marekfort/Development/ackee/TapestryTests"))
     }
 
     /**
@@ -30,19 +50,19 @@ open class GenerateCommand: SwiftCLI.Command {
     */
     private func listOptions(_ options: [String], prompt: String) -> Int {
         // Prints targets as a list so user can choose with which one they want to bind their files
-        options.enumerated().forEach { index, option in
-            print("\(index + 1). " + option)
-        }
+//        options.enumerated().forEach { index, option in
+//            print("\(index + 1). " + option)
+//        }
+//
+//        let index = Input.readInt(
+//            prompt: prompt,
+//            validation: [.within(1...options.count)],
+//            errorResponse: { input, _ in
+//                self.stderr <<< "'\(input)' is invalid; must be a number between 1 and \(options.count)"
+//            }
+//        )
 
-        let index = Input.readInt(
-            prompt: prompt,
-            validation: [.within(1...options.count)],
-            errorResponse: { input, _ in
-                self.stderr <<< "'\(input)' is invalid; must be a number between 1 and \(options.count)"
-            }
-        )
-
-        return index
+        return 0
     }
 
 }
