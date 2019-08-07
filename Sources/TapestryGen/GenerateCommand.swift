@@ -14,7 +14,13 @@ import Basic
 
 class TapestryModelLoader: GeneratorModelLoading {
     func loadProject(at path: AbsolutePath) throws -> Project {
-        return Project(path: path, name: "<Name>", settings: .default, filesGroup: .group(name: "Sources"), targets: [], schemes: [])
+        let sources = try TuistGenerator.Target.sources(projectPath: path, sources: [(glob: "Sources/**", compilerFlags: nil)])
+
+        return Project(path: path, name: "Name", settings: .default, filesGroup: .group(name: "Project"), targets: [Target(name: "Target_name", platform: .iOS, product: .app, productName: nil, bundleId: "bundle-id", sources: sources, filesGroup: .group(name: "Project"))], schemes: [])
+
+
+
+        //Target(name: <#T##String#>, platform: <#T##Platform#>, product: <#T##Product#>, productName: <#T##String?#>, bundleId: <#T##String#>, infoPlist: <#T##InfoPlist?#>, entitlements: <#T##AbsolutePath?#>, settings: <#T##Settings?#>, sources: <#T##[Target.SourceFile]#>, resources: <#T##[FileElement]#>, headers: <#T##Headers?#>, coreDataModels: <#T##[CoreDataModel]#>, actions: <#T##[TargetAction]#>, environment: <#T##[String : String]#>, filesGroup: <#T##ProjectGroup#>, dependencies: <#T##[Dependency]#>)
     }
 
     /// We do not use workspace
@@ -25,6 +31,11 @@ class TapestryModelLoader: GeneratorModelLoading {
     func loadTuistConfig(at path: AbsolutePath) throws -> TuistConfig {
         return TuistConfig(generationOptions: [.generateManifest])
     }
+    /**
+     private func pathTo(_ relativePath: String) -> AbsolutePath {
+         return path.appending(RelativePath(relativePath))
+     }
+    */
 }
 
 open class GenerateCommand: SwiftCLI.Command {
