@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SwiftCLI
 import PathKit
 import TuistGenerator
 import SPMUtility
@@ -38,21 +37,23 @@ class TapestryModelLoader: GeneratorModelLoading {
     */
 }
 
-open class GenerateCommand: SwiftCLI.Command {
+final class GenerateCommand: Command {
 
-    public let name = "generate"
-    public let shortDescription = "Generates Swift code for contract"
+    // MARK: - Command
+    static var command: String = "generate"
+    static var overview: String = "Generates Swift code for contract"
 
-    public init() {
-
+    init(parser: ArgumentParser) {
+        _ = parser.add(subparser: GenerateCommand.command, overview: GenerateCommand.overview)
+        
     }
 
-    public func execute() throws {
-        _ = listOptions(["CLI Tool", "Framework"], prompt: "What type of project do you want to create?")
-
-        let generator = Generator(modelLoader: TapestryModelLoader())
+    func run(with _: ArgumentParser.Result) throws {
+        // _ = listOptions(["CLI Tool", "Framework"], prompt: "What type of project do you want to create?")
+        
+        // let generator = Generator(modelLoader: TapestryModelLoader())
         // TODO: Find generated project and do something with files group
-        let path = try generator.generateProject(at: AbsolutePath("/Users/marekfort/Development/ackee/TapestryTests"))
+        // let path = try generator.generateProject(at: AbsolutePath("/Users/marekfort/Development/ackee/TapestryTests"))
     }
 
     /**
