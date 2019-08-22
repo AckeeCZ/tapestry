@@ -10,6 +10,7 @@ import PathKit
 import TuistGenerator
 import SPMUtility
 import Basic
+import class Workspace.InitPackage
 
 class TapestryModelLoader: GeneratorModelLoading {
     func loadProject(at path: AbsolutePath) throws -> Project {
