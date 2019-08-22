@@ -57,19 +57,19 @@
       },
       {
         "package": "tuist",
-        "repositoryURL": "https://github.com/tuist/tuist.git",
+        "repositoryURL": "https://github.com/fortmarek/tuist.git",
         "state": {
           "branch": "master",
-          "revision": "22854327d5953070895323adbeeb2455f2a4c402",
+          "revision": "db822080a8baee0b740d9d112c7a77122d497dda",
           "version": null
         }
       },
       {
-        "package": "XcodeProj",
-        "repositoryURL": "https://github.com/tuist/XcodeProj",
+        "package": "TuistXcodeProj",
+        "repositoryURL": "https://github.com/fortmarek/XcodeProj",
         "state": {
           "branch": null,
-          "revision": "b951777f42e9acbfb8f19da623b43aaa604422f9",
+          "revision": "b337d32ec4e223faa758cf31816f9b419fa2d36a",
           "version": "7.0.0"
         }
       }

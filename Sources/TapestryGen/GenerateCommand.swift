@@ -29,7 +29,7 @@ class TapestryModelLoader: GeneratorModelLoading {
     }
 
     func loadTuistConfig(at path: AbsolutePath) throws -> TuistConfig {
-        return TuistConfig(generationOptions: [.generateManifest])
+        return TuistConfig(compatibleXcodeVersions: .all, generationOptions: [.generateManifest])
     }
     /**
      private func pathTo(_ relativePath: String) -> AbsolutePath {
@@ -50,6 +50,8 @@ final class GenerateCommand: Command {
     }
 
     func run(with _: ArgumentParser.Result) throws {
+        let initPackage = try! InitPackage(name: "PackageName", destinationPath: AbsolutePath("/Users/marekfort/Development/ackee/TapestryTests"), packageType: .executable)
+        try! initPackage.writePackageStructure()
         // _ = listOptions(["CLI Tool", "Framework"], prompt: "What type of project do you want to create?")
         
         // let generator = Generator(modelLoader: TapestryModelLoader())
