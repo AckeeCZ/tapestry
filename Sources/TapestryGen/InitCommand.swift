@@ -9,16 +9,22 @@ import Foundation
 import PathKit
 import TuistGenerator
 import TuistCore
-import acho
 import SPMUtility
 import Basic
 import class Workspace.InitPackage
 
 class TapestryModelLoader: GeneratorModelLoading {
+
+    private let name: String
+
+    init(name: String) {
+        self.name = name
+    }
+
     func loadProject(at path: AbsolutePath) throws -> Project {
         let sources = try TuistGenerator.Target.sources(projectPath: path, sources: [(glob: "Sources/**", compilerFlags: nil)])
 
-        return Project(path: path, name: "Name", settings: .default, filesGroup: .group(name: "Project"), targets: [Target(name: "Target_name", platform: .iOS, product: .app, productName: nil, bundleId: "bundle-id", sources: sources, filesGroup: .group(name: "Project"))], schemes: [])
+        return Project(path: path, name: name, settings: .default, filesGroup: .group(name: name), targets: [Target(name: name, platform: .iOS, product: .app, productName: nil, bundleId: "ackee." + String(name), sources: sources, filesGroup: .group(name: name))], schemes: [])
     }
 
     /// We do not use workspace
@@ -29,11 +35,6 @@ class TapestryModelLoader: GeneratorModelLoading {
     func loadTuistConfig(at path: AbsolutePath) throws -> TuistConfig {
         return TuistConfig(compatibleXcodeVersions: .all, generationOptions: [.generateManifest])
     }
-    /**
-     private func pathTo(_ relativePath: String) -> AbsolutePath {
-         return path.appending(RelativePath(relativePath))
-     }
-    */
 }
 
 enum InitCommandError: FatalError, Equatable {
@@ -97,27 +98,41 @@ final class InitCommand: NSObject, Command {
         let path = try self.path(arguments: arguments)
         let name = try self.name(path: fileHandler.currentPath)
 
-        let initPackage = try InitPackage(name: name, destinationPath: path, packageType: packageType())
-        try initPackage.writePackageStructure()
+        let packageType = try initPackage(path: path, name: name)
 
-        // TODO: Generate example project here with dependency
-
-        // _ = listOptions(["CLI Tool", "Framework"], prompt: "What type of project do you want to create?")
-        
-        //let generator = Generator(modelLoader: TapestryModelLoader())
-        //let path = try generator.generateProject(at: AbsolutePath("/Users/marekfort/Development/ackee/TapestryTests"))
+        switch packageType {
+        case .library:
+            let examplePath = path.appending(RelativePath("Example"))
+            try fileHandler.createFolder(examplePath)
+            try generateProject(path: examplePath, name: name)
+        case .executable:
+            break
+        }
     }
 
     // MARK: - Helpers
 
-    private func packageType() throws -> InitPackage.PackageType {
-        let packageType: SupportedPackageType = try inputReader.readEnumInput(question: "Choose package type")
-        switch packageType {
+    private func generateProject(path: AbsolutePath, name: String) throws {
+        let generator = Generator(modelLoader: TapestryModelLoader(name: name))
+        _ = try generator.generateProject(at: path)
+    }
+
+    /// Initialize SPM's package
+    /// - Returns: SupportedPackageType if reading input was successful
+    private func initPackage(path: AbsolutePath, name: String) throws -> SupportedPackageType {
+        let supportedPackageType: SupportedPackageType = try inputReader.readEnumInput(question: "Choose package type:")
+        let packageType: InitPackage.PackageType
+        switch supportedPackageType {
         case .library:
-            return .library
+            packageType = .library
         case .executable:
-            return .executable
+            packageType = .executable
         }
+
+        let initPackage = try InitPackage(name: name, destinationPath: path, packageType: packageType)
+        try initPackage.writePackageStructure()
+
+        return supportedPackageType
     }
 
     private func name(path: AbsolutePath) throws -> String {
@@ -135,40 +150,6 @@ final class InitCommand: NSObject, Command {
             return fileHandler.currentPath
         }
     }
-
-    /// Checks if the given directory is empty, essentially that it doesn't contain any file or directory.
-    ///
-    /// - Parameter path: Directory to be checked.
-    /// - Throws: An InitCommandError.nonEmptyDirectory error when the directory is not empty.
-    private func verifyDirectoryIsEmpty(path: AbsolutePath) throws {
-        if !path.glob("*").isEmpty {
-            throw InitCommandError.nonEmptyDirectory(path)
-        }
-    }
-
-    /**
-     List options and prompt the user which one he/she wants to use
-     - Parameters:
-        - options: List of options to present to user
-        - prompt: Description of the presented question/options
-    */
-    private func listOptions(_ options: [String], prompt: String) -> Int {
-        // Prints targets as a list so user can choose with which one they want to bind their files
-//        options.enumerated().forEach { index, option in
-//            print("\(index + 1). " + option)
-//        }
-//
-//        let index = Input.readInt(
-//            prompt: prompt,
-//            validation: [.within(1...options.count)],
-//            errorResponse: { input, _ in
-//                self.stderr <<< "'\(input)' is invalid; must be a number between 1 and \(options.count)"
-//            }
-//        )
-
-        return 0
-    }
-
 }
 
 enum SupportedPackageType: String, CaseIterable {
