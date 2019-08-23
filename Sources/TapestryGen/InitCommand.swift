@@ -65,10 +65,6 @@ enum InitCommandError: FatalError, Equatable {
     }
 }
 
-enum PackageType: String, CaseIterable {
-    case executable, framework
-}
-
 final class InitCommand: NSObject, Command {
 
     // MARK: - Command
@@ -100,21 +96,29 @@ final class InitCommand: NSObject, Command {
     func run(with arguments: ArgumentParser.Result) throws {
         let path = try self.path(arguments: arguments)
         let name = try self.name(path: fileHandler.currentPath)
-        let initPackage = try InitPackage(name: name, destinationPath: path, packageType: .executable)
-        try initPackage.writePackageStructure()
 
-        let packageType: PackageType = try inputReader.readEnumInput(question: "Choose package type:")
+        let initPackage = try InitPackage(name: name, destinationPath: path, packageType: packageType())
+        try initPackage.writePackageStructure()
 
         // TODO: Generate example project here with dependency
 
         // _ = listOptions(["CLI Tool", "Framework"], prompt: "What type of project do you want to create?")
         
-        // let generator = Generator(modelLoader: TapestryModelLoader())
-        // TODO: Find generated project and do something with files group
-        // let path = try generator.generateProject(at: AbsolutePath("/Users/marekfort/Development/ackee/TapestryTests"))
+        //let generator = Generator(modelLoader: TapestryModelLoader())
+        //let path = try generator.generateProject(at: AbsolutePath("/Users/marekfort/Development/ackee/TapestryTests"))
     }
 
     // MARK: - Helpers
+
+    private func packageType() throws -> InitPackage.PackageType {
+        let packageType: SupportedPackageType = try inputReader.readEnumInput(question: "Choose package type")
+        switch packageType {
+        case .library:
+            return .library
+        case .executable:
+            return .executable
+        }
+    }
 
     private func name(path: AbsolutePath) throws -> String {
         if let name = path.components.last {
@@ -165,4 +169,8 @@ final class InitCommand: NSObject, Command {
         return 0
     }
 
+}
+
+enum SupportedPackageType: String, CaseIterable {
+    case library, executable
 }

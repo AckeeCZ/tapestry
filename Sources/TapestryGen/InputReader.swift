@@ -14,6 +14,7 @@ enum InputError: Error {
 protocol InputReading {
     func readString(options: [String], question: String) throws -> String
     func readEnumInput<EnumType: RawRepresentable & CaseIterable>(question: String) throws -> EnumType where EnumType.RawValue == String
+    func readRawInput<StringRawRepresentable: RawRepresentable, RawCollection: Collection>(options: RawCollection, question: String) throws -> StringRawRepresentable where StringRawRepresentable.RawValue == String, RawCollection.Element == StringRawRepresentable
 }
 
 class InputReader: InputReading {
@@ -27,9 +28,7 @@ class InputReader: InputReading {
         return try readRawInput(options: EnumType.allCases, question: question)
     }
 
-    // MARK: - Helpers
-
-    private func readRawInput<StringRawRepresentable: RawRepresentable, RawCollection: Collection>(options: RawCollection, question: String) throws -> StringRawRepresentable where StringRawRepresentable.RawValue == String, RawCollection.Element == StringRawRepresentable {
+    func readRawInput<StringRawRepresentable: RawRepresentable, RawCollection: Collection>(options: RawCollection, question: String) throws -> StringRawRepresentable where StringRawRepresentable.RawValue == String, RawCollection.Element == StringRawRepresentable {
         let acho = Acho<String>()
         guard
             let answer = acho.ask(question: question, options: options.map { $0.rawValue }),
