@@ -116,6 +116,7 @@ final class InitCommand: NSObject, Command {
         return supportedPackageType
     }
 
+    /// Obtain package name
     private func name(path: AbsolutePath) throws -> String {
         if let name = path.components.last {
             return name
@@ -124,6 +125,7 @@ final class InitCommand: NSObject, Command {
         }
     }
 
+    /// Obtain package path
     private func path(arguments: ArgumentParser.Result) throws -> AbsolutePath {
         if let path = arguments.get(pathArgument) {
             return AbsolutePath(path, relativeTo: fileHandler.currentPath)
