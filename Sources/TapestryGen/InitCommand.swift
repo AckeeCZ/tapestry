@@ -47,24 +47,24 @@ enum SupportedPackageType: String, CaseIterable {
     case library, executable
 }
 
+/// This command initializes Swift package with example in current empty directory
 final class InitCommand: NSObject, Command {
-
-    // MARK: - Command
     static var command: String = "init"
-    static var overview: String = "Init tapestry framework template"
+    static var overview: String = "Initializes Swift package with example in current directory"
 
     let pathArgument: OptionArgument<String>
 
     private let fileHandler: FileHandling
     private let inputReader: InputReading
+    private let printer: Printing
     private let exampleGenerator: ExampleGenerating
 
     required convenience init(parser: ArgumentParser) {
         let fileHandler = FileHandler()
-        self.init(parser: parser, fileHandler: fileHandler, inputReader: InputReader(), exampleGenerator: ExampleGenerator(fileHandler: fileHandler))
+        self.init(parser: parser, fileHandler: fileHandler, inputReader: InputReader(), printer: Printer(), exampleGenerator: ExampleGenerator(fileHandler: fileHandler))
     }
 
-    init(parser: ArgumentParser, fileHandler: FileHandling, inputReader: InputReading, exampleGenerator: ExampleGenerating) {
+    init(parser: ArgumentParser, fileHandler: FileHandling, inputReader: InputReading, printer: Printing, exampleGenerator: ExampleGenerating) {
         let subParser = parser.add(subparser: InitCommand.command, overview: InitCommand.overview)
 
         pathArgument = subParser.add(option: "--path",
@@ -75,6 +75,7 @@ final class InitCommand: NSObject, Command {
 
         self.fileHandler = fileHandler
         self.inputReader = inputReader
+        self.printer = printer
         self.exampleGenerator = exampleGenerator
     }
 
@@ -86,12 +87,13 @@ final class InitCommand: NSObject, Command {
 
         switch packageType {
         case .library:
+            printer.print("Creating library 📚")
             try exampleGenerator.generateProject(path: path, name: name)
         case .executable:
-            break
+            printer.print("Creating executable 🏃🏾‍♂️")
         }
 
-        // printer.print(success: "Project generated.")
+        printer.print(success: "Package generated ✅")
     }
 
     // MARK: - Helpers
