@@ -24,7 +24,7 @@ public final class CommandRegistry {
     public convenience init() {
         self.init(errorHandler: ErrorHandler(),
                   processArguments: CommandRegistry.processArguments)
-        register(command: GenerateCommand.self)
+        register(command: InitCommand.self)
     }
 
     init(errorHandler: ErrorHandling,
