@@ -13,30 +13,6 @@ import SPMUtility
 import Basic
 import class Workspace.InitPackage
 
-class TapestryModelLoader: GeneratorModelLoading {
-
-    private let name: String
-
-    init(name: String) {
-        self.name = name
-    }
-
-    func loadProject(at path: AbsolutePath) throws -> Project {
-        let sources = try TuistGenerator.Target.sources(projectPath: path, sources: [(glob: "Sources/**", compilerFlags: nil)])
-
-        return Project(path: path, name: name, settings: .default, filesGroup: .group(name: name), targets: [Target(name: name, platform: .iOS, product: .app, productName: nil, bundleId: "ackee." + String(name), sources: sources, filesGroup: .group(name: name))], schemes: [])
-    }
-
-    /// We do not use workspace
-    func loadWorkspace(at path: AbsolutePath) throws -> Workspace {
-        return Workspace(name: "", projects: [])
-    }
-
-    func loadTuistConfig(at path: AbsolutePath) throws -> TuistConfig {
-        return TuistConfig(compatibleXcodeVersions: .all, generationOptions: [.generateManifest])
-    }
-}
-
 enum InitCommandError: FatalError, Equatable {
     case ungettableProjectName(AbsolutePath)
     case nonEmptyDirectory(AbsolutePath)
@@ -66,6 +42,11 @@ enum InitCommandError: FatalError, Equatable {
     }
 }
 
+/// Narrowing down InitPackage.PackageType to types we are supporting
+enum SupportedPackageType: String, CaseIterable {
+    case library, executable
+}
+
 final class InitCommand: NSObject, Command {
 
     // MARK: - Command
@@ -76,12 +57,14 @@ final class InitCommand: NSObject, Command {
 
     private let fileHandler: FileHandling
     private let inputReader: InputReading
+    private let exampleGenerator: ExampleGenerating
 
     required convenience init(parser: ArgumentParser) {
-        self.init(parser: parser, fileHandler: FileHandler(), inputReader: InputReader())
+        let fileHandler = FileHandler()
+        self.init(parser: parser, fileHandler: fileHandler, inputReader: InputReader(), exampleGenerator: ExampleGenerator(fileHandler: fileHandler))
     }
 
-    init(parser: ArgumentParser, fileHandler: FileHandling, inputReader: InputReading) {
+    init(parser: ArgumentParser, fileHandler: FileHandling, inputReader: InputReading, exampleGenerator: ExampleGenerating) {
         let subParser = parser.add(subparser: InitCommand.command, overview: InitCommand.overview)
 
         pathArgument = subParser.add(option: "--path",
@@ -92,6 +75,7 @@ final class InitCommand: NSObject, Command {
 
         self.fileHandler = fileHandler
         self.inputReader = inputReader
+        self.exampleGenerator = exampleGenerator
     }
 
     func run(with arguments: ArgumentParser.Result) throws {
@@ -102,20 +86,15 @@ final class InitCommand: NSObject, Command {
 
         switch packageType {
         case .library:
-            let examplePath = path.appending(RelativePath("Example"))
-            try fileHandler.createFolder(examplePath)
-            try generateProject(path: examplePath, name: name)
+            try exampleGenerator.generateProject(path: path, name: name)
         case .executable:
             break
         }
+
+        // printer.print(success: "Project generated.")
     }
 
     // MARK: - Helpers
-
-    private func generateProject(path: AbsolutePath, name: String) throws {
-        let generator = Generator(modelLoader: TapestryModelLoader(name: name))
-        _ = try generator.generateProject(at: path)
-    }
 
     /// Initialize SPM's package
     /// - Returns: SupportedPackageType if reading input was successful
@@ -150,8 +129,4 @@ final class InitCommand: NSObject, Command {
             return fileHandler.currentPath
         }
     }
-}
-
-enum SupportedPackageType: String, CaseIterable {
-    case library, executable
 }
