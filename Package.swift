@@ -17,6 +17,7 @@ let package = Package(
         // TODO: Change to .upToNextMinor
         .package(url: "https://github.com/fortmarek/tuist.git", .upToNextMinor(from: "0.17.0")),
         .package(url: "https://github.com/apple/swift-package-manager", .upToNextMinor(from: "0.4.0")),
+        .package(url: "https://github.com/miguelangel-dev/acho", .branch("patch-1")),
     ],
     targets: [
         .target(
@@ -30,6 +31,7 @@ let package = Package(
                 "PathKit",
                 "TuistGenerator",
                 "SwiftPM",
+                "acho",
             ]),
         .testTarget(
             name: "TapestryTests",

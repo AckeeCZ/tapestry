@@ -7,6 +7,7 @@
 
 import SPMUtility
 import Foundation
+import TuistCore
 import Basic
 
 public final class CommandRegistry {

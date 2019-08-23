@@ -8,6 +8,8 @@
 import Foundation
 import PathKit
 import TuistGenerator
+import TuistCore
+import acho
 import SPMUtility
 import Basic
 import class Workspace.InitPackage
@@ -17,8 +19,6 @@ class TapestryModelLoader: GeneratorModelLoading {
         let sources = try TuistGenerator.Target.sources(projectPath: path, sources: [(glob: "Sources/**", compilerFlags: nil)])
 
         return Project(path: path, name: "Name", settings: .default, filesGroup: .group(name: "Project"), targets: [Target(name: "Target_name", platform: .iOS, product: .app, productName: nil, bundleId: "bundle-id", sources: sources, filesGroup: .group(name: "Project"))], schemes: [])
-
-        //Target(name: <#T##String#>, platform: <#T##Platform#>, product: <#T##Product#>, productName: <#T##String?#>, bundleId: <#T##String#>, infoPlist: <#T##InfoPlist?#>, entitlements: <#T##AbsolutePath?#>, settings: <#T##Settings?#>, sources: <#T##[Target.SourceFile]#>, resources: <#T##[FileElement]#>, headers: <#T##Headers?#>, coreDataModels: <#T##[CoreDataModel]#>, actions: <#T##[TargetAction]#>, environment: <#T##[String : String]#>, filesGroup: <#T##ProjectGroup#>, dependencies: <#T##[Dependency]#>)
     }
 
     /// We do not use workspace
@@ -65,6 +65,9 @@ enum InitCommandError: FatalError, Equatable {
     }
 }
 
+enum PackageType: String, CaseIterable {
+    case executable, framework
+}
 
 final class InitCommand: NSObject, Command {
 
@@ -75,12 +78,13 @@ final class InitCommand: NSObject, Command {
     let pathArgument: OptionArgument<String>
 
     private let fileHandler: FileHandling
+    private let inputReader: InputReading
 
     required convenience init(parser: ArgumentParser) {
-        self.init(parser: parser, fileHandler: FileHandler())
+        self.init(parser: parser, fileHandler: FileHandler(), inputReader: InputReader())
     }
 
-    init(parser: ArgumentParser, fileHandler: FileHandling) {
+    init(parser: ArgumentParser, fileHandler: FileHandling, inputReader: InputReading) {
         let subParser = parser.add(subparser: InitCommand.command, overview: InitCommand.overview)
 
         pathArgument = subParser.add(option: "--path",
@@ -90,6 +94,7 @@ final class InitCommand: NSObject, Command {
                                      completion: .filename)
 
         self.fileHandler = fileHandler
+        self.inputReader = inputReader
     }
 
     func run(with arguments: ArgumentParser.Result) throws {
@@ -97,6 +102,8 @@ final class InitCommand: NSObject, Command {
         let name = try self.name(path: fileHandler.currentPath)
         let initPackage = try InitPackage(name: name, destinationPath: path, packageType: .executable)
         try initPackage.writePackageStructure()
+
+        let packageType: PackageType = try inputReader.readEnumInput(question: "Choose package type:")
 
         // TODO: Generate example project here with dependency
 
