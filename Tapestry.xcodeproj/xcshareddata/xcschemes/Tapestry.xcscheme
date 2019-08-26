@@ -60,6 +60,12 @@
             ReferencedContainer = "container:Tapestry.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "init --path /Users/marekfort/Development/ackee/TapestryTests"
+            isEnabled = "YES">
+         </CommandLineArgument>
+      </CommandLineArguments>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

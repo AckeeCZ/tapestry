@@ -81,7 +81,7 @@ final class InitCommand: NSObject, Command {
 
     func run(with arguments: ArgumentParser.Result) throws {
         let path = try self.path(arguments: arguments)
-        let name = try self.name(path: fileHandler.currentPath)
+        let name = try self.name(path: path)
 
         let packageType = try initPackage(path: path, name: name)
 

@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "Tapestry::TapestryGen"
-               BuildableName = "TapestryGen.framework"
-               BlueprintName = "TapestryGen"
+               BlueprintIdentifier = "Tapestry::Tapestry"
+               BuildableName = "Tapestry"
+               BlueprintName = "Tapestry"
                ReferencedContainer = "container:Tapestry.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -28,9 +28,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "Tapestry::Tapestry"
-               BuildableName = "Tapestry"
-               BlueprintName = "Tapestry"
+               BlueprintIdentifier = "Tapestry::TapestryGen"
+               BuildableName = "TapestryGen.framework"
+               BlueprintName = "TapestryGen"
                ReferencedContainer = "container:Tapestry.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
