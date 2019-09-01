@@ -1,0 +1,4 @@
+module llbuildCore {
+    umbrella "/Users/marekfort/Development/ackee/Tapestry/.build/checkouts/swift-llbuild/lib/Core/include"
+    export *
+}

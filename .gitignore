@@ -1,5 +1,7 @@
-.DS_Store
+*.xcodeproj/**/xcuserdata/
+*.xcscmblueprint
+/Carthage
 /.build
-/Packages
-/*.xcodeproj
-xcuserdata/
+.DS_Store
+DerivedData
+.swiftpm/
