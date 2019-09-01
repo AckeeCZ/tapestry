@@ -15,8 +15,7 @@ before_deploy:
 after_deploy:
 - pod trunk push --skip-import-validation --skip-tests --allow-warnings
 script:
-- set -o pipefail && xcodebuild test -scheme Tapestry -destination 'platform=iOS Simulator,name=iPhone
-  XS,OS=12.1' ONLY_ACTIVE_ARCH=YES | xcpretty
+- set -o pipefail && swift test --generate-linuxmain -Xswiftc -target -Xswiftc x86_64-apple-macosx10.12 
 deploy:
   provider: releases
   api_key:
