@@ -8,6 +8,7 @@ env:
   - FRAMEWORK_NAME=Tapestry
 before_install:
 - brew update
+- brew outdated danger/tap/danger-swift || brew upgrade danger/tap/danger-swift
 - brew outdated carthage || brew upgrade carthage
 before_deploy:
 - carthage build --no-skip-current --platform iOS --cache-builds
@@ -15,6 +16,7 @@ before_deploy:
 after_deploy:
 - pod trunk push --skip-import-validation --skip-tests --allow-warnings
 script:
+- danger-swift ci
 - set -o pipefail && swift test --generate-linuxmain -Xswiftc -target -Xswiftc x86_64-apple-macosx10.12 
 deploy:
   provider: releases
