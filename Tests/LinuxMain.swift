@@ -3,5 +3,6 @@ import XCTest
 import TapestryTests
 
 var tests = [XCTestCaseEntry]()
-tests += TapestryTests.allTests()
+tests += TapestryTests.__allTests()
+
 XCTMain(tests)
