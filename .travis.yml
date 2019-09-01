@@ -1,0 +1,28 @@
+osx_image: xcode11
+language: objective-c
+cache:
+  directories:
+  - Carthage
+env:
+  global:
+  - FRAMEWORK_NAME=Tapestry
+before_install:
+- brew update
+- brew outdated carthage || brew upgrade carthage
+- carthage bootstrap --platform iOS --cache-builds
+before_deploy:
+- carthage build --no-skip-current --platform iOS --cache-builds
+- carthage archive $FRAMEWORK_NAME
+after_deploy:
+- pod trunk push --skip-import-validation --skip-tests --allow-warnings
+script:
+- set -o pipefail && xcodebuild test -scheme Tapestry -destination 'platform=iOS Simulator,name=iPhone
+  XS,OS=12.1' ONLY_ACTIVE_ARCH=YES | xcpretty
+deploy:
+  provider: releases
+  api_key:
+    secure: wFWClyyBgwbOvMDX1naWN3HSW5Lh3AtBlTjgDGvWmVLPahHSucppFXVE18vGs6A0eNdoCrDz9Cc1gFXDkZe6z6NxYoB7dupJCsiPAiMDrGdbgqgWAGRCgMncWPT3DjkbiNQBfK5TXUF4/DVmSyKvej/V70fa0oMuzvy4V+TiqKD2aC2sNXmPu582NDFiSJ9pIOpWmShPfZ/b/FGXJ5FPZ4i4tIZdF+1Z8lhSdU//K0CQAkVtTmuQaj4mWR1mbyZJQFOlCGWCtn5AyLEpvjrheuRH4DhSJKsIo5hOT8J/820AzFofKb0NrIErYOb+0iO52/K93hhg6jTI2SyPYgrPLyYPJFvhORwZPx56a6WMrayHQ+sVdMruiSdpo5ecNce/tiLncImTngSl4R6MTNLewRkTaaVnXtkLRH50O5BZmMghU7zuSiGgODG4JCIbVEUuH4SjqUS7GG7UlJmIKLF3z0oAH2rpQaqEX2Y0GLQXgIYOyv7vQvhMLUoIo5exrr62BQuEcvB3PgNh3sxk52APUaceRxb7VjqzEBDqGD0+ZQxXRsn0JjES7DA2D7OosBYtexoFX7et1pTrDT2FIDqVvq7oJ3P5LAbfSMIR1mxefHr0+46etoKGQrvwvGwzShFUhIBH9VzktoHOhos+RkbPGAXmM7JLIOyP26S577TBqJA=
+  file: "$FRAMEWORK_NAME.framework.zip"
+  skip_cleanup: true
+  on:
+    repo: fortmarek/Tapestry
