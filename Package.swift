@@ -13,24 +13,25 @@ let package = Package(
             targets: ["Tapestry"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/jakeheis/SwiftCLI", .upToNextMinor(from: "5.3.2")),
         .package(url: "https://github.com/kylef/PathKit.git", .upToNextMinor(from: "1.0.0")),
         // TODO: Change to .upToNextMinor
-        .package(url: "https://github.com/tuist/tuist.git", .branch("master")),
+        .package(url: "https://github.com/fortmarek/tuist.git", .upToNextMinor(from: "0.17.0")),
+        .package(url: "https://github.com/apple/swift-package-manager", .upToNextMinor(from: "0.4.0")),
+        .package(url: "https://github.com/miguelangel-dev/acho", .branch("patch-1")),
     ],
     targets: [
         .target(
             name: "Tapestry",
             dependencies: [
-                "SwiftCLI",
                 .target(name: "TapestryGen")
             ]),
         .target(
             name: "TapestryGen",
             dependencies: [
-                "SwiftCLI",
                 "PathKit",
                 "TuistGenerator",
+                "SwiftPM",
+                "acho",
             ]),
         .testTarget(
             name: "TapestryTests",

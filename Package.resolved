@@ -2,12 +2,30 @@
   "object": {
     "pins": [
       {
+        "package": "acho",
+        "repositoryURL": "https://github.com/miguelangel-dev/acho",
+        "state": {
+          "branch": "patch-1",
+          "revision": "9c2bd39b3e40e2558f1fcc3854bbd354633bb577",
+          "version": null
+        }
+      },
+      {
         "package": "AEXML",
         "repositoryURL": "https://github.com/tadija/AEXML",
         "state": {
           "branch": null,
           "revision": "e4d517844dd03dac557e35d77a8e9ab438de91a6",
           "version": "4.4.0"
+        }
+      },
+      {
+        "package": "ColorizeSwift",
+        "repositoryURL": "https://github.com/mtynior/ColorizeSwift.git",
+        "state": {
+          "branch": null,
+          "revision": "7492d039d594daccc39cacea343eed6cc9d1ed5a",
+          "version": null
         }
       },
       {
@@ -41,44 +59,35 @@
         "package": "llbuild",
         "repositoryURL": "https://github.com/apple/swift-llbuild.git",
         "state": {
-          "branch": "master",
-          "revision": "5bf016632c0e85d835c63b84b43d3c887f01418f",
-          "version": null
+          "branch": null,
+          "revision": "f1c9ad9a253cdf1aa89a7f5c99c30b4513b06ddb",
+          "version": "0.1.1"
         }
       },
       {
         "package": "SwiftPM",
         "repositoryURL": "https://github.com/apple/swift-package-manager",
         "state": {
-          "branch": "swift-5.0-RELEASE",
-          "revision": "3a57975e10be0b1a8b87992ddf3a49701036f96c",
-          "version": null
-        }
-      },
-      {
-        "package": "SwiftCLI",
-        "repositoryURL": "https://github.com/jakeheis/SwiftCLI",
-        "state": {
           "branch": null,
-          "revision": "ba2268e67c07b9f9cfbc0801385e6238b36255eb",
-          "version": "5.3.2"
+          "revision": "8656a25cb906c1896339f950ac960ee1b4fe8034",
+          "version": "0.4.0"
         }
       },
       {
         "package": "tuist",
-        "repositoryURL": "https://github.com/tuist/tuist.git",
+        "repositoryURL": "https://github.com/fortmarek/tuist.git",
         "state": {
-          "branch": "master",
-          "revision": "22854327d5953070895323adbeeb2455f2a4c402",
-          "version": null
+          "branch": null,
+          "revision": "db822080a8baee0b740d9d112c7a77122d497dda",
+          "version": "0.17.0"
         }
       },
       {
-        "package": "XcodeProj",
-        "repositoryURL": "https://github.com/tuist/XcodeProj",
+        "package": "TuistXcodeProj",
+        "repositoryURL": "https://github.com/fortmarek/XcodeProj",
         "state": {
           "branch": null,
-          "revision": "b951777f42e9acbfb8f19da623b43aaa604422f9",
+          "revision": "b337d32ec4e223faa758cf31816f9b419fa2d36a",
           "version": "7.0.0"
         }
       }
