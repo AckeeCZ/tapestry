@@ -43,7 +43,7 @@ enum InitCommandError: FatalError, Equatable {
 }
 
 /// Narrowing down InitPackage.PackageType to types we are supporting
-enum SupportedPackageType: String, CaseIterable {
+enum PackageType: String, CaseIterable {
     case library, executable
 }
 
@@ -92,6 +92,8 @@ final class InitCommand: NSObject, Command {
         case .executable:
             printer.print("Creating executable 🏃🏾‍♂️")
         }
+        
+        try generateTravis(path: path, packageType: packageType, name: name)
 
         printer.print(success: "Package generated ✅")
     }
@@ -99,9 +101,9 @@ final class InitCommand: NSObject, Command {
     // MARK: - Helpers
 
     /// Initialize SPM's package
-    /// - Returns: SupportedPackageType if reading input was successful
-    private func initPackage(path: AbsolutePath, name: String) throws -> SupportedPackageType {
-        let supportedPackageType: SupportedPackageType = try inputReader.readEnumInput(question: "Choose package type:")
+    /// - Returns: PackageType if reading input was successful
+    private func initPackage(path: AbsolutePath, name: String) throws -> PackageType {
+        let supportedPackageType: PackageType = try inputReader.readEnumInput(question: "Choose package type:")
         let packageType: InitPackage.PackageType
         switch supportedPackageType {
         case .library:
@@ -132,5 +134,43 @@ final class InitCommand: NSObject, Command {
         } else {
             return fileHandler.currentPath
         }
+    }
+    
+    /// Generates travis configuration file
+    /// - Parameters:
+    ///     - path: Path where to generate travis config file
+    ///     - packageType: Package type to derive build script command
+    ///     - name: Name of package
+    private func generateTravis(path: AbsolutePath, packageType: PackageType, name: String) throws {
+        let exampleProjectName: String = name + ExampleGenerator.exampleAppendix
+        let script: String
+        switch packageType {
+        case .executable:
+            script = "- set -o pipefail && swift test --generate-linuxmain -Xswiftc -target -Xswiftc x86_64-apple-macosx10.12"
+        case .library:
+            script = "- xcodebuild -project Example/\(exampleProjectName).xcodeproj -scheme \(exampleProjectName) -sdk iphonesimulator -destination 'OS=13.0,name=iPhone Xʀ,platform=iOS Simulator' -configuration Debug ONLY_ACTIVE_ARCH=NO | xcpretty -c"
+        }
+        let content = """
+        osx_image: xcode11
+        language: objective-c
+        cache:
+          directories:
+          - Carthage
+        env:
+          global:
+          - FRAMEWORK_NAME=\(name)
+        before_install:
+        - brew update
+        - brew outdated carthage || brew upgrade carthage
+        before_deploy:
+        - carthage build --no-skip-current --platform iOS --cache-builds
+        - carthage archive $FRAMEWORK_NAME
+        after_deploy:
+        - pod trunk push --skip-import-validation --skip-tests --allow-warnings
+        script:
+        \(script)
+        """
+        let travisPath = path.appending(component: ".travis.yml")
+        try content.write(to: travisPath.url, atomically: true, encoding: .utf8)
     }
 }

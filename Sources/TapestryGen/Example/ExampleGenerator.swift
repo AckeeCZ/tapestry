@@ -15,7 +15,9 @@ protocol ExampleGenerating {
     func generateProject(path: AbsolutePath, name: String) throws
 }
 
-class ExampleGenerator: ExampleGenerating {
+final class ExampleGenerator: ExampleGenerating {
+    
+    static let exampleAppendix: String = "Example"
 
     private let fileHandler: FileHandling
 
@@ -31,7 +33,7 @@ class ExampleGenerator: ExampleGenerating {
 
         try createExampleSources(path: examplePath, name: name)
 
-        let generator = Generator(modelLoader: ExampleModelLoader(name: name))
+        let generator = Generator(modelLoader: ExampleModelLoader(packageName: name, name: name + ExampleGenerator.exampleAppendix))
         _ = try generator.generateProject(at: examplePath)
     }
 
