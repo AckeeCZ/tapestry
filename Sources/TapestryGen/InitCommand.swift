@@ -93,6 +93,8 @@ final class InitCommand: NSObject, Command {
             printer.print("Creating executable 🏃🏾‍♂️")
         }
         
+        try generateGitignore(path: path)
+        
         try generateTravis(path: path, packageType: packageType, name: name)
 
         printer.print(success: "Package generated ✅")
@@ -172,5 +174,20 @@ final class InitCommand: NSObject, Command {
         """
         let travisPath = path.appending(component: ".travis.yml")
         try content.write(to: travisPath.url, atomically: true, encoding: .utf8)
+    }
+    
+    private func generateGitignore(path: AbsolutePath) throws {
+        let content = """
+        *.xcodeproj/**/xcuserdata/
+        *.xcscmblueprint
+        /Carthage
+        /.build
+        .DS_Store
+        DerivedData
+        .swiftpm/
+        
+        """
+        let gitignorePath = path.appending(component: ".gitignore")
+        try content.write(to: gitignorePath.url, atomically: true, encoding: .utf8)
     }
 }
