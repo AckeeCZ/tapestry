@@ -58,13 +58,14 @@ final class InitCommand: NSObject, Command {
     private let inputReader: InputReading
     private let printer: Printing
     private let exampleGenerator: ExampleGenerating
+    private let gitController: GitControlling
 
     required convenience init(parser: ArgumentParser) {
         let fileHandler = FileHandler()
-        self.init(parser: parser, fileHandler: fileHandler, inputReader: InputReader(), printer: Printer(), exampleGenerator: ExampleGenerator(fileHandler: fileHandler))
+        self.init(parser: parser, fileHandler: fileHandler, inputReader: InputReader(), printer: Printer(), exampleGenerator: ExampleGenerator(fileHandler: fileHandler), gitController: GitController())
     }
 
-    init(parser: ArgumentParser, fileHandler: FileHandling, inputReader: InputReading, printer: Printing, exampleGenerator: ExampleGenerating) {
+    init(parser: ArgumentParser, fileHandler: FileHandling, inputReader: InputReading, printer: Printing, exampleGenerator: ExampleGenerating, gitController: GitControlling) {
         let subParser = parser.add(subparser: InitCommand.command, overview: InitCommand.overview)
 
         pathArgument = subParser.add(option: "--path",
@@ -77,6 +78,7 @@ final class InitCommand: NSObject, Command {
         self.inputReader = inputReader
         self.printer = printer
         self.exampleGenerator = exampleGenerator
+        self.gitController = gitController
     }
 
     func run(with arguments: ArgumentParser.Result) throws {
@@ -92,6 +94,10 @@ final class InitCommand: NSObject, Command {
         case .executable:
             printer.print("Creating executable 🏃🏾‍♂️")
         }
+        
+        try gitController.initGit(path: path)
+        
+        try generateLicense(path: path)
         
         try generateGitignore(path: path)
         
@@ -189,5 +195,37 @@ final class InitCommand: NSObject, Command {
         """
         let gitignorePath = path.appending(component: ".gitignore")
         try content.write(to: gitignorePath.url, atomically: true, encoding: .utf8)
+    }
+    
+    private func generateLicense(path: AbsolutePath) throws {
+        let gitName = try gitController.currentName()
+        let gitEmail = try gitController.currentEmail()
+        let calendar = Calendar.current
+        let currentYear = calendar.component(.year, from: Date())
+        let content = """
+        Copyright \(currentYear)-present, \(gitName); \(gitEmail)
+
+        Permission is hereby granted, free of charge, to any person obtaining a
+        copy of this software and associated documentation files (the
+        "Software"), to deal in the Software without restriction, including
+        without limitation the rights to use, copy, modify, merge, publish,
+        distribute, sublicense, and/or sell copies of the Software, and to
+        permit persons to whom the Software is furnished to do so, subject to
+        the following conditions:
+
+        The above copyright notice and this permission notice shall be included
+        in all copies or substantial portions of the Software.
+
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+        OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+        MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+        IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+        CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+        TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+        SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+        """
+        
+        let licensePath = path.appending(component: "LICENSE")
+        try content.write(to: licensePath.url, atomically: true, encoding: .utf8)
     }
 }
