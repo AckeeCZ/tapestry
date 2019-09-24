@@ -191,7 +191,6 @@ final class InitCommand: NSObject, Command {
         .DS_Store
         DerivedData
         .swiftpm/
-        
         """
         let gitignorePath = path.appending(component: ".gitignore")
         try content.write(to: gitignorePath.url, atomically: true, encoding: .utf8)

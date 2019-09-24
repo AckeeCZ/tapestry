@@ -14,9 +14,8 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/kylef/PathKit.git", .upToNextMinor(from: "1.0.0")),
-        // TODO: Change to .upToNextMinor
         .package(url: "https://github.com/fortmarek/tuist.git", .upToNextMinor(from: "0.17.0")),
-        .package(url: "https://github.com/apple/swift-package-manager", .upToNextMinor(from: "0.4.0")),
+        .package(url: "https://github.com/apple/swift-package-manager", .branch("swift-5.0-RELEASE")),
         .package(url: "https://github.com/miguelangel-dev/acho", .branch("patch-1")),
     ],
     targets: [
@@ -30,7 +29,7 @@ let package = Package(
             dependencies: [
                 "PathKit",
                 "TuistGenerator",
-                "SwiftPM",
+                "SPMUtility",
                 "acho",
             ]),
         .testTarget(
