@@ -2,6 +2,7 @@
 *.xcscmblueprint
 /Carthage
 /.build
+/build
 .DS_Store
 DerivedData
 .swiftpm/
