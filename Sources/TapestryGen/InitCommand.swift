@@ -98,10 +98,13 @@ final class InitCommand: NSObject, Command {
         try gitController.initGit(path: path)
         
         try generateLicense(path: path)
-        
         try generateGitignore(path: path)
+        try generateReadme(path: path,
+                           name: name)
         
-        try generateTravis(path: path, packageType: packageType, name: name)
+        try generateTravis(path: path,
+                           packageType: packageType,
+                           name: name)
 
         printer.print(success: "Package generated ✅")
     }
@@ -149,7 +152,9 @@ final class InitCommand: NSObject, Command {
     ///     - path: Path where to generate travis config file
     ///     - packageType: Package type to derive build script command
     ///     - name: Name of package
-    private func generateTravis(path: AbsolutePath, packageType: PackageType, name: String) throws {
+    private func generateTravis(path: AbsolutePath,
+                                packageType: PackageType,
+                                name: String) throws {
         let exampleProjectName: String = name + ExampleGenerator.exampleAppendix
         let script: String
         switch packageType {
@@ -226,5 +231,41 @@ final class InitCommand: NSObject, Command {
         
         let licensePath = path.appending(component: "LICENSE")
         try content.write(to: licensePath.url, atomically: true, encoding: .utf8)
+    }
+    
+    private func generateReadme(path: AbsolutePath,
+                                name: String) throws {
+        let gitName = try gitController.currentName()
+        let content = """
+        # \(name)
+        [![CI Status](http://img.shields.io/travis/\(gitName)/\(name).svg?style=flat)](https://travis-ci.org/fortmarek/ParallaxOverlay)
+        [![Version](https://img.shields.io/cocoapods/v/\(name).svg?style=flat)](http://cocoapods.org/pods/ParallaxOverlay)
+        <a href="https://swift.org/package-manager">
+                <img src="https://img.shields.io/badge/spm-compatible-brightgreen.svg?style=flat" alt="Swift Package Manager" />
+        </a>
+        [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+
+        Say something about your library
+
+        ## Installation
+
+        ### SPM
+
+        `\(name)` is available via [Swift Package Manager](https://swift.org/package-manager).
+
+        Using Xcode 11 and later, go to `File -> Swift Packages -> Add Package Dependency` and enter [https://github.com/\(gitName)/\(name)](https://github.com/\(gitName)/\(name)
+
+        ### CocoaPods
+
+        \(name) is available through [CocoaPods](http://cocoapods.org). To install
+        it, simply add the following line to your Podfile:
+
+        ```ruby
+        pod '\(name)'
+        ```
+        """
+        
+        let readmePath = path.appending("README.md")
+        try content.write(to: readmePath.url, atomically: true, encoding: .utf8)
     }
 }
