@@ -265,7 +265,7 @@ final class InitCommand: NSObject, Command {
         ```
         """
         
-        let readmePath = path.appending("README.md")
+        let readmePath = path.appending(component: "README.md")
         try content.write(to: readmePath.url, atomically: true, encoding: .utf8)
     }
 }
