@@ -86,6 +86,8 @@ final class InitCommand: NSObject, Command {
         let name = try self.name(path: path)
 
         let packageType = try initPackage(path: path, name: name)
+        
+        try FrameworkGenerator(fileHandler: fileHandler).generateProject(path: path, name: name)
 
         switch packageType {
         case .library:

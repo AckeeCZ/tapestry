@@ -1,10 +1,3 @@
-//
-//  ExampleGenerator.swift
-//  AEXML
-//
-//  Created by Marek Fořt on 8/23/19.
-//
-
 import Foundation
 import TuistGenerator
 import Basic
