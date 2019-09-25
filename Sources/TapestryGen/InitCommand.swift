@@ -97,9 +97,16 @@ final class InitCommand: NSObject, Command {
         
         try gitController.initGit(path: path)
         
-        try generateLicense(path: path)
+        let authorName = try self.authorName()
+        let email = try self.email()
+        let username = try self.username(email: email)
+        
+        try generateLicense(authorName: authorName,
+                            email: email,
+                            path: path)
         try generateGitignore(path: path)
         try generateReadme(path: path,
+                           username: username,
                            name: name)
         
         try generateTravis(path: path,
@@ -136,6 +143,36 @@ final class InitCommand: NSObject, Command {
         } else {
             throw InitCommandError.ungettableProjectName(AbsolutePath.current)
         }
+    }
+    
+    private func authorName() throws -> String {
+        return prompt("👋 Author name", defaultValue: try gitController.currentName())
+    }
+    
+    private func email() throws -> String {
+        let gitEmail = try gitController.currentEmail()
+        return prompt("💌 Email", defaultValue: gitEmail)
+    }
+    
+    private func username(email: String) throws -> String {
+        let defaultUsername = email.components(separatedBy: "@").first
+        return prompt("🍷 Username", defaultValue: defaultUsername)
+    }
+    
+    private func prompt(_ text: String, defaultValue: String? = nil) -> String {
+        if let defaultValue = defaultValue {
+            printer.print(text + " or press enter to use: \(defaultValue) > ", includeNewline: false)
+            let readLine = readLineAndUnwrap()
+            return readLine.isEmpty ? defaultValue : readLine
+        } else {
+            printer.print(text, includeNewline: false)
+            let readLine = readLineAndUnwrap()
+            return readLine.isEmpty ? prompt("Try again: " + text) : readLine
+        }
+    }
+    
+    private func readLineAndUnwrap() -> String {
+        return readLine() ?? ""
     }
 
     /// Obtain package path
@@ -201,13 +238,13 @@ final class InitCommand: NSObject, Command {
         try content.write(to: gitignorePath.url, atomically: true, encoding: .utf8)
     }
     
-    private func generateLicense(path: AbsolutePath) throws {
-        let gitName = try gitController.currentName()
-        let gitEmail = try gitController.currentEmail()
+    private func generateLicense(authorName: String,
+                                 email: String,
+                                 path: AbsolutePath) throws {
         let calendar = Calendar.current
         let currentYear = calendar.component(.year, from: Date())
         let content = """
-        Copyright \(currentYear)-present, \(gitName); \(gitEmail)
+        Copyright \(currentYear)-present, \(authorName); \(email)
 
         Permission is hereby granted, free of charge, to any person obtaining a
         copy of this software and associated documentation files (the
@@ -234,11 +271,11 @@ final class InitCommand: NSObject, Command {
     }
     
     private func generateReadme(path: AbsolutePath,
+                                username: String,
                                 name: String) throws {
-        let gitName = try gitController.currentName()
         let content = """
         # \(name)
-        [![CI Status](http://img.shields.io/travis/\(gitName)/\(name).svg?style=flat)](https://travis-ci.org/fortmarek/ParallaxOverlay)
+        [![CI Status](http://img.shields.io/travis/\(username)/\(name).svg?style=flat)](https://travis-ci.org/\(username)/\(name)
         [![Version](https://img.shields.io/cocoapods/v/\(name).svg?style=flat)](http://cocoapods.org/pods/ParallaxOverlay)
         <a href="https://swift.org/package-manager">
                 <img src="https://img.shields.io/badge/spm-compatible-brightgreen.svg?style=flat" alt="Swift Package Manager" />
@@ -252,8 +289,6 @@ final class InitCommand: NSObject, Command {
         ### SPM
 
         `\(name)` is available via [Swift Package Manager](https://swift.org/package-manager).
-
-        Using Xcode 11 and later, go to `File -> Swift Packages -> Add Package Dependency` and enter [https://github.com/\(gitName)/\(name)](https://github.com/\(gitName)/\(name)
 
         ### CocoaPods
 
