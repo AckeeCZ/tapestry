@@ -11,6 +11,8 @@ import TuistGenerator
 import TuistCore
 import SPMUtility
 import Basic
+import Xcodeproj
+import class Workspace.Workspace
 import class Workspace.InitPackage
 
 enum InitCommandError: FatalError, Equatable {
@@ -59,13 +61,14 @@ final class InitCommand: NSObject, Command {
     private let printer: Printing
     private let exampleGenerator: ExampleGenerating
     private let gitController: GitControlling
+    private let system: Systeming
 
     required convenience init(parser: ArgumentParser) {
         let fileHandler = FileHandler()
-        self.init(parser: parser, fileHandler: fileHandler, inputReader: InputReader(), printer: Printer(), exampleGenerator: ExampleGenerator(fileHandler: fileHandler), gitController: GitController())
+        self.init(parser: parser, fileHandler: fileHandler, inputReader: InputReader(), printer: Printer(), exampleGenerator: ExampleGenerator(fileHandler: fileHandler), gitController: GitController(), system: System())
     }
 
-    init(parser: ArgumentParser, fileHandler: FileHandling, inputReader: InputReading, printer: Printing, exampleGenerator: ExampleGenerating, gitController: GitControlling) {
+    init(parser: ArgumentParser, fileHandler: FileHandling, inputReader: InputReading, printer: Printing, exampleGenerator: ExampleGenerating, gitController: GitControlling, system: Systeming) {
         let subParser = parser.add(subparser: InitCommand.command, overview: InitCommand.overview)
 
         pathArgument = subParser.add(option: "--path",
@@ -79,6 +82,7 @@ final class InitCommand: NSObject, Command {
         self.printer = printer
         self.exampleGenerator = exampleGenerator
         self.gitController = gitController
+        self.system = system
     }
 
     func run(with arguments: ArgumentParser.Result) throws {
@@ -86,8 +90,6 @@ final class InitCommand: NSObject, Command {
         let name = try self.name(path: path)
 
         let packageType = try initPackage(path: path, name: name)
-        
-        try FrameworkGenerator(fileHandler: fileHandler).generateProject(path: path, name: name)
 
         switch packageType {
         case .library:
@@ -114,6 +116,8 @@ final class InitCommand: NSObject, Command {
         try generateTravis(path: path,
                            packageType: packageType,
                            name: name)
+        
+        try system.run(["swift", "package", "--package-path", path.pathString, "generate-xcodeproj"])
 
         printer.print(success: "Package generated ✅")
     }
