@@ -5,7 +5,7 @@ import TuistCore
 
 protocol ExampleGenerating {
     /// Generates example project at given path
-    func generateProject(path: AbsolutePath, name: String) throws
+    func generateProject(path: AbsolutePath, name: String, bundleId: String) throws
 }
 
 final class ExampleGenerator: ExampleGenerating {
@@ -20,13 +20,16 @@ final class ExampleGenerator: ExampleGenerating {
 
     // MARK: - Public methods
 
-    func generateProject(path: AbsolutePath, name: String) throws {
+    func generateProject(path: AbsolutePath, name: String, bundleId: String) throws {
         let examplePath = path.appending(RelativePath("Example"))
         try fileHandler.createFolder(examplePath)
 
         try createExampleSources(path: examplePath, name: name)
 
-        let generator = Generator(modelLoader: ExampleModelLoader(packageName: name, name: name + ExampleGenerator.exampleAppendix))
+        let generator = Generator(modelLoader:
+            ExampleModelLoader(packageName: name,
+                               name: name + ExampleGenerator.exampleAppendix,
+                               bundleId: bundleId))
         _ = try generator.generateProject(at: examplePath)
     }
 

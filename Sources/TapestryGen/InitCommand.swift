@@ -90,20 +90,23 @@ final class InitCommand: NSObject, Command {
         let name = try self.name(path: path)
 
         let packageType = try initPackage(path: path, name: name)
-
-        switch packageType {
-        case .library:
-            printer.print("Creating library 📚")
-            try exampleGenerator.generateProject(path: path, name: name)
-        case .executable:
-            printer.print("Creating executable 🏃🏾‍♂️")
-        }
         
         try gitController.initGit(path: path)
         
         let authorName = try self.authorName()
         let email = try self.email()
         let username = try self.username(email: email)
+        let bundleId = try self.bundleId(username: username, projectName: name)
+        
+        switch packageType {
+        case .library:
+            printer.print("Creating library 📚")
+            try exampleGenerator.generateProject(path: path,
+                                                 name: name,
+                                                 bundleId: bundleId)
+        case .executable:
+            printer.print("Creating executable 🏃🏾‍♂️")
+        }
         
         try generateLicense(authorName: authorName,
                             email: email,
@@ -163,6 +166,10 @@ final class InitCommand: NSObject, Command {
     private func username(email: String) throws -> String {
         let defaultUsername = email.components(separatedBy: "@").first
         return prompt("🍷 Username", defaultValue: defaultUsername)
+    }
+    
+    private func bundleId(username: String, projectName: String) throws -> String {
+        return prompt("📝 Bundle ID", defaultValue: username + "." + projectName)
     }
     
     private func prompt(_ text: String, defaultValue: String? = nil) -> String {
