@@ -77,9 +77,9 @@
         "package": "tuist",
         "repositoryURL": "https://github.com/fortmarek/tuist.git",
         "state": {
-          "branch": null,
-          "revision": "db822080a8baee0b740d9d112c7a77122d497dda",
-          "version": "0.17.0"
+          "branch": "master",
+          "revision": "8545abfc99bee82603255f44978c22a5742bcbed",
+          "version": null
         }
       },
       {
@@ -87,8 +87,8 @@
         "repositoryURL": "https://github.com/fortmarek/XcodeProj",
         "state": {
           "branch": null,
-          "revision": "b337d32ec4e223faa758cf31816f9b419fa2d36a",
-          "version": "7.0.0"
+          "revision": "a35db98cf575c58a98fd7de69a365bbd2151bada",
+          "version": "7.1.0"
         }
       }
     ]
