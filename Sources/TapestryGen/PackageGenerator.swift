@@ -16,7 +16,7 @@ public protocol PackageGenerating {
 public final class PackageGenerator: PackageGenerating {
     private let inputReader: InputReading
     
-    public init(inputReader: InputReading = InputReader()) {
+    public init(inputReader: TapestryCore.InputReading = InputReader()) {
         self.inputReader = inputReader
     }
     
@@ -30,7 +30,9 @@ public final class PackageGenerator: PackageGenerating {
             packageType = .executable
         }
 
-        let initPackage = try InitPackage(name: name, destinationPath: path, packageType: packageType)
+        let initPackage = try InitPackage(name: name,
+                                          destinationPath: path,
+                                          packageType: packageType)
         try initPackage.writePackageStructure()
 
         return supportedPackageType

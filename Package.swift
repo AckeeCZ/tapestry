@@ -43,9 +43,13 @@ let package = Package(
                 "acho",
                 "TuistGenerator",
             ]),
+        .target(name: "TapestryCoreTesting",
+                dependencies: [
+                    "TapestryCore",
+            ]),
         .testTarget(
             name: "TapestryKitTests",
-            dependencies: ["TapestryKit"]),
+            dependencies: ["TapestryKit", "TapestryCoreTesting"]),
         .testTarget(
             name: "TapestryCoreTests",
             dependencies: ["TapestryCore"]),
