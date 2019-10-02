@@ -14,7 +14,7 @@ public final class ExampleGenerator: ExampleGenerating {
 
     private let fileHandler: FileHandling
 
-    public init(fileHandler: FileHandling) {
+    public init(fileHandler: FileHandling = FileHandler()) {
         self.fileHandler = fileHandler
     }
 

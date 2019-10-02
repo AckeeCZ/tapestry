@@ -6,7 +6,6 @@ import SPMUtility
 import Basic
 import Xcodeproj
 import class Workspace.Workspace
-import class Workspace.InitPackage
 
 enum InitCommandError: FatalError, Equatable {
     case ungettableProjectName(AbsolutePath)
@@ -37,11 +36,6 @@ enum InitCommandError: FatalError, Equatable {
     }
 }
 
-/// Narrowing down InitPackage.PackageType to types we are supporting
-enum PackageType: String, CaseIterable {
-    case library, executable
-}
-
 /// This command initializes Swift package with example in current empty directory
 final class InitCommand: NSObject, Command {
     static var command: String = "init"
@@ -50,18 +44,29 @@ final class InitCommand: NSObject, Command {
     let pathArgument: OptionArgument<String>
 
     private let fileHandler: FileHandling
-    private let inputReader: InputReading
     private let printer: TapestryCore.Printing
     private let exampleGenerator: ExampleGenerating
     private let gitController: GitControlling
     private let system: Systeming
+    private let packageGenerator: PackageGenerating
 
     required convenience init(parser: ArgumentParser) {
-        let fileHandler = FileHandler()
-        self.init(parser: parser, fileHandler: fileHandler, inputReader: InputReader(), printer: Printer(), exampleGenerator: ExampleGenerator(fileHandler: fileHandler), gitController: GitController(), system: System())
+        self.init(parser: parser,
+                  fileHandler: FileHandler(),
+                  printer: Printer(),
+                  exampleGenerator: ExampleGenerator(),
+                  gitController: GitController(),
+                  system: System(),
+                  packageGenerator: PackageGenerator())
     }
 
-    init(parser: ArgumentParser, fileHandler: FileHandling, inputReader: InputReading, printer: TapestryCore.Printing, exampleGenerator: ExampleGenerating, gitController: GitControlling, system: Systeming) {
+    init(parser: ArgumentParser,
+         fileHandler: FileHandling,
+         printer: TapestryCore.Printing,
+         exampleGenerator: ExampleGenerating,
+         gitController: GitControlling,
+         system: Systeming,
+         packageGenerator: PackageGenerating) {
         let subParser = parser.add(subparser: InitCommand.command, overview: InitCommand.overview)
 
         pathArgument = subParser.add(option: "--path",
@@ -71,18 +76,18 @@ final class InitCommand: NSObject, Command {
                                      completion: .filename)
 
         self.fileHandler = fileHandler
-        self.inputReader = inputReader
         self.printer = printer
         self.exampleGenerator = exampleGenerator
         self.gitController = gitController
         self.system = system
+        self.packageGenerator = packageGenerator
     }
 
     func run(with arguments: ArgumentParser.Result) throws {
         let path = try self.path(arguments: arguments)
         let name = try self.name(path: path)
 
-        let packageType = try initPackage(path: path, name: name)
+        let packageType = try packageGenerator.initPackage(path: path, name: name)
         
         try gitController.initGit(path: path)
         
@@ -119,24 +124,6 @@ final class InitCommand: NSObject, Command {
     }
 
     // MARK: - Helpers
-
-    /// Initialize SPM's package
-    /// - Returns: PackageType if reading input was successful
-    private func initPackage(path: AbsolutePath, name: String) throws -> PackageType {
-        let supportedPackageType: PackageType = try inputReader.readEnumInput(question: "Choose package type:")
-        let packageType: InitPackage.PackageType
-        switch supportedPackageType {
-        case .library:
-            packageType = .library
-        case .executable:
-            packageType = .executable
-        }
-
-        let initPackage = try InitPackage(name: name, destinationPath: path, packageType: packageType)
-        try initPackage.writePackageStructure()
-
-        return supportedPackageType
-    }
 
     /// Obtain package name
     private func name(path: AbsolutePath) throws -> String {

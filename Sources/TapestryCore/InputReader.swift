@@ -17,9 +17,7 @@ public protocol InputReading {
     func readRawInput<StringRawRepresentable: RawRepresentable, RawCollection: Collection>(options: RawCollection, question: String) throws -> StringRawRepresentable where StringRawRepresentable.RawValue == String, RawCollection.Element == StringRawRepresentable
 }
 
-public final class InputReader: InputReading {
-    public init() {}
-    
+public final class InputReader: InputReading {    
     public func readString(options: [String], question: String) throws -> String {
         let acho = Acho<String>()
         guard let answer = acho.ask(question: question, options: options) else { throw InputError.failedReading }
