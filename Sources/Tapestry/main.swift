@@ -1,5 +1,5 @@
 import Foundation
-import TapestryGen
+import TapestryKit
 
 var registry = CommandRegistry()
 registry.run()

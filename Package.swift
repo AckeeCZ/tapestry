@@ -22,18 +22,35 @@ let package = Package(
         .target(
             name: "Tapestry",
             dependencies: [
-                .target(name: "TapestryGen")
+                .target(name: "TapestryKit")
+            ]),
+        .target(name: "TapestryKit",
+                dependencies: [
+                    "SPMUtility",
+                    "TapestryGen",
+                    "TapestryCore",
+            ]),
+        .target(name: "TapestryCore",
+                dependencies: [
+                    "acho",
+                    "SPMUtility"
             ]),
         .target(
             name: "TapestryGen",
             dependencies: [
                 "PathKit",
-                "TuistGenerator",
                 "SPMUtility",
                 "acho",
+                "TuistGenerator",
             ]),
         .testTarget(
-            name: "TapestryTests",
-            dependencies: ["Tapestry"]),
+            name: "TapestryKitTests",
+            dependencies: ["TapestryKit"]),
+        .testTarget(
+            name: "TapestryCoreTests",
+            dependencies: ["TapestryCore"]),
+        .testTarget(
+            name: "TapestryGenTests",
+            dependencies: ["TapestryGen"])
     ]
 )

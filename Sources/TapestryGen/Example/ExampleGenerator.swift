@@ -3,24 +3,24 @@ import TuistGenerator
 import Basic
 import TuistCore
 
-protocol ExampleGenerating {
+public protocol ExampleGenerating {
     /// Generates example project at given path
     func generateProject(path: AbsolutePath, name: String, bundleId: String) throws
 }
 
-final class ExampleGenerator: ExampleGenerating {
+public final class ExampleGenerator: ExampleGenerating {
     
-    static let exampleAppendix: String = "Example"
+    public static let exampleAppendix: String = "Example"
 
     private let fileHandler: FileHandling
 
-    init(fileHandler: FileHandling) {
+    public init(fileHandler: FileHandling) {
         self.fileHandler = fileHandler
     }
 
     // MARK: - Public methods
 
-    func generateProject(path: AbsolutePath, name: String, bundleId: String) throws {
+    public func generateProject(path: AbsolutePath, name: String, bundleId: String) throws {
         let examplePath = path.appending(RelativePath("Example"))
         try fileHandler.createFolder(examplePath)
 

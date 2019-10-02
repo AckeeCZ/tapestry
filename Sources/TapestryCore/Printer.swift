@@ -23,7 +23,7 @@ public protocol Printing: AnyObject {
     func print(deprecation: String)
 }
 
-extension Printing {
+public extension Printing {
     func print(_ text: String, includeNewline: Bool = true) {
         print(text, includeNewline: includeNewline)
     }

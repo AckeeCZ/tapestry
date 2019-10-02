@@ -1,13 +1,6 @@
-//
-//  InitCommand.swift
-//  
-//
-//  Created by Marek Fořt on 8/5/19.
-//
-
 import Foundation
-import PathKit
-import TuistGenerator
+import TapestryCore
+import TapestryGen
 import TuistCore
 import SPMUtility
 import Basic
@@ -58,7 +51,7 @@ final class InitCommand: NSObject, Command {
 
     private let fileHandler: FileHandling
     private let inputReader: InputReading
-    private let printer: Printing
+    private let printer: TapestryCore.Printing
     private let exampleGenerator: ExampleGenerating
     private let gitController: GitControlling
     private let system: Systeming
@@ -68,7 +61,7 @@ final class InitCommand: NSObject, Command {
         self.init(parser: parser, fileHandler: fileHandler, inputReader: InputReader(), printer: Printer(), exampleGenerator: ExampleGenerator(fileHandler: fileHandler), gitController: GitController(), system: System())
     }
 
-    init(parser: ArgumentParser, fileHandler: FileHandling, inputReader: InputReading, printer: Printing, exampleGenerator: ExampleGenerating, gitController: GitControlling, system: Systeming) {
+    init(parser: ArgumentParser, fileHandler: FileHandling, inputReader: InputReading, printer: TapestryCore.Printing, exampleGenerator: ExampleGenerating, gitController: GitControlling, system: Systeming) {
         let subParser = parser.add(subparser: InitCommand.command, overview: InitCommand.overview)
 
         pathArgument = subParser.add(option: "--path",
