@@ -15,8 +15,8 @@ public protocol PackageGenerating {
 
 public final class PackageGenerator: PackageGenerating {
     private let inputReader: InputReading
-    
-    public init(inputReader: TapestryCore.InputReading = InputReader()) {
+
+    public init(inputReader: InputReading = InputReader()) {
         self.inputReader = inputReader
     }
     

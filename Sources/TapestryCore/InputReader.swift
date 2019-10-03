@@ -18,6 +18,8 @@ public protocol InputReading {
 }
 
 public final class InputReader: InputReading {
+    public init() {}
+    
     public func readString(options: [String], question: String) throws -> String {
         let acho = Acho<String>()
         guard let answer = acho.ask(question: question, options: options) else { throw InputError.failedReading }

@@ -87,6 +87,8 @@ final class InitCommand: NSObject, Command {
         let path = try self.path(arguments: arguments)
         let name = try self.name(path: path)
 
+        try verifyDirectoryIsEmpty(path: path)
+        
         let packageType = try packageGenerator.initPackage(path: path, name: name)
         
         try gitController.initGit(path: path)
@@ -124,6 +126,16 @@ final class InitCommand: NSObject, Command {
     }
 
     // MARK: - Helpers
+    
+    /// Checks if the given directory is empty, essentially that it doesn't contain any file or directory.
+    ///
+    /// - Parameter path: Directory to be checked.
+    /// - Throws: An InitCommandError.nonEmptyDirectory error when the directory is not empty.
+    private func verifyDirectoryIsEmpty(path: AbsolutePath) throws {
+        if !path.glob("*").isEmpty {
+            throw InitCommandError.nonEmptyDirectory(path)
+        }
+    }
 
     /// Obtain package name
     private func name(path: AbsolutePath) throws -> String {

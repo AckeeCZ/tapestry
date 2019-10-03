@@ -38,10 +38,9 @@ let package = Package(
         .target(
             name: "TapestryGen",
             dependencies: [
-                "PathKit",
                 "SPMUtility",
-                "acho",
                 "TuistGenerator",
+                "TapestryCore",
             ]),
         .target(name: "TapestryCoreTesting",
                 dependencies: [

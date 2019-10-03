@@ -97,7 +97,7 @@ public extension XCTestCase {
         XCTAssertTrue(array.isEmpty, "Expected array to be empty but it's not. It contains the following elements: \(array)", file: file, line: line)
     }
     
-    func XCTAssertThrownError<Error: Swift.Error & Equatable, T>(_ closure: @autoclosure () throws -> T, _ error: Error, file: StaticString = #file, line: UInt = #line) {
+    func XCTAssertThrowsSpecific<Error: Swift.Error & Equatable, T>(_ closure: @autoclosure () throws -> T, _ error: Error, file: StaticString = #file, line: UInt = #line) {
         do {
             let _ = try closure()
         } catch let closureError as Error {

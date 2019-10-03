@@ -29,7 +29,7 @@ final class InitCommandTests: XCTestCase {
 
         let result = try parser.parse(["init", "--path", path.pathString])
 
-        XCTAssertThrownError(try subject.run(with: result), InitCommandError.nonEmptyDirectory(path))
+        XCTAssertThrowsSpecific(try subject.run(with: result), InitCommandError.nonEmptyDirectory(path))
     }
 }
 
