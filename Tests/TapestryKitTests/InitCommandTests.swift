@@ -20,7 +20,7 @@ final class InitCommandTests: XCTestCase {
                               exampleGenerator: MockExampleGenerator(),
                               gitController: MockGitController(),
                               system: MockSystem(),
-                              packageGenerator: MockPackageGenerator())
+                              packageController: MockPackageController())
     }
     
     func test_run_when_the_directory_is_not_empty() throws {

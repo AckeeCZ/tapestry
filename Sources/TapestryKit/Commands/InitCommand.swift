@@ -48,7 +48,7 @@ final class InitCommand: NSObject, Command {
     private let exampleGenerator: ExampleGenerating
     private let gitController: GitControlling
     private let system: Systeming
-    private let packageGenerator: PackageGenerating
+    private let packageController: PackageControlling
 
     required convenience init(parser: ArgumentParser) {
         self.init(parser: parser,
@@ -57,7 +57,7 @@ final class InitCommand: NSObject, Command {
                   exampleGenerator: ExampleGenerator(),
                   gitController: GitController(),
                   system: System(),
-                  packageGenerator: PackageGenerator())
+                  packageController: PackageController())
     }
 
     init(parser: ArgumentParser,
@@ -66,7 +66,7 @@ final class InitCommand: NSObject, Command {
          exampleGenerator: ExampleGenerating,
          gitController: GitControlling,
          system: Systeming,
-         packageGenerator: PackageGenerating) {
+         packageController: PackageControlling) {
         let subParser = parser.add(subparser: InitCommand.command, overview: InitCommand.overview)
 
         pathArgument = subParser.add(option: "--path",
@@ -80,7 +80,7 @@ final class InitCommand: NSObject, Command {
         self.exampleGenerator = exampleGenerator
         self.gitController = gitController
         self.system = system
-        self.packageGenerator = packageGenerator
+        self.packageController = packageController
     }
 
     func run(with arguments: ArgumentParser.Result) throws {
@@ -89,7 +89,7 @@ final class InitCommand: NSObject, Command {
 
         try verifyDirectoryIsEmpty(path: path)
         
-        let packageType = try packageGenerator.initPackage(path: path, name: name)
+        let packageType = try packageController.initPackage(path: path, name: name)
         
         try gitController.initGit(path: path)
         

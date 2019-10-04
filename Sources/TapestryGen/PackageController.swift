@@ -1,23 +1,32 @@
 import Basic
 import TapestryCore
-import class Workspace.InitPackage
+import TuistCore
 
 /// Supported package types
 public enum PackageType: String, CaseIterable {
     case library, executable
 }
 
-public protocol PackageGenerating {
+public protocol PackageControlling {
     /// Initialize SPM package
+    /// - Parameters:
+    ///     -  path: Path where should package be created
+    ///     -  name:
     /// - Returns: PackageType if reading input was successful
     func initPackage(path: AbsolutePath, name: String) throws -> PackageType
+    
+    
 }
 
-public final class PackageGenerator: PackageGenerating {
+/// Class that access underlying swift package commands
+public final class PackageController: PackageControlling {
     private let inputReader: InputReading
+    private let system: Systeming
 
-    public init(inputReader: InputReading = InputReader()) {
+    public init(inputReader: InputReading = InputReader(),
+                system: Systeming: = System()) {
         self.inputReader = inputReader
+        self.system = system
     }
     
     public func initPackage(path: AbsolutePath, name: String) throws -> PackageType {
@@ -30,11 +39,10 @@ public final class PackageGenerator: PackageGenerating {
             packageType = .executable
         }
 
-        let initPackage = try InitPackage(name: name,
-                                          destinationPath: path,
-                                          packageType: packageType)
-        try initPackage.writePackageStructure()
+        try system.run(["swift", "package", "init", "--\(supportedPackageType.rawValue)"])
 
         return supportedPackageType
     }
+    
+    
 }
