@@ -120,7 +120,7 @@ final class InitCommand: NSObject, Command {
                            packageType: packageType,
                            name: name)
         
-        try system.run(["swift", "package", "--package-path", path.pathString, "generate-xcodeproj"])
+        try packageController.generateXcodeproj(path: path)
 
         printer.print(success: "Package generated ✅")
     }

@@ -15,7 +15,10 @@ public protocol PackageControlling {
     /// - Returns: PackageType if reading input was successful
     func initPackage(path: AbsolutePath, name: String) throws -> PackageType
     
-    
+    /// Generate Xcodeproj for package at given path
+    /// - Parameters:
+    ///     - path: The path of package we should generate xcodeproj for
+    func generateXcodeproj(path: AbsolutePath) throws
 }
 
 /// Class that access underlying swift package commands
@@ -24,25 +27,20 @@ public final class PackageController: PackageControlling {
     private let system: Systeming
 
     public init(inputReader: InputReading = InputReader(),
-                system: Systeming: = System()) {
+                system: Systeming = System()) {
         self.inputReader = inputReader
         self.system = system
     }
     
     public func initPackage(path: AbsolutePath, name: String) throws -> PackageType {
         let supportedPackageType: PackageType = try inputReader.readEnumInput(question: "Choose package type:")
-        let packageType: InitPackage.PackageType
-        switch supportedPackageType {
-        case .library:
-            packageType = .library
-        case .executable:
-            packageType = .executable
-        }
 
         try system.run(["swift", "package", "init", "--\(supportedPackageType.rawValue)"])
 
         return supportedPackageType
     }
     
-    
+    public func generateXcodeproj(path: AbsolutePath) throws {
+        try system.run(["swift", "package", "--package-path", path.pathString, "generate-xcodeproj"])
+    }
 }
