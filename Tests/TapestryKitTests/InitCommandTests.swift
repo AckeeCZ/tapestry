@@ -2,6 +2,7 @@ import SPMUtility
 import Basic
 import TuistCore
 import XCTest
+@testable import TapestryGen
 @testable import TapestryCoreTesting
 @testable import TapestryKit
 
@@ -50,7 +51,7 @@ final class InitCommandTests: XCTestCase {
         let result = try parser.parse(["init", "--path", path.pathString])
         
         var initializedPackageName: String?
-        packageController.stubInitPackage = { _, packageName in
+        packageController.initPackageStub = { _, packageName in
             initializedPackageName = packageName
             return .library
         }
@@ -90,6 +91,10 @@ final class InitCommandTests: XCTestCase {
         
         inputReader.promptCommand("📝 Bundle ID", output: expectedBundleId)
         
+        packageController.initPackageStub = { _, _ in
+            return .library
+        }
+        
         exampleGenerator.generateProjectStub = { path, name, bundleId in
             examplePath = path
             exampleName = name
@@ -105,6 +110,124 @@ final class InitCommandTests: XCTestCase {
         XCTAssertEqual(examplePath, path)
         XCTAssertEqual(exampleName, name)
         XCTAssertEqual(exampleBundleId, expectedBundleId)
+    }
+    
+    func test_example_not_generated_when_executable() throws {
+        // Given
+        packageController.initPackageStub = { _, _ in
+            return .executable
+        }
+        var exampleWasGenerated: Bool = false
+        exampleGenerator.generateProjectStub = { _, _, _ in
+            exampleWasGenerated = true
+        }
+        
+        let result = try parser.parse(["init"])
+        
+        // When
+        try subject.run(with: result)
+        
+        // Then
+        XCTAssertFalse(exampleWasGenerated)
+    }
+    
+    func test_license_is_generated() throws {
+        // Given
+        let result = try parser.parse(["init"])
+        let expectedAuthorName = "Test Name"
+        let expectedEmail = "test@test.com"
+        inputReader.promptCommand("👋 Author name", output: expectedAuthorName)
+        inputReader.promptCommand("💌 Email", output: expectedEmail)
+        
+        // When
+        try subject.run(with: result)
+        
+        // Then
+        let licenseContent = try fileHandler.readTextFile(fileHandler.currentPath.appending(component: "LICENSE"))
+        XCTAssertTrue(licenseContent.contains(expectedAuthorName))
+        XCTAssertTrue(licenseContent.contains(expectedEmail))
+    }
+    
+    func test_gitignore_is_generated() throws {
+        // Given
+        let result = try parser.parse(["init"])
+        
+        // When
+        try subject.run(with: result)
+        
+        // Then
+        XCTAssertTrue(fileHandler.exists(fileHandler.currentPath.appending(component: ".gitignore")))
+    }
+    
+    func test_readme_is_generated() throws {
+        // Given
+        let expectedName = "testPackage"
+        let path = fileHandler.currentPath.appending(component: expectedName)
+        try fileHandler.createFolder(path)
+        let result = try parser.parse(["init", "--path", path.pathString])
+        let expectedUsername = "testname"
+        inputReader.promptCommand("🍷 Username", output: expectedUsername)
+        
+        // When
+        try subject.run(with: result)
+        
+        // Then
+        let readmeContent = try fileHandler.readTextFile(path.appending(component: "README.md"))
+        XCTAssertTrue(readmeContent.contains(expectedName))
+        XCTAssertTrue(readmeContent.contains(expectedUsername))
+    }
+    
+    func test_travis_is_generated_when_library() throws {
+        // Given
+        let expectedName = "testPackage"
+        let path = fileHandler.currentPath.appending(component: expectedName)
+        try fileHandler.createFolder(path)
+        packageController.initPackageStub = { _, _ in
+            return .library
+        }
+        let result = try parser.parse(["init", "--path", path.pathString])
+        
+        // When
+        try subject.run(with: result)
+        
+        // Then
+        let travisContent = try fileHandler.readTextFile(path.appending(component: ".travis.yml"))
+        XCTAssertTrue(travisContent.contains(expectedName))
+        XCTAssertTrue(travisContent.contains(expectedName + ExampleGenerator.exampleAppendix))
+    }
+    
+    func test_travis_is_generated_when_executable() throws {
+        // Given
+        let expectedName = "testPackage"
+        let path = fileHandler.currentPath.appending(component: expectedName)
+        try fileHandler.createFolder(path)
+        packageController.initPackageStub = { _, _ in
+            return .executable
+        }
+        let result = try parser.parse(["init", "--path", path.pathString])
+        
+        // When
+        try subject.run(with: result)
+        
+        // Then
+        let travisContent = try fileHandler.readTextFile(path.appending(component: ".travis.yml"))
+        XCTAssertTrue(travisContent.contains(expectedName))
+        XCTAssertFalse(travisContent.contains(expectedName + ExampleGenerator.exampleAppendix))
+    }
+    
+    func test_package_xcodeProj_is_generated() throws {
+        // Given
+        var path: AbsolutePath?
+        packageController.generateXcodeprojStub = {
+            path = $0
+        }
+        let result = try parser.parse(["init"])
+        
+        // When
+        try subject.run(with: result)
+        
+        // Then
+        XCTAssertEqual(fileHandler.currentPath, path)
     }
 }
 
