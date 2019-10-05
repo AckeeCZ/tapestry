@@ -49,6 +49,7 @@ final class InitCommand: NSObject, Command {
     private let gitController: GitControlling
     private let system: Systeming
     private let packageController: PackageControlling
+    private let inputReader: InputReading
 
     required convenience init(parser: ArgumentParser) {
         self.init(parser: parser,
@@ -57,7 +58,8 @@ final class InitCommand: NSObject, Command {
                   exampleGenerator: ExampleGenerator(),
                   gitController: GitController(),
                   system: System(),
-                  packageController: PackageController())
+                  packageController: PackageController(),
+                  inputReader: InputReader())
     }
 
     init(parser: ArgumentParser,
@@ -66,7 +68,8 @@ final class InitCommand: NSObject, Command {
          exampleGenerator: ExampleGenerating,
          gitController: GitControlling,
          system: Systeming,
-         packageController: PackageControlling) {
+         packageController: PackageControlling,
+         inputReader: InputReading) {
         let subParser = parser.add(subparser: InitCommand.command, overview: InitCommand.overview)
 
         pathArgument = subParser.add(option: "--path",
@@ -81,6 +84,7 @@ final class InitCommand: NSObject, Command {
         self.gitController = gitController
         self.system = system
         self.packageController = packageController
+        self.inputReader = inputReader
     }
 
     func run(with arguments: ArgumentParser.Result) throws {
@@ -138,6 +142,8 @@ final class InitCommand: NSObject, Command {
     }
 
     /// Obtain package name
+    /// - Parameters:
+    ///     - path: Name is derived from this path (last component)
     private func name(path: AbsolutePath) throws -> String {
         if let name = path.components.last {
             return name
@@ -147,37 +153,21 @@ final class InitCommand: NSObject, Command {
     }
     
     private func authorName() throws -> String {
-        return prompt("👋 Author name", defaultValue: try gitController.currentName())
+        return inputReader.prompt("👋 Author name", defaultValue: try gitController.currentName())
     }
     
     private func email() throws -> String {
         let gitEmail = try gitController.currentEmail()
-        return prompt("💌 Email", defaultValue: gitEmail)
+        return inputReader.prompt("💌 Email", defaultValue: gitEmail)
     }
     
     private func username(email: String) throws -> String {
         let defaultUsername = email.components(separatedBy: "@").first
-        return prompt("🍷 Username", defaultValue: defaultUsername)
+        return inputReader.prompt("🍷 Username", defaultValue: defaultUsername)
     }
     
     private func bundleId(username: String, projectName: String) throws -> String {
-        return prompt("📝 Bundle ID", defaultValue: username + "." + projectName)
-    }
-    
-    private func prompt(_ text: String, defaultValue: String? = nil) -> String {
-        if let defaultValue = defaultValue {
-            printer.print(text + " or press enter to use: \(defaultValue) > ", includeNewline: false)
-            let readLine = readLineAndUnwrap()
-            return readLine.isEmpty ? defaultValue : readLine
-        } else {
-            printer.print(text, includeNewline: false)
-            let readLine = readLineAndUnwrap()
-            return readLine.isEmpty ? prompt("Try again: " + text) : readLine
-        }
-    }
-    
-    private func readLineAndUnwrap() -> String {
-        return readLine() ?? ""
+        return inputReader.prompt("📝 Bundle ID", defaultValue: username + "." + projectName)
     }
 
     /// Obtain package path
