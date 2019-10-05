@@ -27,4 +27,16 @@ final class GitControllerTests: XCTestCase {
 
         XCTAssertThrowsError(try subject.initGit(path: path))
     }
+    
+    func test_currentName() throws {
+        let name = "test"
+        system.succeedCommand(["git", "config", "user.name"], output: name)
+        XCTAssertEqual(try subject.currentName(), name)
+    }
+    
+    func test_currentEmail() throws {
+        let email = "test@test.com"
+        system.succeedCommand(["git", "config", "user.email"], output: email)
+        XCTAssertEqual(try subject.currentEmail(), email)
+    }
 }
