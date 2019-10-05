@@ -50,7 +50,7 @@ let package = Package(
             dependencies: ["TapestryKit", "TapestryCoreTesting"]),
         .testTarget(
             name: "TapestryCoreTests",
-            dependencies: ["TapestryCore"]),
+            dependencies: ["TapestryCore", "TapestryCoreTesting"]),
         .testTarget(
             name: "TapestryGenTests",
             dependencies: ["TapestryGen", "TapestryCoreTesting"])
