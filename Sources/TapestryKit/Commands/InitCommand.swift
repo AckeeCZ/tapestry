@@ -4,8 +4,6 @@ import TapestryGen
 import TuistCore
 import SPMUtility
 import Basic
-import Xcodeproj
-import class Workspace.Workspace
 
 enum InitCommandError: FatalError, Equatable {
     case ungettableProjectName(AbsolutePath)
@@ -219,6 +217,9 @@ final class InitCommand: NSObject, Command {
         try content.write(to: travisPath.url, atomically: true, encoding: .utf8)
     }
     
+    /// Generates .gitignore file
+    /// - Parameters:
+    ///     - path: Path where to generate .gitignore file
     private func generateGitignore(path: AbsolutePath) throws {
         let content = """
         *.xcodeproj/**/xcuserdata/
@@ -233,6 +234,11 @@ final class InitCommand: NSObject, Command {
         try content.write(to: gitignorePath.url, atomically: true, encoding: .utf8)
     }
     
+    /// Generates LICENSE file
+    /// - Parameters:
+    ///     - authorName: Author name for LICENSE
+    ///     - email: Email for LICENSE
+    ///     - path: Path where to generate LICENSE file
     private func generateLicense(authorName: String,
                                  email: String,
                                  path: AbsolutePath) throws {
@@ -265,6 +271,11 @@ final class InitCommand: NSObject, Command {
         try content.write(to: licensePath.url, atomically: true, encoding: .utf8)
     }
     
+    /// Generates README file
+    /// - Parameters:
+    ///     - path: Path where to generate README file
+    ///     - username: Github username for Travis
+    ///     - name: Name of package
     private func generateReadme(path: AbsolutePath,
                                 username: String,
                                 name: String) throws {
