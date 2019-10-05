@@ -8,28 +8,37 @@ public protocol ExampleGenerating {
     func generateProject(path: AbsolutePath, name: String, bundleId: String) throws
 }
 
-public final class ExampleGenerator: ExampleGenerating {
-    
-    public static let exampleAppendix: String = "Example"
+public typealias GeneratorInit = ((_ name: String, _ bundleId: String) -> Generating)
 
+public final class ExampleGenerator: ExampleGenerating {
+    /// String that describes what should appendix for example, aka for TapestryExample it is the part after `Tapestry`
+    public static let exampleAppendix: String = "Example"
+    
+    private let generatorInit: GeneratorInit
     private let fileHandler: FileHandling
 
-    public init(fileHandler: FileHandling = FileHandler()) {
+    /// - Parameters:
+    ///     - generatorInit: Closure for creating `Generator`
+    public init(fileHandler: FileHandling = FileHandler(),
+                generatorInit: @escaping GeneratorInit =
+        { name, bundleId in
+            Generator(modelLoader: ExampleModelLoader(packageName: name,
+                                                      name: name + ExampleGenerator.exampleAppendix,
+                                                      bundleId: bundleId))
+        }) {
+        self.generatorInit = generatorInit
         self.fileHandler = fileHandler
     }
 
     // MARK: - Public methods
 
     public func generateProject(path: AbsolutePath, name: String, bundleId: String) throws {
-        let examplePath = path.appending(RelativePath("Example"))
+        let examplePath = path.appending(RelativePath(ExampleGenerator.exampleAppendix))
         try fileHandler.createFolder(examplePath)
 
         try createExampleSources(path: examplePath, name: name)
 
-        let generator = Generator(modelLoader:
-            ExampleModelLoader(packageName: name,
-                               name: name + ExampleGenerator.exampleAppendix,
-                               bundleId: bundleId))
+        let generator = generatorInit(name, bundleId)
         _ = try generator.generateProject(at: examplePath)
     }
 
