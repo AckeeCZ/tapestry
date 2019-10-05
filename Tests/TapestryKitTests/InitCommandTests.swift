@@ -22,7 +22,8 @@ final class InitCommandTests: XCTestCase {
                               exampleGenerator: MockExampleGenerator(),
                               gitController: MockGitController(),
                               system: MockSystem(),
-                              packageController: packageController)
+                              packageController: packageController,
+                              inputReader: MockInputReader())
     }
     
     func test_run_when_the_directory_is_not_empty() throws {
@@ -37,6 +38,7 @@ final class InitCommandTests: XCTestCase {
     func test_package_initialized_with_name_from_path() throws {
         let name = "test"
         let path = fileHandler.currentPath.appending(component: name)
+        try fileHandler.createFolder(path)
         
         let result = try parser.parse(["init", "--path", path.pathString])
         
