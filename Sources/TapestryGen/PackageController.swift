@@ -36,7 +36,7 @@ public final class PackageController: PackageControlling {
     public func initPackage(path: AbsolutePath, name: String) throws -> PackageType {
         let supportedPackageType: PackageType = try inputReader.readEnumInput(question: "Choose package type:")
 
-        try system.run(["swift", "package", "--package-path", path.pathString, "init", "--\(supportedPackageType.rawValue)"])
+        try system.run(["swift", "package", "--package-path", path.pathString, "init", "--type" , "\(supportedPackageType.rawValue)"])
 
         return supportedPackageType
     }

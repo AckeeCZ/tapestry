@@ -20,7 +20,7 @@ final class PackageControllerTests: XCTestCase {
     func test_initPackage_when_library() throws {
         let path = AbsolutePath("/test")
         inputReader.readEnumInputStub = "library"
-        system.succeedCommand(["swift", "package", "--package-path", path.pathString, "init", "--library"])
+        system.succeedCommand(["swift", "package", "--package-path", path.pathString, "init", "--type" , "library"])
         
         XCTAssertNoThrow(try subject.initPackage(path: path, name: path.components.last ?? ""))
     }
@@ -28,7 +28,7 @@ final class PackageControllerTests: XCTestCase {
     func test_initPackage_when_executable() throws {
         let path = AbsolutePath("/test")
         inputReader.readEnumInputStub = "executable"
-        system.succeedCommand(["swift", "package", "--package-path", path.pathString, "init", "--executable"])
+        system.succeedCommand(["swift", "package", "--package-path", path.pathString, "init", "--type", "executable"])
         
         XCTAssertNoThrow(try subject.initPackage(path: path, name: path.components.last ?? ""))
     }
@@ -36,7 +36,7 @@ final class PackageControllerTests: XCTestCase {
     func test_initPackage_throws_when_wrong_input() throws {
         let path = AbsolutePath("/test")
         inputReader.readEnumInputStub = "test"
-        system.succeedCommand(["swift", "package", "--package-path", path.pathString, "init", "--executable"])
+        system.succeedCommand(["swift", "package", "--package-path", path.pathString, "init", "--type", "executable"])
         
         XCTAssertThrowsError(try subject.initPackage(path: path, name: path.components.last ?? ""))
     }
