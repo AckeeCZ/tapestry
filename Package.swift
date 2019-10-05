@@ -4,13 +4,13 @@
 import PackageDescription
 
 let package = Package(
-    name: "Tapestry",
+    name: "tapestry",
     products: [
         .library(name: "TapestryGen",
                  targets: ["TapestryGen"]),
         .executable(
-            name: "Tapestry",
-            targets: ["Tapestry"]),
+            name: "tapestry",
+            targets: ["tapestry"]),
     ],
     dependencies: [
         .package(url: "https://github.com/fortmarek/tuist.git", .branch("master")),
@@ -19,7 +19,7 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "Tapestry",
+            name: "tapestry",
             dependencies: [
                 .target(name: "TapestryKit")
             ]),
