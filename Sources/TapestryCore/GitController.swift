@@ -9,12 +9,21 @@ import Foundation
 import TuistCore
 import Basic
 
+/// Interface for interacting with git
 public protocol GitControlling {
+    /// Initialize git repository
+    /// - Parameters:
+    ///     - path: Path defining where should the git repository be created
     func initGit(path: AbsolutePath) throws
+    /// Get current git name
+    /// - Returns: Git name
     func currentName() throws -> String
+    /// Get current git email
+    /// - Returns: Git email
     func currentEmail() throws -> String
 }
 
+/// Class for interacting with git
 public final class GitController: GitControlling {
     private let system: Systeming
     private let fileHandler: FileHandling

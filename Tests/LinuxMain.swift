@@ -1,8 +1,10 @@
 import XCTest
 
-import TapestryTests
+import TapestryGenTests
+import TapestryKitTests
 
 var tests = [XCTestCaseEntry]()
-tests += TapestryTests.__allTests()
+tests += TapestryGenTests.__allTests()
+tests += TapestryKitTests.__allTests()
 
 XCTMain(tests)

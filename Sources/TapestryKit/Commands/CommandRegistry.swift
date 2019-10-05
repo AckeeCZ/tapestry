@@ -33,7 +33,7 @@ public final class CommandRegistry {
         self.errorHandler = errorHandler
         parser = ArgumentParser(commandName: "tapestry",
                                 usage: "<command> <options>",
-                                overview: "Generate, build and test your Xcode projects.")
+                                overview: "Generate your package projects.")
         self.processArguments = processArguments
     }
 

@@ -13,7 +13,6 @@ let package = Package(
             targets: ["Tapestry"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/kylef/PathKit.git", .upToNextMinor(from: "1.0.0")),
         .package(url: "https://github.com/fortmarek/tuist.git", .branch("master")),
         .package(url: "https://github.com/apple/swift-package-manager", .branch("swift-5.0-RELEASE")),
         .package(url: "https://github.com/miguelangel-dev/acho", .branch("patch-1")),
@@ -54,6 +53,6 @@ let package = Package(
             dependencies: ["TapestryCore"]),
         .testTarget(
             name: "TapestryGenTests",
-            dependencies: ["TapestryGen"])
+            dependencies: ["TapestryGen", "TapestryCoreTesting"])
     ]
 )

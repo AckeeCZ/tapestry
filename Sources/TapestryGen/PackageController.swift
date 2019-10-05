@@ -7,6 +7,7 @@ public enum PackageType: String, CaseIterable {
     case library, executable
 }
 
+/// Interrface for interacting wit Swift package
 public protocol PackageControlling {
     /// Initialize SPM package
     /// - Parameters:
@@ -35,7 +36,7 @@ public final class PackageController: PackageControlling {
     public func initPackage(path: AbsolutePath, name: String) throws -> PackageType {
         let supportedPackageType: PackageType = try inputReader.readEnumInput(question: "Choose package type:")
 
-        try system.run(["swift", "package", "init", "--\(supportedPackageType.rawValue)"])
+        try system.run(["swift", "package", "--package-path", path.pathString, "init", "--\(supportedPackageType.rawValue)"])
 
         return supportedPackageType
     }

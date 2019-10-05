@@ -5,6 +5,7 @@ private enum InputError: Error {
     case failedReading
 }
 
+/// Interface for reading and processing user input
 public protocol InputReading {
     /// Reads String from given options
     /// - Parameters:
