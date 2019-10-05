@@ -32,7 +32,8 @@ let package = Package(
         .target(name: "TapestryCore",
                 dependencies: [
                     "acho",
-                    "SPMUtility"
+                    "SPMUtility",
+                    "TuistGenerator",
             ]),
         .target(
             name: "TapestryGen",
