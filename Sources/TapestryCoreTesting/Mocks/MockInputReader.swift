@@ -7,7 +7,11 @@ private enum InputReaderError: Error {
 public final class MockInputReader: InputReading {
     public var readStringStub: (([String], String) throws -> String)?
     public var readEnumInputStub: String?
-    public var promptStub: ((String, String?) -> String)?
+    private var stubs: [String: String] = [:]
+    
+    public func promptCommand(_ text: String, output: String) {
+        stubs[text] = output
+    }
     
     public func readString(options: [String], question: String) throws -> String {
         return try readStringStub?(options, question) ?? ""
@@ -22,7 +26,7 @@ public final class MockInputReader: InputReading {
     }
     
     public func prompt(_ text: String, defaultValue: String?) -> String {
-        return promptStub?(text, defaultValue) ?? ""
+        return stubs[text] ?? defaultValue ?? ""
     }
     
     // MARK: - Helpers
