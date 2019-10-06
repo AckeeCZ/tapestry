@@ -1,19 +1,25 @@
 import XCTest
 import SPMUtility
+import Basic
 @testable import TapestryKit
 @testable import TapestryCoreTesting
 
 final class ReleaseCommandTests: XCTestCase {
     private var subject: ReleaseCommand!
     private var fileHandler: MockFileHandler!
+    private var gitController: MockGitController!
     private var parser: ArgumentParser!
     
     override func setUp() {
         super.setUp()
         
         fileHandler = try! MockFileHandler()
+        gitController = MockGitController()
         parser = ArgumentParser.test()
-        subject = ReleaseCommand(parser: parser)
+        subject = ReleaseCommand(parser: parser,
+                                 fileHandler: fileHandler,
+                                 printer: MockPrinter(),
+                                 gitController: gitController)
     }
     
     func test_updateVersionInPodspec() throws {
@@ -78,5 +84,72 @@ final class ReleaseCommandTests: XCTestCase {
         ```
         """
         XCTAssertEqual(try fileHandler.readTextFile(readmePath), expectedContent)
+    }
+    
+    func test_version_is_commited() throws {
+        // Given
+        let path = fileHandler.currentPath.appending(component: "test")
+        try fileHandler.createFolder(path)
+        let result = try parser.parse(["release", "0.0.1", "--path", path.pathString])
+        
+        var message: String?
+        var commitPath: AbsolutePath?
+        gitController.commitStub = {
+            message = $0
+            commitPath = $1
+        }
+        
+        // When
+        try subject.run(with: result)
+        
+        // Then
+        XCTAssertEqual("Version 0.0.1", message)
+        XCTAssertEqual(commitPath, path)
+    }
+    
+    func test_version_is_tagged() throws {
+        // Given
+        let path = fileHandler.currentPath.appending(component: "test")
+        try fileHandler.createFolder(path)
+        let result = try parser.parse(["release", "0.0.1", "--path", path.pathString])
+        
+        var version: Version?
+        var tagPath: AbsolutePath?
+        gitController.tagVersionStub = {
+            version = $0
+            tagPath = $1
+        }
+        
+        // When
+        try subject.run(with: result)
+        
+        // Then
+        XCTAssertEqual("0.0.1", version?.description)
+        XCTAssertEqual(tagPath, path)
+    }
+    
+    func test_version_is_tagged_after_commit() throws {
+        // Given
+        let result = try parser.parse(["release", "0.0.1"])
+        
+        var tagWasCalled: Bool = false
+        var commitWasCalled: Bool = false
+        gitController.commitStub = { _, _ in
+            XCTAssertFalse(tagWasCalled)
+            XCTAssertFalse(commitWasCalled)
+            commitWasCalled = true
+        }
+        gitController.tagVersionStub = { _, _ in
+            XCTAssertTrue(commitWasCalled)
+            XCTAssertFalse(tagWasCalled)
+            tagWasCalled = true
+        }
+        
+        // When
+        try subject.run(with: result)
+        
+        // Then
+        XCTAssertTrue(tagWasCalled)
+        XCTAssertTrue(commitWasCalled)
     }
 }

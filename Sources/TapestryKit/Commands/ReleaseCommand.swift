@@ -135,6 +135,10 @@ final class ReleaseCommand: NSObject, Command {
                                        name: String,
                                        version: Version) throws {
         let readmePath = path.appending(component: "README.md")
+        guard fileHandler.exists(readmePath) else {
+            printer.print(warning: "Podspec at \(readmePath.pathString) does not exist, skipping...")
+            return
+        }
         var content = try fileHandler.readTextFile(readmePath)
         // Replacing pods version
         content = content
