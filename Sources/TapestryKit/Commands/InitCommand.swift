@@ -291,6 +291,10 @@ final class InitCommand: NSObject, Command {
         ### SPM
 
         `\(name)` is available via [Swift Package Manager](https://swift.org/package-manager).
+        Just add this to your `Package.swift`:
+        ```swift
+        .package(url: "https://github.com/\(username)/\(name).git", .upToNextMajor(from: "0.0.1")),
+        ```
 
         ### CocoaPods
 
@@ -298,7 +302,7 @@ final class InitCommand: NSObject, Command {
         it, simply add the following line to your Podfile:
 
         ```ruby
-        pod '\(name)'
+        pod "\(name)", "~> 0.0.1"
         ```
         """
         
