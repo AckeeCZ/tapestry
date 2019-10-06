@@ -117,6 +117,11 @@ final class InitCommand: NSObject, Command {
         try generateTravis(path: path,
                            packageType: packageType,
                            name: name)
+        try generatePodspec(path: path,
+                            name: name,
+                            username: username,
+                            authorName: authorName,
+                            email: email)
         
         try packageController.generateXcodeproj(path: path)
 
@@ -308,5 +313,36 @@ final class InitCommand: NSObject, Command {
         
         let readmePath = path.appending(component: "README.md")
         try content.write(to: readmePath.url, atomically: true, encoding: .utf8)
+    }
+    
+    private func generatePodspec(path: AbsolutePath,
+                                 name: String,
+                                 username: String,
+                                 authorName: String,
+                                 email: String) throws {
+        let content = """
+
+        Pod::Spec.new do |s|
+          s.name = '\(name)'
+          s.version = '0.0.1'
+          s.license = 'MIT'
+          s.summary = '\(name) is a developer library'
+          s.homepage = 'https://github.com/\(username)/\(name)'
+          s.authors = { 'Alamofire Software Foundation' => '\(email)' }
+          s.source = { :git => 'https://github.com/\(username)/\(name).git', :tag => s.version }
+
+          s.ios.deployment_target = '10.0'
+          s.osx.deployment_target = '10.12'
+          s.tvos.deployment_target = '10.0'
+          s.watchos.deployment_target = '3.0'
+
+          s.swift_versions = ['5.0', '5.1']
+
+          s.source_files = 'Sources/*.swift'
+        end
+        """
+        
+        let podspecPath = path.appending(component: "\(name).podspec")
+        try content.write(to: podspecPath.url, atomically: true, encoding: .utf8)
     }
 }
