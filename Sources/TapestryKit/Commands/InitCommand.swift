@@ -41,7 +41,7 @@ final class InitCommand: NSObject, Command {
 
     let pathArgument: OptionArgument<String>
 
-    private let fileHandler: FileHandling
+    private let fileHandler: TapestryCore.FileHandling
     private let printer: TapestryCore.Printing
     private let exampleGenerator: ExampleGenerating
     private let gitController: GitControlling
@@ -59,7 +59,7 @@ final class InitCommand: NSObject, Command {
     }
 
     init(parser: ArgumentParser,
-         fileHandler: FileHandling,
+         fileHandler: TapestryCore.FileHandling,
          printer: TapestryCore.Printing,
          exampleGenerator: ExampleGenerating,
          gitController: GitControlling,

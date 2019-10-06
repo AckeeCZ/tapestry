@@ -22,16 +22,17 @@ public protocol GitControlling {
     /// Get current git email
     /// - Returns: Git email
     func currentEmail() throws -> String
-    func commit(_ message: String) throws
-    func tagVersion(_ version: Version) throws
+    func commit(_ message: String, path: AbsolutePath?) throws
+    func tagVersion(_ version: Version, path: AbsolutePath?) throws
 }
 
 /// Class for interacting with git
-public final class GitController: GitControlling {
+public final class GitController: GitControlling {    
     private let system: Systeming
     private let fileHandler: FileHandling
     
-    public init(system: Systeming = System(), fileHandler: FileHandling = FileHandler()) {
+    public init(system: Systeming = System(),
+                fileHandler: FileHandling = FileHandler()) {
         self.system = system
         self.fileHandler = fileHandler
     }
@@ -48,11 +49,15 @@ public final class GitController: GitControlling {
         return try system.capture("git", "config", "user.email").replacingOccurrences(of: "\n", with: "")
     }
     
-    public func tagVersion(_ version: Version) throws {
-        try system.run("git", "tag", version.description)
+    public func tagVersion(_ version: Version, path: AbsolutePath?) throws {
+        try fileHandler.inDirectory(path ?? fileHandler.currentPath) { [weak self] in
+            try self?.system.run("git", "tag", version.description)
+        }
     }
     
-    public func commit(_ message: String) throws {
-        try system.run("git", "commit", "-m")
+    public func commit(_ message: String, path: AbsolutePath?) throws {
+        try fileHandler.inDirectory(path ?? fileHandler.currentPath) { [weak self] in
+            try self?.system.run("git", "commit", "-am", message)
+        }
     }
 }

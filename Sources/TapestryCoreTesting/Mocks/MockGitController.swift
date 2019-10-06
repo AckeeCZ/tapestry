@@ -6,7 +6,8 @@ public final class MockGitController: GitControlling {
     public var initGitStub: ((AbsolutePath) throws -> ())?
     public var nameStub: (() throws -> String)?
     public var emailStub: (() throws -> String)?
-    public var tagVersionStub: ((Version) throws -> ())?
+    public var tagVersionStub: ((Version, AbsolutePath?) throws -> ())?
+    public var commitStub: ((String, AbsolutePath?) throws -> ())?
     
     public func initGit(path: AbsolutePath) throws {
         try initGitStub?(path)
@@ -20,7 +21,11 @@ public final class MockGitController: GitControlling {
         return try emailStub?() ?? ""
     }
     
-    public func tagVersion(_ version: Version) throws {
-        try tagVersionStub?(version)
+    public func tagVersion(_ version: Version, path: AbsolutePath?) throws {
+        try tagVersionStub?(version, path)
+    }
+    
+    public func commit(_ message: String, path: AbsolutePath?) throws {
+        try commitStub?(message, path)
     }
 }

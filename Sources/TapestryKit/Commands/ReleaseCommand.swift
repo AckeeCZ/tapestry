@@ -40,7 +40,7 @@ final class ReleaseCommand: NSObject, Command {
     let versionArgument: PositionalArgument<Version>
     let pathArgument: OptionArgument<String>
 
-    private let fileHandler: FileHandling
+    private let fileHandler: TapestryCore.FileHandling
     private let printer: TapestryCore.Printing
     private let gitController: GitControlling
 
@@ -52,7 +52,7 @@ final class ReleaseCommand: NSObject, Command {
     }
 
     init(parser: ArgumentParser,
-         fileHandler: FileHandling,
+         fileHandler: TapestryCore.FileHandling,
          printer: TapestryCore.Printing,
          gitController: GitControlling) {
         let subParser = parser.add(subparser: ReleaseCommand.command, overview: ReleaseCommand.overview)
@@ -71,6 +71,8 @@ final class ReleaseCommand: NSObject, Command {
     func run(with arguments: ArgumentParser.Result) throws {
         guard let version = arguments.get(versionArgument) else { throw ReleaseError.noVersion }
         
+        printer.print("Updating version 🚀")
+        
         let path = try self.path(arguments: arguments)
         let name = try self.name(path: path)
         
@@ -81,6 +83,13 @@ final class ReleaseCommand: NSObject, Command {
         try updateVersionInReadme(path: path,
                                   name: name,
                                   version: version)
+        
+        try gitController.commit("Version \(version.description)", path: path)
+        
+        try gitController.tagVersion(version,
+                                     path: path)
+        
+        printer.print(success: "Version updated to \(version.description) 🎉")
     }
     
     // MARK: - Helpers
