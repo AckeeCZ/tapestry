@@ -26,6 +26,7 @@ public final class CommandRegistry {
         self.init(errorHandler: ErrorHandler(),
                   processArguments: CommandRegistry.processArguments)
         register(command: InitCommand.self)
+        register(command: ReleaseCommand.self)
     }
 
     init(errorHandler: ErrorHandling,
@@ -33,7 +34,7 @@ public final class CommandRegistry {
         self.errorHandler = errorHandler
         parser = ArgumentParser(commandName: "tapestry",
                                 usage: "<command> <options>",
-                                overview: "Generate your package projects.")
+                                overview: "Generate and maintain your package projects.")
         self.processArguments = processArguments
     }
 

@@ -28,7 +28,6 @@ final class InitCommandTests: XCTestCase {
                               printer: MockPrinter(),
                               exampleGenerator: exampleGenerator,
                               gitController: gitController,
-                              system: MockSystem(),
                               packageController: packageController,
                               inputReader: inputReader)
     }

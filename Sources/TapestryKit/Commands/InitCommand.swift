@@ -45,7 +45,6 @@ final class InitCommand: NSObject, Command {
     private let printer: TapestryCore.Printing
     private let exampleGenerator: ExampleGenerating
     private let gitController: GitControlling
-    private let system: Systeming
     private let packageController: PackageControlling
     private let inputReader: InputReading
 
@@ -55,7 +54,6 @@ final class InitCommand: NSObject, Command {
                   printer: Printer(),
                   exampleGenerator: ExampleGenerator(),
                   gitController: GitController(),
-                  system: System(),
                   packageController: PackageController(),
                   inputReader: InputReader())
     }
@@ -65,7 +63,6 @@ final class InitCommand: NSObject, Command {
          printer: TapestryCore.Printing,
          exampleGenerator: ExampleGenerating,
          gitController: GitControlling,
-         system: Systeming,
          packageController: PackageControlling,
          inputReader: InputReading) {
         let subParser = parser.add(subparser: InitCommand.command, overview: InitCommand.overview)
@@ -80,7 +77,6 @@ final class InitCommand: NSObject, Command {
         self.printer = printer
         self.exampleGenerator = exampleGenerator
         self.gitController = gitController
-        self.system = system
         self.packageController = packageController
         self.inputReader = inputReader
     }
