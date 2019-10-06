@@ -8,6 +8,7 @@
 import Foundation
 import TuistCore
 import Basic
+import SPMUtility
 
 /// Interface for interacting with git
 public protocol GitControlling {
@@ -21,6 +22,7 @@ public protocol GitControlling {
     /// Get current git email
     /// - Returns: Git email
     func currentEmail() throws -> String
+    func tagVersion(_ version: Version) throws
 }
 
 /// Class for interacting with git
@@ -43,5 +45,9 @@ public final class GitController: GitControlling {
     
     public func currentEmail() throws -> String {
         return try system.capture("git", "config", "user.email").replacingOccurrences(of: "\n", with: "")
+    }
+    
+    public func tagVersion(_ version: Version) throws {
+        try system.run("git", "tag", version.description)
     }
 }

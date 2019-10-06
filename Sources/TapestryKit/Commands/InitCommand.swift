@@ -323,22 +323,22 @@ final class InitCommand: NSObject, Command {
         let content = """
 
         Pod::Spec.new do |s|
-          s.name = '\(name)'
-          s.version = '0.0.1'
-          s.license = 'MIT'
-          s.summary = '\(name) is a developer library'
-          s.homepage = 'https://github.com/\(username)/\(name)'
-          s.authors = { 'Alamofire Software Foundation' => '\(email)' }
-          s.source = { :git => 'https://github.com/\(username)/\(name).git', :tag => s.version }
+          s.name = "\(name)"
+          s.version = "0.0.1"
+          s.license = "MIT"
+          s.summary = "\(name) is a developer library"
+          s.homepage = "https://github.com/\(username)/\(name)"
+          s.authors = { "Alamofire Software Foundation" => "\(email)" }
+          s.source = { :git => "https://github.com/\(username)/\(name).git", :tag => s.version }
 
-          s.ios.deployment_target = '10.0'
-          s.osx.deployment_target = '10.12'
-          s.tvos.deployment_target = '10.0'
-          s.watchos.deployment_target = '3.0'
+          s.ios.deployment_target = "10.0"
+          s.osx.deployment_target = "10.12"
+          s.tvos.deployment_target = "10.0"
+          s.watchos.deployment_target = "3.0"
 
-          s.swift_versions = ['5.0', '5.1']
+          s.swift_versions = ["5.0", "5.1"]
 
-          s.source_files = 'Sources/*.swift'
+          s.source_files = "Sources/*.swift"
         end
         """
         
