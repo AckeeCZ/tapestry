@@ -77,6 +77,10 @@ final class ReleaseCommand: NSObject, Command {
         try updateVersionInPodspec(path: path,
                                    name: name,
                                    version: version)
+        
+        try updateVersionInReadme(path: path,
+                                  name: name,
+                                  version: version)
     }
     
     // MARK: - Helpers
@@ -105,6 +109,10 @@ final class ReleaseCommand: NSObject, Command {
                                         name: String,
                                         version: Version) throws {
         let podspecPath = path.appending(component: "\(name).podspec")
+        guard fileHandler.exists(podspecPath) else {
+            printer.print(warning: "Podspec at \(podspecPath.pathString) does not exist, skipping...")
+            return
+        }
         var content = try fileHandler.readTextFile(podspecPath)
         content = content.replacingOccurrences(
             of: #"s\.version = \"(([0-9]|[\.])*)\""#,
@@ -112,5 +120,18 @@ final class ReleaseCommand: NSObject, Command {
             options: .regularExpression
         )
         try content.write(to: podspecPath.url, atomically: true, encoding: .utf8)
+    }
+    
+    private func updateVersionInReadme(path: AbsolutePath,
+                                       name: String,
+                                       version: Version) throws {
+        let readmePath = path.appending(component: "README.md")
+        var content = try fileHandler.readTextFile(readmePath)
+        content = content.replacingOccurrences(
+            of: "pod \"\(name)\"" + #", "~>[ ]?([0-9]|[\.])*""#,
+            with: "pod \"\(name)\", \"~> \(version.description)\"",
+            options: .regularExpression
+        )
+        try content.write(to: readmePath.url, atomically: true, encoding: .utf8)
     }
 }

@@ -40,4 +40,43 @@ final class ReleaseCommandTests: XCTestCase {
         """
         XCTAssertEqual(try fileHandler.readTextFile(podspecPath), expectedContent)
     }
+    
+    func test_updateVersionInReadme() throws {
+        // Given
+        let content = """
+        Just add this to your `Package.swift`:
+        ```swift
+        .package(url: "https://github.com/marek.fort/TestPackage.git", .upToNextMajor(from: "0.0.1")),
+        ```
+
+        ```ruby
+        pod "TestPackage", "~> 0.0.1"
+        pod "Random", "~> 0.0.1"
+        ```
+        """
+        let name = "TestPackage"
+        let path = fileHandler.currentPath.appending(component: name)
+        try fileHandler.createFolder(path)
+        let readmePath = path.appending(component: "README.md")
+        try content.write(to: readmePath.url, atomically: true, encoding: .utf8)
+        let version = "1.0.0"
+        let result = try parser.parse(["release", version, "--path", path.pathString])
+        
+        // When
+        try subject.run(with: result)
+        
+        // Then
+        let expectedContent = """
+        Just add this to your `Package.swift`:
+        ```swift
+        .package(url: "https://github.com/marek.fort/TestPackage.git", .upToNextMajor(from: "0.0.1")),
+        ```
+
+        ```ruby
+        pod "TestPackage", "~> 1.0.0"
+        pod "Random", "~> 0.0.1"
+        ```
+        """
+        XCTAssertEqual(try fileHandler.readTextFile(readmePath), expectedContent)
+    }
 }
