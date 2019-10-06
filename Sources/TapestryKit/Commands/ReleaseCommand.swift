@@ -9,7 +9,7 @@ final class ReleaseCommand: NSObject, Command {
     static var command: String = "release"
     static var overview: String = "Tags a new release and updates documentation and Pod accordingly"
 
-    let versionArgument: PositionalArgument<Int>
+    let versionArgument: PositionalArgument<Version>
 
     private let fileHandler: FileHandling
     private let printer: TapestryCore.Printing
@@ -26,8 +26,8 @@ final class ReleaseCommand: NSObject, Command {
          fileHandler: FileHandling,
          printer: TapestryCore.Printing,
          gitController: GitControlling) {
-        let subParser = parser.add(subparser: InitCommand.command, overview: InitCommand.overview)
-        versionArgument = subParser.add(positional: "Version", kind: Int.self)
+        let subParser = parser.add(subparser: ReleaseCommand.command, overview: ReleaseCommand.overview)
+        versionArgument = subParser.add(positional: "Version", kind: Version.self)
 
         self.fileHandler = fileHandler
         self.printer = printer
