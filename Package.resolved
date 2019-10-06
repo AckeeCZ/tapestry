@@ -3,10 +3,10 @@
     "pins": [
       {
         "package": "acho",
-        "repositoryURL": "https://github.com/miguelangel-dev/acho",
+        "repositoryURL": "https://github.com/fortmarek/acho",
         "state": {
-          "branch": "patch-1",
-          "revision": "9c2bd39b3e40e2558f1fcc3854bbd354633bb577",
+          "branch": "spm_bump",
+          "revision": "60016bfd4fb930cd4dddd5aa1df0ce5c2d47ae0f",
           "version": null
         }
       },
@@ -75,20 +75,20 @@
       },
       {
         "package": "tuist",
-        "repositoryURL": "https://github.com/fortmarek/tuist.git",
+        "repositoryURL": "https://github.com/tuist/tuist.git",
         "state": {
           "branch": "master",
-          "revision": "8545abfc99bee82603255f44978c22a5742bcbed",
+          "revision": "4b3010f023c3a7d9353105a79017d915c9bf56b9",
           "version": null
         }
       },
       {
-        "package": "TuistXcodeProj",
-        "repositoryURL": "https://github.com/fortmarek/XcodeProj",
+        "package": "XcodeProj",
+        "repositoryURL": "https://github.com/tuist/XcodeProj",
         "state": {
-          "branch": null,
-          "revision": "a35db98cf575c58a98fd7de69a365bbd2151bada",
-          "version": "7.1.0"
+          "branch": "master",
+          "revision": "d231fbed3554d883ebcd1b414220cc133bb5a1c5",
+          "version": null
         }
       }
     ]

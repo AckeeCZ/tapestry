@@ -13,9 +13,8 @@ let package = Package(
             targets: ["tapestry"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/fortmarek/tuist.git", .branch("master")),
-        .package(url: "https://github.com/apple/swift-package-manager", .branch("swift-5.0-RELEASE")),
-        .package(url: "https://github.com/miguelangel-dev/acho", .branch("patch-1")),
+        .package(url: "https://github.com/tuist/tuist.git", .branch("master")),
+        .package(url: "https://github.com/fortmarek/acho", .branch("spm_bump")),
     ],
     targets: [
         .target(
@@ -25,21 +24,17 @@ let package = Package(
             ]),
         .target(name: "TapestryKit",
                 dependencies: [
-                    "SPMUtility",
                     "TapestryGen",
                     "TapestryCore",
             ]),
         .target(name: "TapestryCore",
                 dependencies: [
                     "acho",
-                    "SPMUtility",
                     "TuistGenerator",
             ]),
         .target(
             name: "TapestryGen",
             dependencies: [
-                "SPMUtility",
-                "TuistGenerator",
                 "TapestryCore",
             ]),
         .target(name: "TapestryCoreTesting",
