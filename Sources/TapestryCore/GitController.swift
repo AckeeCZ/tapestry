@@ -22,6 +22,7 @@ public protocol GitControlling {
     /// Get current git email
     /// - Returns: Git email
     func currentEmail() throws -> String
+    func commit(_ message: String) throws
     func tagVersion(_ version: Version) throws
 }
 
@@ -49,5 +50,9 @@ public final class GitController: GitControlling {
     
     public func tagVersion(_ version: Version) throws {
         try system.run("git", "tag", version.description)
+    }
+    
+    public func commit(_ message: String) throws {
+        try system.run("git", "commit", "-m")
     }
 }
