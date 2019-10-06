@@ -5,7 +5,7 @@ import Basic
 import SPMUtility
 
 enum ReleaseError: FatalError, Equatable {
-    case noVersion, ungettableProjectName(AbsolutePath)
+    case noVersion, ungettableProjectName(AbsolutePath), tagExists(Version)
 
     var type: ErrorType {
         return .abort
@@ -17,6 +17,8 @@ enum ReleaseError: FatalError, Equatable {
             return "No version provided."
         case let .ungettableProjectName(path):
             return "Couldn't infer the project name from path \(path.pathString)."
+        case let .tagExists(version):
+            return "Version tag \(version) already exists."
         }
     }
     
@@ -26,6 +28,8 @@ enum ReleaseError: FatalError, Equatable {
             return lhsPath == rhsPath
         case (.noVersion, .noVersion):
             return true
+        case let (.tagExists(lhsVersion), .tagExists(rhsVersion)):
+            return lhsVersion == rhsVersion
         default:
             return false
         }
@@ -75,6 +79,8 @@ final class ReleaseCommand: NSObject, Command {
         
         let path = try self.path(arguments: arguments)
         let name = try self.name(path: path)
+        
+        guard try !gitController.tagExists(version, path: path) else { throw ReleaseError.tagExists(version) }
         
         try updateVersionInPodspec(path: path,
                                    name: name,

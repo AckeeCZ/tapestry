@@ -152,4 +152,17 @@ final class ReleaseCommandTests: XCTestCase {
         XCTAssertTrue(tagWasCalled)
         XCTAssertTrue(commitWasCalled)
     }
+    
+    func test_error_when_version_exists() throws {
+        // Given
+        let version = Version(0, 0, 1)
+        let result = try parser.parse(["release", version.description])
+        
+        gitController.tagExistsStub = { _, _ in
+            true
+        }
+        
+        // Then
+        XCTAssertThrowsSpecific(try subject.run(with: result), ReleaseError.tagExists(version))
+    }
 }

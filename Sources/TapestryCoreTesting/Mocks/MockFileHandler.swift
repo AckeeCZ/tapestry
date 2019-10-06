@@ -24,8 +24,8 @@ public final class MockFileHandler: FileHandling {
         try closure(currentPath)
     }
     
-    public func inDirectory(_ directory: AbsolutePath, closure: () throws -> Void) throws {
-        try closure()
+    public func inDirectory<T>(_ directory: AbsolutePath, closure: () throws -> T) throws -> T {
+        return try closure()
     }
 
     public func exists(_ path: AbsolutePath) -> Bool {

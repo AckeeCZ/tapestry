@@ -45,10 +45,22 @@ final class GitControllerTests: XCTestCase {
         // Given
         let path = AbsolutePath("/test")
         let version = Version(0, 0, 1)
+        system.succeedCommand(["git", "tag", "--list"], output: "")
         system.succeedCommand(["git", "tag", version.description])
         
         // Then
         XCTAssertNoThrow(try subject.tagVersion(version, path: path))
+    }
+    
+    func test_tag_error_when_tag_exists() throws {
+        // Given
+        let path = AbsolutePath("/test")
+        let version = Version(0, 0, 1)
+        system.succeedCommand(["git", "tag", "--list"], output: "1.0.0\n0.0.1\n")
+        system.succeedCommand(["git", "tag", version.description])
+        
+        // Then
+        XCTAssertThrowsSpecific(try subject.tagVersion(version, path: path), GitError.tagExists(version))
     }
     
     func test_commit_with_path_succeeds() throws {

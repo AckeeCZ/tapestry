@@ -10,6 +10,26 @@ import TuistCore
 import Basic
 import SPMUtility
 
+enum GitError: FatalError, Equatable {
+    case tagExists(Version)
+    
+    var type: ErrorType { .abort }
+    
+    var description: String {
+        switch self {
+        case let .tagExists(version):
+            return "Version tag \(version) already exists."
+        }
+    }
+    
+    static func == (lhs: GitError, rhs: GitError) -> Bool {
+        switch (lhs, rhs) {
+        case let (.tagExists(lhsVersion), .tagExists(rhsVersion)):
+            return lhsVersion == rhsVersion
+        }
+    }
+}
+
 /// Interface for interacting with git
 public protocol GitControlling {
     /// Initialize git repository
@@ -24,6 +44,7 @@ public protocol GitControlling {
     func currentEmail() throws -> String
     func commit(_ message: String, path: AbsolutePath?) throws
     func tagVersion(_ version: Version, path: AbsolutePath?) throws
+    func tagExists(_ version: Version, path: AbsolutePath?) throws -> Bool
 }
 
 /// Class for interacting with git
@@ -50,6 +71,7 @@ public final class GitController: GitControlling {
     }
     
     public func tagVersion(_ version: Version, path: AbsolutePath?) throws {
+        guard try !tagExists(version, path: path) else { throw GitError.tagExists(version) }
         try fileHandler.inDirectory(path ?? fileHandler.currentPath) { [weak self] in
             try self?.system.run("git", "tag", version.description)
         }
@@ -58,6 +80,18 @@ public final class GitController: GitControlling {
     public func commit(_ message: String, path: AbsolutePath?) throws {
         try fileHandler.inDirectory(path ?? fileHandler.currentPath) { [weak self] in
             try self?.system.run("git", "commit", "-am", message)
+        }
+    }
+    
+    public func tagExists(_ version: Version, path: AbsolutePath?) throws -> Bool {
+        return try allTags(path: path).contains(version)
+    }
+    
+    // MARK: - Helpers
+    
+    private func allTags(path: AbsolutePath?) throws -> [Version] {
+        return try fileHandler.inDirectory(path ?? fileHandler.currentPath) { [weak self] in
+            try self?.system.capture("git", "tag", "--list").split(separator: "\n").compactMap { Version(string: String($0)) } ?? []
         }
     }
 }

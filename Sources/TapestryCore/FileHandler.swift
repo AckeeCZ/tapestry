@@ -77,7 +77,7 @@ public protocol FileHandling: AnyObject {
     /// - Throws: An error if the temporary directory cannot be created or the closure throws.
     func inTemporaryDirectory(_ closure: (AbsolutePath) throws -> Void) throws
     
-    func inDirectory(_ directory: AbsolutePath, closure: () throws -> Void) throws
+    func inDirectory<T>(_ directory: AbsolutePath, closure: () throws -> T) throws -> T
 
     /// Writes a string into the given path (using the utf8 encoding)
     ///
@@ -149,12 +149,13 @@ public final class FileHandler: FileHandling {
         try closure(directory.path)
     }
     
-    public func inDirectory(_ directory: AbsolutePath, closure: () throws -> Void) throws {
+    public func inDirectory<T>(_ directory: AbsolutePath, closure: () throws -> T) throws -> T {
         let originalDirectoryPath = fileManager.currentDirectoryPath
         guard isFolder(directory) else { throw FileHandlerError.notDirectory(directory) }
         fileManager.changeCurrentDirectoryPath(directory.pathString)
-        try closure()
+        let result = try closure()
         fileManager.changeCurrentDirectoryPath(originalDirectoryPath)
+        return result
     }
 
     /// Returns true if there's a folder or file at the given path.
