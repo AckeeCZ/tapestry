@@ -69,7 +69,7 @@ final class ReleaseCommandTests: XCTestCase {
         let expectedContent = """
         Just add this to your `Package.swift`:
         ```swift
-        .package(url: "https://github.com/marek.fort/TestPackage.git", .upToNextMajor(from: "0.0.1")),
+        .package(url: "https://github.com/marek.fort/TestPackage.git", .upToNextMajor(from: "1.0.0")),
         ```
 
         ```ruby

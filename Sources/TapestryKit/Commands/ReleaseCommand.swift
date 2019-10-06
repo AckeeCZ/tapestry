@@ -127,11 +127,20 @@ final class ReleaseCommand: NSObject, Command {
                                        version: Version) throws {
         let readmePath = path.appending(component: "README.md")
         var content = try fileHandler.readTextFile(readmePath)
-        content = content.replacingOccurrences(
+        // Replacing pods version
+        content = content
+        .replacingOccurrences(
             of: "pod \"\(name)\"" + #", "~>[ ]?([0-9]|[\.])*""#,
             with: "pod \"\(name)\", \"~> \(version.description)\"",
             options: .regularExpression
         )
+        // Replacing SPM version
+        .replacingOccurrences(
+            of: "\(name)" + #"\.git", \.upToNextMajor\(from:[ ]?"([0-9]|[\.])*""#,
+            with: "\(name).git\", .upToNextMajor(from: \"\(version.description)\"",
+            options: .regularExpression
+        )
+
         try content.write(to: readmePath.url, atomically: true, encoding: .utf8)
     }
 }
