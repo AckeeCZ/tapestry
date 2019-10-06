@@ -1,5 +1,6 @@
 import XCTest
 import Basic
+import SPMUtility
 @testable import TapestryCore
 @testable import TapestryCoreTesting
 
@@ -38,5 +39,25 @@ final class GitControllerTests: XCTestCase {
         let email = "test@test.com"
         system.succeedCommand(["git", "config", "user.email"], output: email)
         XCTAssertEqual(try subject.currentEmail(), email)
+    }
+    
+    func test_tag_with_path_succeeds() throws {
+        // Given
+        let path = AbsolutePath("/test")
+        let version = Version(0, 0, 1)
+        system.succeedCommand(["git", "tag", version.description])
+        
+        // Then
+        XCTAssertNoThrow(try subject.tagVersion(version, path: path))
+    }
+    
+    func test_commit_with_path_succeeds() throws {
+        // Given
+        let path = AbsolutePath("/test")
+        let message = "Test commit"
+        system.succeedCommand(["git", "commit", "-am", message])
+        
+        // Then
+        XCTAssertNoThrow(try subject.commit(message, path: path))
     }
 }
