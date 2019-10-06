@@ -77,6 +77,11 @@ public protocol FileHandling: AnyObject {
     /// - Throws: An error if the temporary directory cannot be created or the closure throws.
     func inTemporaryDirectory(_ closure: (AbsolutePath) throws -> Void) throws
     
+    /// Runs the given closure in a given directory
+    ///
+    /// - Parameters:
+    ///     - closure: Closure to be executed in the given directory.
+    /// - Throws: An error if the directory is not a valid directory
     func inDirectory<T>(_ directory: AbsolutePath, closure: () throws -> T) throws -> T
 
     /// Writes a string into the given path (using the utf8 encoding)
