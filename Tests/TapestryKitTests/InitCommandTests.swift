@@ -1,6 +1,7 @@
 import SPMUtility
 import Basic
 import TuistCore
+import TapestryCore
 import XCTest
 @testable import TapestryGen
 @testable import TapestryCoreTesting
@@ -8,7 +9,7 @@ import XCTest
 
 final class InitCommandTests: XCTestCase {
     private var subject: InitCommand!
-    private var fileHandler: FileHandling!
+    private var fileHandler: TapestryCore.FileHandling!
     private var packageController: MockPackageController!
     private var gitController: MockGitController!
     private var inputReader: MockInputReader!
@@ -28,7 +29,6 @@ final class InitCommandTests: XCTestCase {
                               printer: MockPrinter(),
                               exampleGenerator: exampleGenerator,
                               gitController: gitController,
-                              system: MockSystem(),
                               packageController: packageController,
                               inputReader: inputReader)
     }
@@ -230,11 +230,3 @@ final class InitCommandTests: XCTestCase {
         XCTAssertEqual(fileHandler.currentPath, path)
     }
 }
-
-extension ArgumentParser {
-    static func test(usage: String = "test",
-                     overview: String = "overview") -> ArgumentParser {
-        return ArgumentParser(usage: usage, overview: overview)
-    }
-}
-

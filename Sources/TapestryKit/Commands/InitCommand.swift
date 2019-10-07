@@ -41,11 +41,10 @@ final class InitCommand: NSObject, Command {
 
     let pathArgument: OptionArgument<String>
 
-    private let fileHandler: FileHandling
+    private let fileHandler: TapestryCore.FileHandling
     private let printer: TapestryCore.Printing
     private let exampleGenerator: ExampleGenerating
     private let gitController: GitControlling
-    private let system: Systeming
     private let packageController: PackageControlling
     private let inputReader: InputReading
 
@@ -55,17 +54,15 @@ final class InitCommand: NSObject, Command {
                   printer: Printer(),
                   exampleGenerator: ExampleGenerator(),
                   gitController: GitController(),
-                  system: System(),
                   packageController: PackageController(),
                   inputReader: InputReader())
     }
 
     init(parser: ArgumentParser,
-         fileHandler: FileHandling,
+         fileHandler: TapestryCore.FileHandling,
          printer: TapestryCore.Printing,
          exampleGenerator: ExampleGenerating,
          gitController: GitControlling,
-         system: Systeming,
          packageController: PackageControlling,
          inputReader: InputReading) {
         let subParser = parser.add(subparser: InitCommand.command, overview: InitCommand.overview)
@@ -80,7 +77,6 @@ final class InitCommand: NSObject, Command {
         self.printer = printer
         self.exampleGenerator = exampleGenerator
         self.gitController = gitController
-        self.system = system
         self.packageController = packageController
         self.inputReader = inputReader
     }
@@ -121,6 +117,11 @@ final class InitCommand: NSObject, Command {
         try generateTravis(path: path,
                            packageType: packageType,
                            name: name)
+        try generatePodspec(path: path,
+                            name: name,
+                            username: username,
+                            authorName: authorName,
+                            email: email)
         
         try packageController.generateXcodeproj(path: path)
 
@@ -295,6 +296,10 @@ final class InitCommand: NSObject, Command {
         ### SPM
 
         `\(name)` is available via [Swift Package Manager](https://swift.org/package-manager).
+        Just add this to your `Package.swift`:
+        ```swift
+        .package(url: "https://github.com/\(username)/\(name).git", .upToNextMajor(from: "0.0.1")),
+        ```
 
         ### CocoaPods
 
@@ -302,11 +307,42 @@ final class InitCommand: NSObject, Command {
         it, simply add the following line to your Podfile:
 
         ```ruby
-        pod '\(name)'
+        pod "\(name)", "~> 0.0.1"
         ```
         """
         
         let readmePath = path.appending(component: "README.md")
         try content.write(to: readmePath.url, atomically: true, encoding: .utf8)
+    }
+    
+    private func generatePodspec(path: AbsolutePath,
+                                 name: String,
+                                 username: String,
+                                 authorName: String,
+                                 email: String) throws {
+        let content = """
+
+        Pod::Spec.new do |s|
+          s.name = "\(name)"
+          s.version = "0.0.1"
+          s.license = "MIT"
+          s.summary = "\(name) is a developer library"
+          s.homepage = "https://github.com/\(username)/\(name)"
+          s.authors = { "Alamofire Software Foundation" => "\(email)" }
+          s.source = { :git => "https://github.com/\(username)/\(name).git", :tag => s.version }
+
+          s.ios.deployment_target = "10.0"
+          s.osx.deployment_target = "10.12"
+          s.tvos.deployment_target = "10.0"
+          s.watchos.deployment_target = "3.0"
+
+          s.swift_versions = ["5.0", "5.1"]
+
+          s.source_files = "Sources/*.swift"
+        end
+        """
+        
+        let podspecPath = path.appending(component: "\(name).podspec")
+        try content.write(to: podspecPath.url, atomically: true, encoding: .utf8)
     }
 }
