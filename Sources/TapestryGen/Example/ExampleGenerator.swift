@@ -2,6 +2,7 @@ import Foundation
 import TuistGenerator
 import Basic
 import TuistCore
+import TapestryCore
 
 public protocol ExampleGenerating {
     /// Generates example project at given path
@@ -15,11 +16,11 @@ public final class ExampleGenerator: ExampleGenerating {
     public static let exampleAppendix: String = "Example"
     
     private let generatorInit: GeneratorInit
-    private let fileHandler: FileHandling
+    private let fileHandler: TapestryCore.FileHandling
 
     /// - Parameters:
     ///     - generatorInit: Closure for creating `Generator`
-    public init(fileHandler: FileHandling = FileHandler(),
+    public init(fileHandler: TapestryCore.FileHandling = FileHandler(),
                 generatorInit: @escaping GeneratorInit =
         { name, bundleId in
             Generator(modelLoader: ExampleModelLoader(packageName: name,

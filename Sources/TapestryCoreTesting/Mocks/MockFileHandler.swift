@@ -1,6 +1,6 @@
 import Basic
 import Foundation
-import TuistCore
+import TapestryCore
 import XCTest
 
 public final class MockFileHandler: FileHandling {
@@ -11,7 +11,7 @@ public final class MockFileHandler: FileHandling {
         return currentDirectory.path
     }
 
-    public init() throws {
+    init() throws {
         currentDirectory = try TemporaryDirectory(removeTreeOnDeinit: true)
         fileHandler = FileHandler()
     }
@@ -22,6 +22,10 @@ public final class MockFileHandler: FileHandling {
 
     public func inTemporaryDirectory(_ closure: (AbsolutePath) throws -> Void) throws {
         try closure(currentPath)
+    }
+    
+    public func inDirectory<T>(_ directory: AbsolutePath, closure: () throws -> T) throws -> T {
+        return try closure()
     }
 
     public func exists(_ path: AbsolutePath) -> Bool {
@@ -86,5 +90,17 @@ extension MockFileHandler {
             try createFolder($0)
         }
         return paths
+    }
+}
+
+extension XCTestCase {
+    func sharedMockFileHandler(file: StaticString = #file, line: UInt = #line) -> MockFileHandler? {
+        guard let mock = FileHandler.shared as? MockFileHandler else {
+            let message = "FileHandler.shared hasn't been mocked." +
+                "You can call mockFileHandler(), or mockSharedInstances() to mock the file handler or the environment respectively."
+            XCTFail(message, file: file, line: line)
+            return nil
+        }
+        return mock
     }
 }
