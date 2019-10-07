@@ -281,7 +281,7 @@ final class InitCommand: NSObject, Command {
                                 name: String) throws {
         let content = """
         # \(name)
-        [![CI Status](http://img.shields.io/travis/\(username)/\(name).svg?style=flat)](https://travis-ci.org/\(username)/\(name)
+        [![CI Status](http://img.shields.io/travis/\(username)/\(name).svg?style=flat)](https://travis-ci.org/\(username)/\(name))
         [![Version](https://img.shields.io/cocoapods/v/\(name).svg?style=flat)](http://cocoapods.org/pods/ParallaxOverlay)
         <a href="https://swift.org/package-manager">
                 <img src="https://img.shields.io/badge/spm-compatible-brightgreen.svg?style=flat" alt="Swift Package Manager" />
