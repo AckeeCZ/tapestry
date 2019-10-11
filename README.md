@@ -28,7 +28,8 @@ $ swift run tapestry
 
 ## Generating project
 
-<img alt="Screenshot" src="Resources/screenshot.png" width="700">
+<img alt="Screenshot" src="Resources/tapestry.gif" width="700">
+
 
 To generate your project, simply run: 
 ```bash
