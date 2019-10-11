@@ -184,7 +184,7 @@ final class InitCommand: NSObject, Command {
         let script: String
         switch packageType {
         case .executable:
-            script = "- set -o pipefail && swift test --generate-linuxmain -Xswiftc -target -Xswiftc x86_64-apple-macosx10.12"
+            script = "- set -o pipefail && swift test --generate-linuxmain -Xswiftc -target -Xswiftc x86_64-apple-macosx10.12 && swift test -Xswiftc -target -Xswiftc x86_64-apple-macosx10.12"
         case .library:
             script = "- xcodebuild -project Example/\(exampleProjectName).xcodeproj -scheme \(exampleProjectName) -sdk iphonesimulator -destination 'OS=13.0,name=iPhone Xʀ,platform=iOS Simulator' -configuration Debug ONLY_ACTIVE_ARCH=NO | xcpretty -c"
         }

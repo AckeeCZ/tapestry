@@ -4,7 +4,7 @@ env:
   global:
   - FRAMEWORK_NAME=tapestry
 script:
-- set -o pipefail && swift test --generate-linuxmain -Xswiftc -target -Xswiftc x86_64-apple-macosx10.12 
+- set -o pipefail && swift test --generate-linuxmain -Xswiftc -target -Xswiftc x86_64-apple-macosx10.12 && swift test -Xswiftc -target -Xswiftc x86_64-apple-macosx10.12 
 before_deploy:
 - swift build --static-swift-stdlib --configuration release
 - export BINARY_PATH=`swift build --show-bin-path --configuration release`/FRAMEWORK_NAME
