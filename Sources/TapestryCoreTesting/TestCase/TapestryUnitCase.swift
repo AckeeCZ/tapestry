@@ -1,8 +1,7 @@
 import Foundation
 import XCTest
-
-@testable import TuistCore
-@testable import TapestryCore
+import TuistCore
+import TapestryCore
 
 public class TapestryUnitTestCase: TapestryTestCase {
     public var system: MockSystem!
@@ -21,10 +20,6 @@ public class TapestryUnitTestCase: TapestryTestCase {
     }
 
     public override func tearDown() {
-        // System
-        system = nil
-        System.shared = System()
-
         // Printer
         printer = nil
         TapestryCore.Printer.shared = TapestryCore.Printer()

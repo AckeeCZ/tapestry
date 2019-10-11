@@ -34,7 +34,7 @@ public class Printer: Printing {
     public static var shared: Printing = Printer()
     
     // MARK: - Init
-    init() {}
+    public init() {}
 
     // MARK: - Public
 
