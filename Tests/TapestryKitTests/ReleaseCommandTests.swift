@@ -1,24 +1,21 @@
 import XCTest
 import SPMUtility
 import Basic
+@testable import TapestryCore
 @testable import TapestryKit
 @testable import TapestryCoreTesting
 
-final class ReleaseCommandTests: XCTestCase {
+final class ReleaseCommandTests: TapestryUnitTestCase {
     private var subject: ReleaseCommand!
-    private var fileHandler: MockFileHandler!
     private var gitController: MockGitController!
     private var parser: ArgumentParser!
     
     override func setUp() {
         super.setUp()
         
-        fileHandler = try! MockFileHandler()
         gitController = MockGitController()
         parser = ArgumentParser.test()
         subject = ReleaseCommand(parser: parser,
-                                 fileHandler: fileHandler,
-                                 printer: MockPrinter(),
                                  gitController: gitController)
     }
     

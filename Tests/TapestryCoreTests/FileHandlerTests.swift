@@ -2,15 +2,16 @@ import Basic
 import Foundation
 import XCTest
 @testable import TapestryCore
+@testable import TapestryCoreTesting
 
-final class FileHandlerErrorTests: XCTestCase {
+final class FileHandlerErrorTests: TapestryUnitTestCase {
     func test_description() {
         XCTAssertEqual(FileHandlerError.invalidTextEncoding(AbsolutePath("/path")).description, "The file at /path is not a utf8 text file")
         XCTAssertEqual(FileHandlerError.writingError(AbsolutePath("/path")).description, "Couldn't write to the file /path")
     }
 }
 
-final class FileHandlerTests: XCTestCase {
+final class FileHandlerTests: TapestryUnitTestCase {
     private var subject: FileHandler!
     private let fileManager = FileManager.default
 

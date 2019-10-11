@@ -6,7 +6,7 @@
         "repositoryURL": "https://github.com/fortmarek/acho",
         "state": {
           "branch": "spm_bump",
-          "revision": "8bd4fd12b378df0fb6230894c580b346be075267",
+          "revision": "5212ca2bb419f1aeafe27311642f4c850b8b8f8c",
           "version": null
         }
       },
@@ -60,7 +60,7 @@
         "repositoryURL": "https://github.com/apple/swift-llbuild.git",
         "state": {
           "branch": "master",
-          "revision": "fb7ab0ddbd6020dd212a1dd931d46a9c94ea2d9c",
+          "revision": "f2010ce4cd7a6fcb374b86df7aa2364c50d60a3e",
           "version": null
         }
       },
@@ -78,7 +78,7 @@
         "repositoryURL": "https://github.com/tuist/tuist.git",
         "state": {
           "branch": "master",
-          "revision": "4b3010f023c3a7d9353105a79017d915c9bf56b9",
+          "revision": "8ff63bf71cc48e2d38d852d2b0605aef5efe93ee",
           "version": null
         }
       },
@@ -87,7 +87,7 @@
         "repositoryURL": "https://github.com/tuist/XcodeProj",
         "state": {
           "branch": "master",
-          "revision": "d231fbed3554d883ebcd1b414220cc133bb5a1c5",
+          "revision": "f9e804ea547e8c5e046b4891b1d875043198a288",
           "version": null
         }
       }

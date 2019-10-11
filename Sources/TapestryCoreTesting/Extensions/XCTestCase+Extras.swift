@@ -2,7 +2,7 @@ import Basic
 import Foundation
 import XCTest
 
-public extension XCTestCase {
+public extension TapestryUnitTestCase {
     // MARK: - XCTAssertions
 
     // swiftlint:disable large_tuple

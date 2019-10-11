@@ -6,7 +6,7 @@ private enum InputReaderError: Error {
 
 public final class MockInputReader: InputReading {
     public var readStringStub: (([String], String) throws -> String)?
-    public var readEnumInputStub: String?
+    public var readEnumInputStub: (() throws -> String?)?
     private var stubs: [String: String] = [:]
     
     public func promptCommand(_ text: String, output: String) {
@@ -19,7 +19,7 @@ public final class MockInputReader: InputReading {
     
     public func readEnumInput<EnumType>(question: String) throws -> EnumType where EnumType : CaseIterable, EnumType : RawRepresentable, EnumType.RawValue == String {
         guard
-            let readEnumInputStub = readEnumInputStub,
+            let readEnumInputStub = try readEnumInputStub?(),
             let enumValue = EnumType(rawValue: readEnumInputStub)
         else { return try defaultEnumValue() }
         return enumValue

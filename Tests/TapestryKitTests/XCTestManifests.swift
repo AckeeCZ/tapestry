@@ -20,7 +20,7 @@ extension InitCommandTests {
     ]
 }
 
-public func __allTests() -> [XCTestCaseEntry] {
+public func __allTests() -> [TapestryUnitTestCaseEntry] {
     return [
         testCase(InitCommandTests.__allTests__InitCommandTests),
     ]

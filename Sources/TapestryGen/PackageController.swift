@@ -25,23 +25,20 @@ public protocol PackageControlling {
 /// Class that access underlying swift package commands
 public final class PackageController: PackageControlling {
     private let inputReader: InputReading
-    private let system: Systeming
 
-    public init(inputReader: InputReading = InputReader(),
-                system: Systeming = System()) {
+    public init(inputReader: InputReading = InputReader()) {
         self.inputReader = inputReader
-        self.system = system
     }
     
     public func initPackage(path: AbsolutePath, name: String) throws -> PackageType {
         let supportedPackageType: PackageType = try inputReader.readEnumInput(question: "Choose package type:")
 
-        try system.run(["swift", "package", "--package-path", path.pathString, "init", "--type" , "\(supportedPackageType.rawValue)"])
+        try System.shared.run(["swift", "package", "--package-path", path.pathString, "init", "--type" , "\(supportedPackageType.rawValue)"])
 
         return supportedPackageType
     }
     
     public func generateXcodeproj(path: AbsolutePath) throws {
-        try system.run(["swift", "package", "--package-path", path.pathString, "generate-xcodeproj"])
+        try System.shared.run(["swift", "package", "--package-path", path.pathString, "generate-xcodeproj"])
     }
 }

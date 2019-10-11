@@ -62,38 +62,31 @@ public protocol GitControlling {
 }
 
 /// Class for interacting with git
-public final class GitController: GitControlling {    
-    private let system: Systeming
-    private let fileHandler: FileHandling
-    
-    public init(system: Systeming = System(),
-                fileHandler: FileHandling = FileHandler()) {
-        self.system = system
-        self.fileHandler = fileHandler
-    }
+public final class GitController: GitControlling {
+    public init() { }
     
     public func initGit(path: AbsolutePath) throws {
-        try system.run("git", "init", path.pathString)
+        try System.shared.run("git", "init", path.pathString)
     }
     
     public func currentName() throws -> String {
-        return try system.capture("git", "config", "user.name").replacingOccurrences(of: "\n", with: "")
+        return try System.shared.capture("git", "config", "user.name").replacingOccurrences(of: "\n", with: "")
     }
     
     public func currentEmail() throws -> String {
-        return try system.capture("git", "config", "user.email").replacingOccurrences(of: "\n", with: "")
+        return try System.shared.capture("git", "config", "user.email").replacingOccurrences(of: "\n", with: "")
     }
     
     public func tagVersion(_ version: Version, path: AbsolutePath?) throws {
         guard try !tagExists(version, path: path) else { throw GitError.tagExists(version) }
-        try fileHandler.inDirectory(path ?? fileHandler.currentPath) { [weak self] in
-            try self?.system.run("git", "tag", version.description)
+        try FileHandler.shared.inDirectory(path ?? FileHandler.shared.currentPath) {
+            try System.shared.run("git", "tag", version.description)
         }
     }
     
     public func commit(_ message: String, path: AbsolutePath?) throws {
-        try fileHandler.inDirectory(path ?? fileHandler.currentPath) { [weak self] in
-            try self?.system.run("git", "commit", "-am", message)
+        try FileHandler.shared.inDirectory(path ?? FileHandler.shared.currentPath) {
+            try System.shared.run("git", "commit", "-am", message)
         }
     }
     
@@ -107,8 +100,8 @@ public final class GitController: GitControlling {
     ///     - path: Path of the git directory
     /// - Returns: All tags for directory at `path`
     private func allTags(path: AbsolutePath?) throws -> [Version] {
-        return try fileHandler.inDirectory(path ?? fileHandler.currentPath) { [weak self] in
-            try self?.system.capture("git", "tag", "--list").split(separator: "\n").compactMap { Version(string: String($0)) } ?? []
+        return try FileHandler.shared.inDirectory(path ?? FileHandler.shared.currentPath) {
+            try System.shared.capture("git", "tag", "--list").split(separator: "\n").compactMap { Version(string: String($0)) }
         }
     }
 }

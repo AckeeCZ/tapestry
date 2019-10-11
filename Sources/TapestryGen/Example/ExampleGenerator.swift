@@ -1,7 +1,7 @@
 import Foundation
 import TuistGenerator
 import Basic
-import TuistCore
+import class TuistGenerator.Generator
 import TapestryCore
 
 public protocol ExampleGenerating {
@@ -16,26 +16,22 @@ public final class ExampleGenerator: ExampleGenerating {
     public static let exampleAppendix: String = "Example"
     
     private let generatorInit: GeneratorInit
-    private let fileHandler: TapestryCore.FileHandling
 
     /// - Parameters:
     ///     - generatorInit: Closure for creating `Generator`
-    public init(fileHandler: TapestryCore.FileHandling = FileHandler(),
-                generatorInit: @escaping GeneratorInit =
-        { name, bundleId in
-            Generator(modelLoader: ExampleModelLoader(packageName: name,
-                                                      name: name + ExampleGenerator.exampleAppendix,
-                                                      bundleId: bundleId))
+    public init(generatorInit: @escaping GeneratorInit = { name, bundleId in
+        Generator(modelLoader: ExampleModelLoader(packageName: name,
+                                                  name: name + ExampleGenerator.exampleAppendix,
+                                                  bundleId: bundleId))
         }) {
         self.generatorInit = generatorInit
-        self.fileHandler = fileHandler
     }
 
     // MARK: - Public methods
 
     public func generateProject(path: AbsolutePath, name: String, bundleId: String) throws {
         let examplePath = path.appending(RelativePath(ExampleGenerator.exampleAppendix))
-        try fileHandler.createFolder(examplePath)
+        try FileHandler.shared.createFolder(examplePath)
 
         try createExampleSources(path: examplePath, name: name)
 
@@ -48,7 +44,7 @@ public final class ExampleGenerator: ExampleGenerating {
     /// Create sources folder with dummy content
     private func createExampleSources(path: AbsolutePath, name: String) throws {
         let sourcesPath = path.appending(RelativePath("Sources"))
-        try fileHandler.createFolder(sourcesPath)
+        try FileHandler.shared.createFolder(sourcesPath)
         try generateExampleSourceFile(path: sourcesPath, name: name)
     }
 

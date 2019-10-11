@@ -1,18 +1,16 @@
 import XCTest
 import Basic
 import SPMUtility
+import class TuistCore.System
 @testable import TapestryCore
 @testable import TapestryCoreTesting
 
-final class GitControllerTests: XCTestCase {
+final class GitControllerTests: TapestryUnitTestCase {
     private var subject: GitController!
-    private var system: MockSystem!
 
     override func setUp() {
         super.setUp()
-        system = MockSystem()
-        subject = GitController(system: system,
-                                fileHandler: try! MockFileHandler())
+        subject = GitController()
     }
 
     func test_init_git_succeeds() throws {
