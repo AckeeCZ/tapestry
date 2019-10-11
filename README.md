@@ -51,6 +51,7 @@ You can change the generated files in `InitCommand` and your example project in 
 - [x] `Executable` support for your CLI tools
 - [ ] more and even more to come!
 
+You can check out an example project that was generated with `tapestry` [here](https://github.com/fortmarek/TapestryDemo).
 
 ## New release
 
