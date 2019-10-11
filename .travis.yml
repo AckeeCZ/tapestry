@@ -1,19 +1,8 @@
 osx_image: xcode11
 language: objective-c
-cache:
-  directories:
-  - Carthage
 env:
   global:
   - FRAMEWORK_NAME=Tapestry
-before_install:
-- brew update
-- brew outdated carthage || brew upgrade carthage
-before_deploy:
-- carthage build --no-skip-current --platform iOS --cache-builds
-- carthage archive $FRAMEWORK_NAME
-after_deploy:
-- pod trunk push --skip-import-validation --skip-tests --allow-warnings
 script:
 - set -o pipefail && swift test --generate-linuxmain -Xswiftc -target -Xswiftc x86_64-apple-macosx10.12 
 deploy:
