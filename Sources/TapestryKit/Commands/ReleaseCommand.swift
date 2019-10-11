@@ -1,5 +1,7 @@
 import Foundation
-import TuistCore
+import protocol TuistCore.FatalError
+import protocol TuistCore.Command
+import enum TuistCore.ErrorType
 import TapestryCore
 import Basic
 import SPMUtility
@@ -44,20 +46,14 @@ final class ReleaseCommand: NSObject, Command {
     let versionArgument: PositionalArgument<Version>
     let pathArgument: OptionArgument<String>
 
-    private let fileHandler: TapestryCore.FileHandling
-    private let printer: TapestryCore.Printing
     private let gitController: GitControlling
 
     required convenience init(parser: ArgumentParser) {
         self.init(parser: parser,
-                  fileHandler: FileHandler(),
-                  printer: Printer(),
                   gitController: GitController())
     }
 
     init(parser: ArgumentParser,
-         fileHandler: TapestryCore.FileHandling,
-         printer: TapestryCore.Printing,
          gitController: GitControlling) {
         let subParser = parser.add(subparser: ReleaseCommand.command, overview: ReleaseCommand.overview)
         versionArgument = subParser.add(positional: "Version", kind: Version.self)
@@ -67,15 +63,13 @@ final class ReleaseCommand: NSObject, Command {
                                      usage: "The path to the folder where the project will be generated (Default: Current directory).",
                                      completion: .filename)
 
-        self.fileHandler = fileHandler
-        self.printer = printer
         self.gitController = gitController
     }
 
     func run(with arguments: ArgumentParser.Result) throws {
         guard let version = arguments.get(versionArgument) else { throw ReleaseError.noVersion }
         
-        printer.print("Updating version 🚀")
+        Printer.shared.print("Updating version 🚀")
         
         let path = try self.path(arguments: arguments)
         let name = try self.name(path: path)
@@ -95,7 +89,7 @@ final class ReleaseCommand: NSObject, Command {
         try gitController.tagVersion(version,
                                      path: path)
         
-        printer.print(success: "Version updated to \(version.description) 🎉")
+        Printer.shared.print(success: "Version updated to \(version.description) 🎉")
     }
     
     // MARK: - Helpers
@@ -103,9 +97,9 @@ final class ReleaseCommand: NSObject, Command {
     /// Obtain package path
     private func path(arguments: ArgumentParser.Result) throws -> AbsolutePath {
         if let path = arguments.get(pathArgument) {
-            return AbsolutePath(path, relativeTo: fileHandler.currentPath)
+            return AbsolutePath(path, relativeTo: FileHandler.shared.currentPath)
         } else {
-            return fileHandler.currentPath
+            return FileHandler.shared.currentPath
         }
     }
     
@@ -124,11 +118,11 @@ final class ReleaseCommand: NSObject, Command {
                                         name: String,
                                         version: Version) throws {
         let podspecPath = path.appending(component: "\(name).podspec")
-        guard fileHandler.exists(podspecPath) else {
-            printer.print(warning: "Podspec at \(podspecPath.pathString) does not exist, skipping...")
+        guard FileHandler.shared.exists(podspecPath) else {
+            Printer.shared.print(warning: "Podspec at \(podspecPath.pathString) does not exist, skipping...")
             return
         }
-        var content = try fileHandler.readTextFile(podspecPath)
+        var content = try FileHandler.shared.readTextFile(podspecPath)
         content = content.replacingOccurrences(
             of: #"s\.version = \"(([0-9]|[\.])*)\""#,
             with: "s.version = \"\(version.description)\"",
@@ -141,11 +135,11 @@ final class ReleaseCommand: NSObject, Command {
                                        name: String,
                                        version: Version) throws {
         let readmePath = path.appending(component: "README.md")
-        guard fileHandler.exists(readmePath) else {
-            printer.print(warning: "Podspec at \(readmePath.pathString) does not exist, skipping...")
+        guard FileHandler.shared.exists(readmePath) else {
+            Printer.shared.print(warning: "Podspec at \(readmePath.pathString) does not exist, skipping...")
             return
         }
-        var content = try fileHandler.readTextFile(readmePath)
+        var content = try FileHandler.shared.readTextFile(readmePath)
         // Replacing pods version
         content = content
         .replacingOccurrences(

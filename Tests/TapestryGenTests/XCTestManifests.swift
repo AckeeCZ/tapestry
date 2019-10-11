@@ -32,7 +32,7 @@ extension PackageControllerTests {
     ]
 }
 
-public func __allTests() -> [XCTestCaseEntry] {
+public func __allTests() -> [TapestryUnitTestCaseEntry] {
     return [
         testCase(ExampleGeneratorTests.__allTests__ExampleGeneratorTests),
         testCase(ExampleModelLoaderTests.__allTests__ExampleModelLoaderTests),

@@ -4,15 +4,13 @@ import TuistGenerator
 @testable import TapestryGen
 @testable import TapestryCoreTesting
 
-final class ExampleGeneratorTests: XCTestCase {
+final class ExampleGeneratorTests: TapestryUnitTestCase {
     private var subject: ExampleGenerator!
-    private var fileHandler: MockFileHandler!
     
     override func setUp() {
         super.setUp()
         
-        fileHandler = try! MockFileHandler()
-        subject = ExampleGenerator(fileHandler: fileHandler, generatorInit: { name, bundleId -> Generating in
+        subject = ExampleGenerator(generatorInit: { name, bundleId -> Generating in
             return MockGenerator()
         })
     }
@@ -45,7 +43,7 @@ final class ExampleGeneratorTests: XCTestCase {
     func test_generator_generates_project() throws {
         // Given
         var generatedProjectPath: AbsolutePath?
-        let subject = ExampleGenerator(fileHandler: try MockFileHandler(), generatorInit: { name, bundleId -> Generating in
+        let subject = ExampleGenerator(generatorInit: { name, bundleId -> Generating in
             let generator = MockGenerator()
             generator.generateProjectStub = {
                 generatedProjectPath = $0

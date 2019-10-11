@@ -11,7 +11,7 @@ extension GitControllerTests {
     ]
 }
 
-public func __allTests() -> [XCTestCaseEntry] {
+public func __allTests() -> [TapestryUnitTestCaseEntry] {
     return [
         testCase(GitControllerTests.__allTests__GitControllerTests),
     ]

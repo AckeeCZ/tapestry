@@ -1,15 +1,13 @@
 import SPMUtility
 import Basic
-import TuistCore
 import TapestryCore
 import XCTest
 @testable import TapestryGen
 @testable import TapestryCoreTesting
 @testable import TapestryKit
 
-final class InitCommandTests: XCTestCase {
+final class InitCommandTests: TapestryUnitTestCase {
     private var subject: InitCommand!
-    private var fileHandler: TapestryCore.FileHandling!
     private var packageController: MockPackageController!
     private var gitController: MockGitController!
     private var inputReader: MockInputReader!
@@ -18,15 +16,12 @@ final class InitCommandTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        fileHandler = try! MockFileHandler()
         packageController = MockPackageController()
         gitController = MockGitController()
         inputReader = MockInputReader()
         exampleGenerator = MockExampleGenerator()
         parser = ArgumentParser.test()
         subject = InitCommand(parser: parser,
-                              fileHandler: fileHandler,
-                              printer: MockPrinter(),
                               exampleGenerator: exampleGenerator,
                               gitController: gitController,
                               packageController: packageController,

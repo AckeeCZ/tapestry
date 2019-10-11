@@ -4,7 +4,7 @@ import TuistGenerator
 @testable import TapestryCoreTesting
 @testable import TapestryGen
 
-final class ExampleModelLoaderTests: XCTestCase {
+final class ExampleModelLoaderTests: TapestryUnitTestCase {
     func test_loadProject() throws {
         // Given
         let packageName = "testPackage"

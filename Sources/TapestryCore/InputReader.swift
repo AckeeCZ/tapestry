@@ -34,11 +34,7 @@ extension InputReading {
 
 /// Handles taking in and processing user input
 public final class InputReader: InputReading {
-    private let printer: Printing
-    
-    public init(printer: Printing = Printer()) {
-        self.printer = printer
-    }
+    public init() {}
     
     public func readString(options: [String], question: String) throws -> String {
         let acho = Acho<String>()
@@ -52,11 +48,11 @@ public final class InputReader: InputReading {
     
     public func prompt(_ text: String, defaultValue: String? = nil) -> String {
         if let defaultValue = defaultValue {
-            printer.print(text + " or press enter to use: \(defaultValue) > ", includeNewline: false)
+            Printer.shared.print(text + " or press enter to use: \(defaultValue) > ", includeNewline: false)
             let readLineValue = readLine() ?? ""
             return readLineValue.isEmpty ? defaultValue : readLineValue
         } else {
-            printer.print(text, includeNewline: false)
+            Printer.shared.print(text, includeNewline: false)
             let readLineValue = readLine() ?? ""
             return readLineValue.isEmpty ? prompt("Try again: " + text) : readLineValue
         }

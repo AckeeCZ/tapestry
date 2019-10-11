@@ -2,7 +2,7 @@ import Foundation
 import Basic
 
 public enum PrinterOutput {
-    case standardOputput
+    case standardOutput
     case standardError
 }
 
@@ -30,19 +30,21 @@ public extension Printing {
 }
 
 public class Printer: Printing {
+    /// Shared instance
+    public static var shared: Printing = Printer()
+    
     // MARK: - Init
-
-    public init() {}
+    init() {}
 
     // MARK: - Public
 
     public func print(_ text: String, includeNewline: Bool) {
-        print(text, output: .standardOputput, includeNewline: includeNewline)
+        print(text, output: .standardOutput, includeNewline: includeNewline)
     }
 
     public func print(_ text: String, output: PrinterOutput, includeNewline: Bool = true) {
         let writer: InteractiveWriter!
-        if output == .standardOputput {
+        if output == .standardOutput {
             writer = .stdout
         } else {
             writer = .stderr

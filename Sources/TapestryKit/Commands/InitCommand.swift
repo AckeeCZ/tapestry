@@ -1,7 +1,9 @@
 import Foundation
 import TapestryCore
 import TapestryGen
-import TuistCore
+import protocol TuistCore.FatalError
+import enum TuistCore.ErrorType
+import protocol TuistCore.Command
 import SPMUtility
 import Basic
 
@@ -41,8 +43,6 @@ final class InitCommand: NSObject, Command {
 
     let pathArgument: OptionArgument<String>
 
-    private let fileHandler: TapestryCore.FileHandling
-    private let printer: TapestryCore.Printing
     private let exampleGenerator: ExampleGenerating
     private let gitController: GitControlling
     private let packageController: PackageControlling
@@ -50,8 +50,6 @@ final class InitCommand: NSObject, Command {
 
     required convenience init(parser: ArgumentParser) {
         self.init(parser: parser,
-                  fileHandler: FileHandler(),
-                  printer: Printer(),
                   exampleGenerator: ExampleGenerator(),
                   gitController: GitController(),
                   packageController: PackageController(),
@@ -59,8 +57,6 @@ final class InitCommand: NSObject, Command {
     }
 
     init(parser: ArgumentParser,
-         fileHandler: TapestryCore.FileHandling,
-         printer: TapestryCore.Printing,
          exampleGenerator: ExampleGenerating,
          gitController: GitControlling,
          packageController: PackageControlling,
@@ -73,8 +69,6 @@ final class InitCommand: NSObject, Command {
                                      usage: "The path to the folder where the project will be generated (Default: Current directory).",
                                      completion: .filename)
 
-        self.fileHandler = fileHandler
-        self.printer = printer
         self.exampleGenerator = exampleGenerator
         self.gitController = gitController
         self.packageController = packageController
@@ -98,12 +92,12 @@ final class InitCommand: NSObject, Command {
         
         switch packageType {
         case .library:
-            printer.print("Creating library 📚")
+            Printer.shared.print("Creating library 📚")
             try exampleGenerator.generateProject(path: path,
                                                  name: name,
                                                  bundleId: bundleId)
         case .executable:
-            printer.print("Creating executable 🏃🏾‍♂️")
+            Printer.shared.print("Creating executable 🏃🏾‍♂️")
         }
         
         try generateLicense(authorName: authorName,
@@ -125,7 +119,7 @@ final class InitCommand: NSObject, Command {
         
         try packageController.generateXcodeproj(path: path)
 
-        printer.print(success: "Package generated ✅")
+        Printer.shared.print(success: "Package generated ✅")
     }
 
     // MARK: - Helpers
@@ -172,9 +166,9 @@ final class InitCommand: NSObject, Command {
     /// Obtain package path
     private func path(arguments: ArgumentParser.Result) throws -> AbsolutePath {
         if let path = arguments.get(pathArgument) {
-            return AbsolutePath(path, relativeTo: fileHandler.currentPath)
+            return AbsolutePath(path, relativeTo: FileHandler.shared.currentPath)
         } else {
-            return fileHandler.currentPath
+            return FileHandler.shared.currentPath
         }
     }
     

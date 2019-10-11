@@ -3,23 +3,22 @@ import Basic
 @testable import TapestryCoreTesting
 @testable import TapestryGen
 
-final class PackageControllerTests: XCTestCase {
+final class PackageControllerTests: TapestryUnitTestCase {
     private var subject: PackageController!
-    private var system: MockSystem!
     private var inputReader: MockInputReader!
     
     override func setUp() {
         super.setUp()
         inputReader = MockInputReader()
-        system = MockSystem()
-        subject = PackageController(inputReader: inputReader,
-                                    system: system)
+        subject = PackageController(inputReader: inputReader)
     }
     
     
     func test_initPackage_when_library() throws {
         let path = AbsolutePath("/test")
-        inputReader.readEnumInputStub = "library"
+        inputReader.readEnumInputStub = {
+            "library"
+        }
         system.succeedCommand(["swift", "package", "--package-path", path.pathString, "init", "--type" , "library"])
         
         XCTAssertNoThrow(try subject.initPackage(path: path, name: path.components.last ?? ""))
@@ -27,7 +26,9 @@ final class PackageControllerTests: XCTestCase {
     
     func test_initPackage_when_executable() throws {
         let path = AbsolutePath("/test")
-        inputReader.readEnumInputStub = "executable"
+        inputReader.readEnumInputStub = {
+            "executable"
+        }
         system.succeedCommand(["swift", "package", "--package-path", path.pathString, "init", "--type", "executable"])
         
         XCTAssertNoThrow(try subject.initPackage(path: path, name: path.components.last ?? ""))
@@ -35,8 +36,10 @@ final class PackageControllerTests: XCTestCase {
     
     func test_initPackage_throws_when_wrong_input() throws {
         let path = AbsolutePath("/test")
-        inputReader.readEnumInputStub = "test"
-        system.succeedCommand(["swift", "package", "--package-path", path.pathString, "init", "--type", "executable"])
+        inputReader.readEnumInputStub = {
+            throw NSError.test()
+        }
+        system.succeedCommand(["swift", "package", "--package-path", path.pathString, "init", "--type", "library"])
         
         XCTAssertThrowsError(try subject.initPackage(path: path, name: path.components.last ?? ""))
     }

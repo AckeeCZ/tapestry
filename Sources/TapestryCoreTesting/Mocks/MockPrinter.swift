@@ -3,23 +3,63 @@ import Foundation
 import TapestryCore
 
 public final class MockPrinter: Printing {
-    public func print(_ text: String, includeNewline: Bool) {}
+    var standardOutput: String = ""
+    var standardError: String = ""
     
-    public func print(_ text: String, output: PrinterOutput, includeNewline: Bool) {}
+    public func print(_ text: String, output: PrinterOutput, includeNewline: Bool) {
+        switch output {
+        case .standardError:
+            standardError.append("\(text)" + (includeNewline ? "\n" : ""))
+        case .standardOutput:
+            standardOutput.append("\(text)" + (includeNewline ? "\n" : ""))
+        }
+    }
     
-    public func print(_ text: String, color: TerminalController.Color) {}
+    public func print(_ text: String, includeNewline: Bool) {
+        standardOutput.append("\(text)" + (includeNewline ? "\n" : ""))
+    }
     
-    public func print(section: String) {}
-    
-    public func print(subsection: String) {}
-    
-    public func print(warning: String) {}
-    
-    public func print(error: Error) {}
-    
-    public func print(success: String) {}
-    
-    public func print(errorMessage: String) {}
-    
-    public func print(deprecation: String) {}
+    public func print(_ text: String, color: TerminalController.Color) {
+        standardOutput.append("\(text)\n")
+    }
+
+    public func print(_ text: String) {
+        standardOutput.append("\(text)\n")
+    }
+
+    public func print(section: String) {
+        standardOutput.append("\(section)\n")
+    }
+
+    public func print(warning: String) {
+        standardOutput.append("\(warning)\n")
+    }
+
+    public func print(deprecation: String) {
+        standardOutput.append("\(deprecation)\n")
+    }
+
+    public func print(errorMessage: String) {
+        standardError.append("\(errorMessage)\n")
+    }
+
+    public func print(error: Error) {
+        standardError.append("\(error.localizedDescription)\n")
+    }
+
+    public func print(success: String) {
+        standardOutput.append("\(success)\n")
+    }
+
+    public func print(subsection: String) {
+        standardOutput.append("\(subsection)\n")
+    }
+
+    func standardOutputMatches(with pattern: String) -> Bool {
+        return standardOutput.contains(pattern)
+    }
+
+    func standardErrorMatches(with pattern: String) -> Bool {
+        return standardError.contains(pattern)
+    }
 }
