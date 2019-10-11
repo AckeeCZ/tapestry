@@ -2,7 +2,7 @@ osx_image: xcode11
 language: objective-c
 env:
   global:
-  - FRAMEWORK_NAME=Tapestry
+  - FRAMEWORK_NAME=tapestry
 script:
 - set -o pipefail && swift test --generate-linuxmain -Xswiftc -target -Xswiftc x86_64-apple-macosx10.12 
 deploy:
@@ -12,4 +12,4 @@ deploy:
   file: "$FRAMEWORK_NAME.framework.zip"
   skip_cleanup: true
   on:
-    repo: AckeeCZ/Tapestry
+    repo: AckeeCZ/tapestry
