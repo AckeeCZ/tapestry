@@ -1,5 +1,5 @@
 # Tapestry
-[![CI Status](http://img.shields.io/travis/AckeeCZ/tapestry.svg?style=flat)](https://travis-ci.com/AckeeCZ/tapestry)
+[![CI Status](http://img.shields.io/travis/AckeeCZ/tapestry.svg?style=flat)](https://travis-ci.com/AckeeCZ/tapestry.svg?branch=master)
 
 ## What's Tapestry 🤔
 
