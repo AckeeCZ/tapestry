@@ -5,7 +5,9 @@
 
 Tapestry helps you with **creating** and **managing** your Swift frameworks 💫
 
-## Usage
+Do you want to easily create a Swift framework that supports Carthage, Cocoapods and Swift Package Manager? Well, look no further, `tapestry` shall help you with exactly that!
+
+## Installation
 
 ### Using [Homebrew](https://brew.sh)
 
