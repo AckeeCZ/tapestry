@@ -12,15 +12,15 @@ final class EditCommand: NSObject, Command {
 
     let pathArgument: OptionArgument<String>
     
-    private let configGenerator: ConfigGenerating
+    private let configGenerator: EditConfigGenerating
     
     required convenience init(parser: ArgumentParser) {
         self.init(parser: parser,
-                  configGenerator: ConfigGenerator())
+                  configGenerator: EditConfigGenerator())
     }
     
     init(parser: ArgumentParser,
-         configGenerator: ConfigGenerating) {
+         configGenerator: EditConfigGenerating) {
         let subParser = parser.add(subparser: EditCommand.command, overview: EditCommand.overview)
         
         pathArgument = subParser.add(option: "--path",
@@ -41,13 +41,13 @@ final class EditCommand: NSObject, Command {
                                              bundleId: "tapestry")
         
         Printer.shared.print("""
-        ✏️  Opening \(name)\(ConfigGenerator.configFilename).xcodeproj/
+        ✏️  Opening \(name)\(EditConfigGenerator.configFilename).xcodeproj/
             
         Press the return key once you're done
         """)
-        try System.shared.run("open", "\(name)\(ConfigGenerator.configFilename).xcodeproj/")
+        try System.shared.run("open", "\(name)\(EditConfigGenerator.configFilename).xcodeproj/")
         readLine(until: .whitespacesAndNewlines)
-        try FileHandler.shared.delete(path.appending(RelativePath("\(name)\(ConfigGenerator.configFilename).xcodeproj/")))
+        try FileHandler.shared.delete(path.appending(RelativePath("\(name)\(EditConfigGenerator.configFilename).xcodeproj/")))
     }
     
     private func readLine(until characterSet: CharacterSet) {

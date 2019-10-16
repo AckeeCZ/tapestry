@@ -3,7 +3,7 @@ import Basic
 import TuistGenerator
 
 /// Loads project for example
-public final class ConfigModelLoader: GeneratorModelLoading {
+public final class EditConfigModelLoader: GeneratorModelLoading {
     private let packageName: String
     private let name: String
     private let bundleId: String
