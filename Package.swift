@@ -1,4 +1,4 @@
-// swift-tools-version:5.1
+// swift-tools-version:4.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -18,18 +18,12 @@ extension Package {
 
 let package = Package(
     name: "tapestry",
-    platforms: [
-        .macOS(.v10_10),
-    ],
     products: [
         .library(name: "TapestryGen",
                  targets: ["TapestryGen"]),
-        .library(name: "TapestryConfiguration",
+        .library(name: "TapestryConfig",
                  type: .dynamic,
-                 targets: ["TapestryConfiguration"]),
-        .executable(
-            name: "tapestry-config",
-            targets: ["TapestryConfigurationExecutable"]), // dev
+                 targets: ["TapestryConfig"]),
         .executable(
             name: "tapestry",
             targets: ["tapestry"]),
@@ -37,18 +31,22 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/tuist/tuist.git", .branch("master")),
         .package(url: "https://github.com/fortmarek/acho", .branch("spm_bump")),
+        .package(url: "https://github.com/shibapm/PackageConfig.git", from: "0.12.2"),
     ],
     targets: [
         .target(
             name: "tapestry",
             dependencies: [
-                .target(name: "TapestryKit")
+                "TapestryKit",
+                "TapestryConfig",
+                "PackageConfig",
             ]),
         .target(name: "TapestryKit",
                 dependencies: [
                     "TapestryGen",
                     "TapestryCore",
-                    "TapestryConfiguration",
+                    "TapestryConfig",
+                    "PackageConfig",
             ]),
         .target(name: "TapestryCore",
                 dependencies: [
@@ -61,11 +59,14 @@ let package = Package(
                 "TapestryCore",
             ]),
         .target(
-            name: "TapestryConfiguration",
+            name: "TapestryConfig",
             dependencies: [
-                "TapestryCore",
+                "PackageConfig",
         ]),
-        .target(name: "TapestryConfigurationExecutable", dependencies: []), // dev
+        .target(name: "PackageConfigs",
+                dependencies: [
+                    "TapestryConfig",
+        ]),
         .target(name: "TapestryCoreTesting",
                 dependencies: [
                     "TapestryCore",
@@ -82,10 +83,10 @@ let package = Package(
     ]
 )
 
-#if canImport(TapestryConfiguration)
-import TapestryConfiguration
+#if canImport(TapestryConfig)
+import TapestryConfig
 
-TapestryConfiguration(release:
+TapestryConfig(release:
     ReleaseAction(add: nil,
                   commitMessage: nil,
                   push: false))
