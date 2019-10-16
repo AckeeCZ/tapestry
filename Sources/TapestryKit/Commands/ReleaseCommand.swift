@@ -5,6 +5,7 @@ import enum TuistCore.ErrorType
 import TapestryCore
 import Basic
 import SPMUtility
+import TapestryConfiguration
 
 enum ReleaseError: FatalError, Equatable {
     case noVersion, ungettableProjectName(AbsolutePath), tagExists(Version)
@@ -68,6 +69,13 @@ final class ReleaseCommand: NSObject, Command {
 
     func run(with arguments: ArgumentParser.Result) throws {
         guard let version = arguments.get(versionArgument) else { throw ReleaseError.noVersion }
+        
+        do {
+            let example = try TapestryConfiguration.load()
+            
+        } catch {
+            print(error)
+        }
         
         Printer.shared.print("Updating version 🚀")
         

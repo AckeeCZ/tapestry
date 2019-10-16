@@ -18,9 +18,18 @@ extension Package {
 
 let package = Package(
     name: "tapestry",
+    platforms: [
+        .macOS(.v10_10),
+    ],
     products: [
         .library(name: "TapestryGen",
                  targets: ["TapestryGen"]),
+        .library(name: "TapestryConfiguration",
+                 type: .dynamic,
+                 targets: ["TapestryConfiguration"]),
+        .executable(
+            name: "tapestry-config",
+            targets: ["TapestryConfigurationExecutable"]), // dev
         .executable(
             name: "tapestry",
             targets: ["tapestry"]),
@@ -39,6 +48,7 @@ let package = Package(
                 dependencies: [
                     "TapestryGen",
                     "TapestryCore",
+                    "TapestryConfiguration",
             ]),
         .target(name: "TapestryCore",
                 dependencies: [
@@ -50,6 +60,12 @@ let package = Package(
             dependencies: [
                 "TapestryCore",
             ]),
+        .target(
+            name: "TapestryConfiguration",
+            dependencies: [
+                "TapestryCore",
+        ]),
+        .target(name: "TapestryConfigurationExecutable", dependencies: []), // dev
         .target(name: "TapestryCoreTesting",
                 dependencies: [
                     "TapestryCore",
@@ -65,3 +81,14 @@ let package = Package(
             dependencies: ["TapestryGen", "TapestryCoreTesting"])
     ]
 )
+
+#if canImport(TapestryConfiguration)
+import TapestryConfiguration
+
+TapestryConfiguration(release:
+    ReleaseAction(add: nil,
+                  commitMessage: nil,
+                  push: false))
+    .write()
+
+#endif
