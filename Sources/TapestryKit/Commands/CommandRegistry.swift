@@ -27,6 +27,7 @@ public final class CommandRegistry {
                   processArguments: CommandRegistry.processArguments)
         register(command: InitCommand.self)
         register(command: ReleaseCommand.self)
+        register(command: EditCommand.self)
     }
 
     init(errorHandler: ErrorHandling,

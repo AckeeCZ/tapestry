@@ -21,14 +21,13 @@ public final class ExampleGenerator: ExampleGenerating {
     ///     - generatorInit: Closure for creating `Generator`
     public init(generatorInit: @escaping GeneratorInit = { name, bundleId in
         Generator(modelLoader: ExampleModelLoader(packageName: name,
-                                                  name: name,
+                                                  name: name + ExampleGenerator.exampleAppendix,
                                                   bundleId: bundleId))
         }) {
         self.generatorInit = generatorInit
     }
 
     // MARK: - Public methods
-
     public func generateProject(path: AbsolutePath, name: String, bundleId: String) throws {
         let examplePath = path.appending(RelativePath(ExampleGenerator.exampleAppendix))
         try FileHandler.shared.createFolder(examplePath)
@@ -36,11 +35,10 @@ public final class ExampleGenerator: ExampleGenerating {
         try createExampleSources(path: examplePath, name: name)
 
         let generator = generatorInit(name, bundleId)
-        _ = try generator.generateProject(at: path)
+        _ = try generator.generateProject(at: examplePath)
     }
 
     // MARK: - Helpers
-
     /// Create sources folder with dummy content
     private func createExampleSources(path: AbsolutePath, name: String) throws {
         let sourcesPath = path.appending(RelativePath("Sources"))

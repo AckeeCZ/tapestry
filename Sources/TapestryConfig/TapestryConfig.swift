@@ -1,10 +1,6 @@
-import protocol PackageConfig.PackageConfig
-
 // MARK: - TapestryConfig
 
-public struct TapestryConfig: Codable, PackageConfig {
-    public static var fileName: String = "tapestry.config.json"
-    
+public struct TapestryConfig: Codable {
     public let release: ReleaseAction?
 
     public init(release: ReleaseAction? = nil) {

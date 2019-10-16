@@ -70,13 +70,6 @@ final class ReleaseCommand: NSObject, Command {
     func run(with arguments: ArgumentParser.Result) throws {
         guard let version = arguments.get(versionArgument) else { throw ReleaseError.noVersion }
         
-        do {
-            let config = try TapestryConfig.load()
-            print(config.release)
-        } catch {
-            print(error)
-        }
-        
         Printer.shared.print("Updating version 🚀")
         
         let path = try self.path(arguments: arguments)

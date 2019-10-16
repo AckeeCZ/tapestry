@@ -31,7 +31,6 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/tuist/tuist.git", .branch("master")),
         .package(url: "https://github.com/fortmarek/acho", .branch("spm_bump")),
-        .package(url: "https://github.com/shibapm/PackageConfig.git", from: "0.12.2"),
     ],
     targets: [
         .target(
@@ -39,14 +38,11 @@ let package = Package(
             dependencies: [
                 "TapestryKit",
                 "TapestryConfig",
-                "PackageConfig",
             ]),
         .target(name: "TapestryKit",
                 dependencies: [
                     "TapestryGen",
                     "TapestryCore",
-                    "TapestryConfig",
-                    "PackageConfig",
             ]),
         .target(name: "TapestryCore",
                 dependencies: [
@@ -59,14 +55,8 @@ let package = Package(
                 "TapestryCore",
             ]),
         .target(
-            name: "TapestryConfig",
-            dependencies: [
-                "PackageConfig",
-        ]),
-        .target(name: "PackageConfigs",
-                dependencies: [
-                    "TapestryConfig",
-        ]),
+            name: "TapestryConfig"
+        ),
         .target(name: "TapestryCoreTesting",
                 dependencies: [
                     "TapestryCore",
@@ -82,13 +72,3 @@ let package = Package(
             dependencies: ["TapestryGen", "TapestryCoreTesting"])
     ]
 )
-
-#if canImport(TapestryConfig)
-import TapestryConfig
-
-TapestryConfig(release:
-    ReleaseAction(add: nil,
-                  commitMessage: nil,
-                  push: false))
-    .write()
-#endif
