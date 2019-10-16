@@ -78,48 +78,53 @@ final class InitCommand: NSObject, Command {
     func run(with arguments: ArgumentParser.Result) throws {
         let path = try self.path(arguments: arguments)
         let name = try self.name(path: path)
+        
+        try exampleGenerator.generateProject(path: path,
+                                             name: name,
+                                             bundleId: "bundleId")
 
-        try verifyDirectoryIsEmpty(path: path)
-        
-        let packageType = try packageController.initPackage(path: path, name: name)
-        
-        try gitController.initGit(path: path)
-        
-        let authorName = try self.authorName()
-        let email = try self.email()
-        let username = try self.username(email: email)
-        let bundleId = try self.bundleId(username: username, projectName: name)
-        
-        switch packageType {
-        case .library:
-            Printer.shared.print("Creating library 📚")
-            try exampleGenerator.generateProject(path: path,
-                                                 name: name,
-                                                 bundleId: bundleId)
-        case .executable:
-            Printer.shared.print("Creating executable 🏃🏾‍♂️")
-        }
-        
-        try generateLicense(authorName: authorName,
-                            email: email,
-                            path: path)
-        try generateGitignore(path: path)
-        try generateReadme(path: path,
-                           username: username,
-                           name: name)
-        
-        try generateTravis(path: path,
-                           packageType: packageType,
-                           name: name)
-        try generatePodspec(path: path,
-                            name: name,
-                            username: username,
-                            authorName: authorName,
-                            email: email)
-        
-        try packageController.generateXcodeproj(path: path)
-
-        Printer.shared.print(success: "Package generated ✅")
+//
+//        try verifyDirectoryIsEmpty(path: path)
+//
+//        let packageType = try packageController.initPackage(path: path, name: name)
+//
+//        try gitController.initGit(path: path)
+//
+//        let authorName = try self.authorName()
+//        let email = try self.email()
+//        let username = try self.username(email: email)
+//        let bundleId = try self.bundleId(username: username, projectName: name)
+//
+//        switch packageType {
+//        case .library:
+//            Printer.shared.print("Creating library 📚")
+//            try exampleGenerator.generateProject(path: path,
+//                                                 name: name,
+//                                                 bundleId: bundleId)
+//        case .executable:
+//            Printer.shared.print("Creating executable 🏃🏾‍♂️")
+//        }
+//
+//        try generateLicense(authorName: authorName,
+//                            email: email,
+//                            path: path)
+//        try generateGitignore(path: path)
+//        try generateReadme(path: path,
+//                           username: username,
+//                           name: name)
+//
+//        try generateTravis(path: path,
+//                           packageType: packageType,
+//                           name: name)
+//        try generatePodspec(path: path,
+//                            name: name,
+//                            username: username,
+//                            authorName: authorName,
+//                            email: email)
+//
+//        try packageController.generateXcodeproj(path: path)
+//
+//        Printer.shared.print(success: "Package generated ✅")
     }
 
     // MARK: - Helpers

@@ -91,5 +91,4 @@ TapestryConfig(release:
                   commitMessage: nil,
                   push: false))
     .write()
-
 #endif

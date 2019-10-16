@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		77F450DB5BBAD240FB439294 /* TapestryConfig in Frameworks */ = {isa = PBXBuildFile; productRef = A7ABA4434D52148A59C1A843 /* TapestryConfig */; };
-		9F636900A4962EC165C5CE76 /* Tapestry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 514A78D035660EF07D7B1172 /* Tapestry.swift */; };
+		2CFD6599E5444F09580909C6 /* tapestry.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A2F8D217EC77F88AF33A8B /* tapestry.swift */; };
+		77F450DB5BBAD240FB439294 /* tapestry in Frameworks */ = {isa = PBXBuildFile; productRef = ED56597932A97E111F8BF511 /* tapestry */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -24,9 +24,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		514A78D035660EF07D7B1172 /* Tapestry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tapestry.swift; sourceTree = "<group>"; };
+		51532C7E7457ACC1C0E71361 /* tapestry */ = {isa = PBXFileReference; name = tapestry; path = ../tapestry; sourceTree = "<group>"; };
 		803A523CD9175C50CF333242 /* tapestry.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = tapestry.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		BA9A8451D08BFC61E9E92194 /* . */ = {isa = PBXFileReference; path = .; sourceTree = "<group>"; };
+		A3A2F8D217EC77F88AF33A8B /* tapestry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = tapestry.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -34,7 +34,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				77F450DB5BBAD240FB439294 /* TapestryConfig in Frameworks */,
+				77F450DB5BBAD240FB439294 /* tapestry in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -44,10 +44,18 @@
 		2707F5B3E998EC9522184A18 /* tapestry */ = {
 			isa = PBXGroup;
 			children = (
-				514A78D035660EF07D7B1172 /* Tapestry.swift */,
-				BA9A8451D08BFC61E9E92194 /* . */,
+				51532C7E7457ACC1C0E71361 /* tapestry */,
+				3ED573DB5F74354CB7E2E497 /* Sources */,
 			);
 			name = tapestry;
+			sourceTree = "<group>";
+		};
+		3ED573DB5F74354CB7E2E497 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				A3A2F8D217EC77F88AF33A8B /* tapestry.swift */,
+			);
+			path = Sources;
 			sourceTree = "<group>";
 		};
 		41D25D35B9B03707C4682070 /* Products */ = {
@@ -93,7 +101,7 @@
 			);
 			name = tapestry;
 			packageProductDependencies = (
-				A7ABA4434D52148A59C1A843 /* TapestryConfig */,
+				ED56597932A97E111F8BF511 /* tapestry */,
 			);
 			productName = tapestry;
 			productReference = 803A523CD9175C50CF333242 /* tapestry.app */;
@@ -155,7 +163,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9F636900A4962EC165C5CE76 /* Tapestry.swift in Sources */,
+				2CFD6599E5444F09580909C6 /* tapestry.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -330,9 +338,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		A7ABA4434D52148A59C1A843 /* TapestryConfig */ = {
+		ED56597932A97E111F8BF511 /* tapestry */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = TapestryConfig;
+			productName = tapestry;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

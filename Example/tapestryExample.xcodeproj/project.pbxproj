@@ -7,12 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		77F450DB5BBAD240FB439294 /* TapestryConfig in Frameworks */ = {isa = PBXBuildFile; productRef = A7ABA4434D52148A59C1A843 /* TapestryConfig */; };
-		9F636900A4962EC165C5CE76 /* Tapestry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 514A78D035660EF07D7B1172 /* Tapestry.swift */; };
+		F6A01BC101033EDBCA56C02A /* tapestry in Frameworks */ = {isa = PBXBuildFile; productRef = BFDF8FD52337973B43C1757A /* tapestry */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		A258F887DE4AC0058C17F91C /* Embed Frameworks */ = {
+		B864EDADBF9F5A33F42E641D /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstSubfolderSpec = 10;
@@ -24,107 +23,105 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		514A78D035660EF07D7B1172 /* Tapestry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tapestry.swift; sourceTree = "<group>"; };
-		803A523CD9175C50CF333242 /* tapestry.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = tapestry.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		BA9A8451D08BFC61E9E92194 /* . */ = {isa = PBXFileReference; path = .; sourceTree = "<group>"; };
+		4CF96F45E4A3C99BD5EE8DF0 /* tapestryExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = tapestryExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6455ABBA7CCC651053F1F3DE /* tapestry */ = {isa = PBXFileReference; name = tapestry; path = ../tapestry; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		A5F352EC186D3B4D0389356A /* Frameworks */ = {
+		CAE29B9937F216AD7D0C750C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				77F450DB5BBAD240FB439294 /* TapestryConfig in Frameworks */,
+				F6A01BC101033EDBCA56C02A /* tapestry in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2707F5B3E998EC9522184A18 /* tapestry */ = {
+		35588FC94928D867A89F062B = {
 			isa = PBXGroup;
 			children = (
-				514A78D035660EF07D7B1172 /* Tapestry.swift */,
-				BA9A8451D08BFC61E9E92194 /* . */,
+				A7280C0A6326D71B5BEEC32F /* tapestryExample */,
+				926FFBDF7596F98C1E704EDA /* Frameworks */,
+				D2B6782B3A4AD5FD12748760 /* Products */,
 			);
-			name = tapestry;
 			sourceTree = "<group>";
 		};
-		41D25D35B9B03707C4682070 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				803A523CD9175C50CF333242 /* tapestry.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		5D4F930795216AAD8DE42833 /* Frameworks */ = {
+		926FFBDF7596F98C1E704EDA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		EE61B1BD4FF19F04F797BA76 = {
+		A7280C0A6326D71B5BEEC32F /* tapestryExample */ = {
 			isa = PBXGroup;
 			children = (
-				2707F5B3E998EC9522184A18 /* tapestry */,
-				5D4F930795216AAD8DE42833 /* Frameworks */,
-				41D25D35B9B03707C4682070 /* Products */,
+				6455ABBA7CCC651053F1F3DE /* tapestry */,
 			);
+			name = tapestryExample;
+			sourceTree = "<group>";
+		};
+		D2B6782B3A4AD5FD12748760 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4CF96F45E4A3C99BD5EE8DF0 /* tapestryExample.app */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		68AB346A7BF3F28A6CC81DF5 /* tapestry */ = {
+		1E82F27C2680AE8B494546B8 /* tapestryExample */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0266FDD172201B8938384CBF /* Build configuration list for PBXNativeTarget "tapestry" */;
+			buildConfigurationList = A1D334D283D3DAF49D382D47 /* Build configuration list for PBXNativeTarget "tapestryExample" */;
 			buildPhases = (
-				78AA03C8A4F953446CD38E26 /* Sources */,
-				B332B631B35F8150C351FE1F /* Resources */,
-				69957418563AEBC819EECA5C /* Embed Precompiled Frameworks */,
-				A258F887DE4AC0058C17F91C /* Embed Frameworks */,
-				A5F352EC186D3B4D0389356A /* Frameworks */,
+				68B83C4E805459070060C045 /* Sources */,
+				E7FC5C6962707CABFF35C0F9 /* Resources */,
+				87CA1700FDC21A4ECB7EA020 /* Embed Precompiled Frameworks */,
+				B864EDADBF9F5A33F42E641D /* Embed Frameworks */,
+				CAE29B9937F216AD7D0C750C /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = tapestry;
+			name = tapestryExample;
 			packageProductDependencies = (
-				A7ABA4434D52148A59C1A843 /* TapestryConfig */,
+				BFDF8FD52337973B43C1757A /* tapestry */,
 			);
-			productName = tapestry;
-			productReference = 803A523CD9175C50CF333242 /* tapestry.app */;
+			productName = tapestryExample;
+			productReference = 4CF96F45E4A3C99BD5EE8DF0 /* tapestryExample.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		FBBD3B02A852280E32247F14 /* Project object */ = {
+		1914E2939ADC51CF04E353B4 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 			};
-			buildConfigurationList = C8E8E5AAD52B54AD65624FE2 /* Build configuration list for PBXProject "tapestry" */;
+			buildConfigurationList = A7C119615E2519227D36F872 /* Build configuration list for PBXProject "tapestryExample" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 			);
-			mainGroup = EE61B1BD4FF19F04F797BA76;
-			productRefGroup = 41D25D35B9B03707C4682070 /* Products */;
+			mainGroup = 35588FC94928D867A89F062B;
+			productRefGroup = D2B6782B3A4AD5FD12748760 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				68AB346A7BF3F28A6CC81DF5 /* tapestry */,
+				1E82F27C2680AE8B494546B8 /* tapestryExample */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		B332B631B35F8150C351FE1F /* Resources */ = {
+		E7FC5C6962707CABFF35C0F9 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -134,7 +131,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		69957418563AEBC819EECA5C /* Embed Precompiled Frameworks */ = {
+		87CA1700FDC21A4ECB7EA020 /* Embed Precompiled Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -151,108 +148,17 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		78AA03C8A4F953446CD38E26 /* Sources */ = {
+		68B83C4E805459070060C045 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9F636900A4962EC165C5CE76 /* Tapestry.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		41939D8B1E655782593DC94A /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "-";
-				COMBINE_HIDPI_IMAGES = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = bundleId;
-				PRODUCT_NAME = tapestry;
-				SDKROOT = macosx;
-				SUPPORTED_PLATFORMS = macosx;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_COMPILATION_MODE = singlefile;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-			};
-			name = Debug;
-		};
-		539D9D9618308BC3A1F54513 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
-		B3155B8684FE5429E977B0FA /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "-";
-				COMBINE_HIDPI_IMAGES = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = bundleId;
-				PRODUCT_NAME = tapestry;
-				SDKROOT = macosx;
-				SUPPORTED_PLATFORMS = macosx;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 5.0;
-			};
-			name = Release;
-		};
-		D2390AC14777A16BBD575930 /* Debug */ = {
+		349E019DADB4A73CCF932DC5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -308,33 +214,123 @@
 			};
 			name = Debug;
 		};
+		74AE480F5D940B5D24564554 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		8D5A089C82391927BE1556D6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = bundleId;
+				PRODUCT_NAME = tapestryExample;
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_COMPILATION_MODE = singlefile;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		C39EE93F1C4BA821674A3256 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = bundleId;
+				PRODUCT_NAME = tapestryExample;
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0266FDD172201B8938384CBF /* Build configuration list for PBXNativeTarget "tapestry" */ = {
+		A1D334D283D3DAF49D382D47 /* Build configuration list for PBXNativeTarget "tapestryExample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				41939D8B1E655782593DC94A /* Debug */,
-				B3155B8684FE5429E977B0FA /* Release */,
+				8D5A089C82391927BE1556D6 /* Debug */,
+				C39EE93F1C4BA821674A3256 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};
-		C8E8E5AAD52B54AD65624FE2 /* Build configuration list for PBXProject "tapestry" */ = {
+		A7C119615E2519227D36F872 /* Build configuration list for PBXProject "tapestryExample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				D2390AC14777A16BBD575930 /* Debug */,
-				539D9D9618308BC3A1F54513 /* Release */,
+				349E019DADB4A73CCF932DC5 /* Debug */,
+				74AE480F5D940B5D24564554 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		A7ABA4434D52148A59C1A843 /* TapestryConfig */ = {
+		BFDF8FD52337973B43C1757A /* tapestry */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = TapestryConfig;
+			productName = tapestry;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
-	rootObject = FBBD3B02A852280E32247F14 /* Project object */;
+	rootObject = 1914E2939ADC51CF04E353B4 /* Project object */;
 }

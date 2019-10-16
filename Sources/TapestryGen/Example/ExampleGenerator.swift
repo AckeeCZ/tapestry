@@ -21,7 +21,7 @@ public final class ExampleGenerator: ExampleGenerating {
     ///     - generatorInit: Closure for creating `Generator`
     public init(generatorInit: @escaping GeneratorInit = { name, bundleId in
         Generator(modelLoader: ExampleModelLoader(packageName: name,
-                                                  name: name + ExampleGenerator.exampleAppendix,
+                                                  name: name,
                                                   bundleId: bundleId))
         }) {
         self.generatorInit = generatorInit
@@ -36,7 +36,7 @@ public final class ExampleGenerator: ExampleGenerating {
         try createExampleSources(path: examplePath, name: name)
 
         let generator = generatorInit(name, bundleId)
-        _ = try generator.generateProject(at: examplePath)
+        _ = try generator.generateProject(at: path)
     }
 
     // MARK: - Helpers
