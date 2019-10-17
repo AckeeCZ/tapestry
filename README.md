@@ -40,7 +40,7 @@ tapestry init --path TapestryProject
 
 You can omit `--path` argument and it will generate your framework in the current directory.
 
-It uses [tuist](https://github.com/tuist/tuist) and [SPM](https://github.com/tuist/tuist) tools, so it's very easy to adjust it to your needs (no complicated template structure, all code is generated from **ground up**!)
+It uses [tuist](https://github.com/tuist/tuist) and [SPM](https://github.com/apple/swift-package-manager) tools, so it's very easy to adjust it to your needs (no complicated template structure, all code is generated from **ground up**!)
 
 You can change the generated files in `InitCommand` and your example project in `ExampleModelLoader`. In the future, I'd like to make this customization even easier, so watch this space 👀
 
