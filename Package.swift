@@ -21,9 +21,9 @@ let package = Package(
     products: [
         .library(name: "TapestryGen",
                  targets: ["TapestryGen"]),
-        .library(name: "TapestryConfig",
+        .library(name: "PackageDescription",
                  type: .dynamic,
-                 targets: ["TapestryConfig"]),
+                 targets: ["PackageDescription"]),
         .executable(
             name: "tapestry",
             targets: ["tapestry"]),
@@ -37,12 +37,12 @@ let package = Package(
             name: "tapestry",
             dependencies: [
                 "TapestryKit",
-                "TapestryConfig",
             ]),
         .target(name: "TapestryKit",
                 dependencies: [
                     "TapestryGen",
                     "TapestryCore",
+                    "PackageDescription",
             ]),
         .target(name: "TapestryCore",
                 dependencies: [
@@ -55,7 +55,7 @@ let package = Package(
                 "TapestryCore",
             ]),
         .target(
-            name: "TapestryConfig"
+            name: "PackageDescription"
         ),
         .target(name: "TapestryCoreTesting",
                 dependencies: [

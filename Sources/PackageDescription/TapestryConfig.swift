@@ -1,6 +1,8 @@
+import Foundation
+
 // MARK: - TapestryConfig
 
-public struct TapestryConfig: Codable {
+public final class TapestryConfig: Codable {
     public let release: ReleaseAction?
 
     public init(release: ReleaseAction? = nil) {
@@ -8,7 +10,7 @@ public struct TapestryConfig: Codable {
     }
 }
 
-public struct ReleaseAction: Codable {
+public final class ReleaseAction: Codable {
     public let add: SourceFilesList?
     public let commitMessage: String?
     public let push: Bool

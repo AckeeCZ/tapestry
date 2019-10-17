@@ -34,7 +34,7 @@ public final class EditConfigModelLoader: GeneratorModelLoading {
                                sources: sources,
                                filesGroup: .group(name: name),
                                dependencies: [
-                                .package(.local(path: RelativePath("../\(packageName)"), productName: "TapestryConfig"))
+                                .package(.local(path: RelativePath("../\(packageName)"), productName: "PackageDescription"))
                         ])],
                        schemes: [])
     }

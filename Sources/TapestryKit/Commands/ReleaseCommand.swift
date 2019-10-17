@@ -5,7 +5,7 @@ import enum TuistCore.ErrorType
 import TapestryCore
 import Basic
 import SPMUtility
-import TapestryConfig
+import PackageDescription
 
 enum ReleaseError: FatalError, Equatable {
     case noVersion, ungettableProjectName(AbsolutePath), tagExists(Version)
@@ -74,6 +74,10 @@ final class ReleaseCommand: NSObject, Command {
         
         let path = try self.path(arguments: arguments)
         let name = try self.name(path: path)
+        
+        let graphManifestLoader = GraphManifestLoader()
+        let configModelLoader = ConfigModelLoader(manifestLoader: graphManifestLoader)
+//        let config = try configModelLoader.loadTapestryConfig(at: path)
         
         guard try !gitController.tagExists(version, path: path) else { throw ReleaseError.tagExists(version) }
         

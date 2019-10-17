@@ -1,0 +1,108 @@
+import TapestryGen
+import PackageDescription
+import TapestryCore
+import Basic
+
+/// Entity responsible for providing generator models
+///
+/// Assumptions:
+///   - TuistGenerator creates a graph of Project dependencies
+///   - The projects are associated with unique paths
+///   - Each path only contains one Project
+///   - Whenever a dependency is encountered referencing another path,
+///     this entity is consulted again to load the model at that path
+public protocol ConfigModelLoading {
+    /// Load a TusitConfig model at the specified path
+    ///
+    /// - Parameter path: The absolute path for the tuistconfig model to load
+    /// - Returns: The tuistconfig loaded from the specified path
+    /// - Throws: Error encountered during the loading process (e.g. Missing tuistconfig)
+    func loadTapestryConfig(at path: AbsolutePath) throws -> TapestryGen.TapestryConfig
+}
+
+class ConfigModelLoader: ConfigModelLoading {    
+    private let manifestLoader: GraphManifestLoading
+    
+    init(manifestLoader: GraphManifestLoading) {
+        self.manifestLoader = manifestLoader
+    }
+    
+    /// Load a TusitConfig model at the specified path
+    ///
+    /// - Parameter path: The absolute path for the tuistconfig model to load
+    /// - Returns: The tuistconfig loaded from the specified path
+    /// - Throws: Error encountered during the loading process (e.g. Missing tuistconfig)
+    func loadTapestryConfig(at path: AbsolutePath) throws -> TapestryGen.TapestryConfig {
+        guard let tapestryConfigPath = locateDirectoryTraversingParents(from: path, path: "TapestryConfig.swift") else {
+            fatalError("woops")
+            // Return default
+        }
+        let manifest = try manifestLoader.loadTapestryConfig(at: tapestryConfigPath.parentDirectory)
+        return try TapestryGen.TapestryConfig.from(manifest: manifest, path: path)
+    }
+
+    /// Traverses the parent directories until the given path is found.
+    ///
+    /// - Parameters:
+    ///   - from: A path to a directory from which search the TuistConfig.swift.
+    /// - Returns: The found path.
+    fileprivate func locateDirectoryTraversingParents(from: AbsolutePath, path: String) -> AbsolutePath? {
+        let tuistConfigPath = from.appending(component: path)
+
+        if FileHandler.shared.exists(tuistConfigPath) {
+            return tuistConfigPath
+        } else if from == AbsolutePath("/") {
+            return nil
+        } else {
+            return locateDirectoryTraversingParents(from: from.parentDirectory, path: path)
+        }
+    }
+}
+
+
+extension TapestryGen.TapestryConfig {
+    static func from(manifest: PackageDescription.TapestryConfig,
+                     path: AbsolutePath) throws -> TapestryGen.TapestryConfig {
+        guard let releaseManifest = manifest.release else {
+            // Provide default
+            fatalError("woops")
+        }
+        let releaseAction = TapestryGen.ReleaseAction.from(manifest: releaseManifest)
+        return TapestryGen.TapestryConfig(releaseAction: releaseAction)
+    }
+}
+
+extension TapestryGen.ReleaseAction {
+    static func from(manifest: PackageDescription.ReleaseAction) -> TapestryGen.ReleaseAction {
+        // TODO: Fix glob
+        // Convert to globs
+//        let add = manifest.add?.globs.map { RelativePath($0.glob) } ?? []
+        let add: [RelativePath] = []
+        return TapestryGen.ReleaseAction(add: add,
+                                         commitMessage: manifest.commitMessage,
+                                         push: manifest.push)
+    }
+}
+
+public enum FileElement: Equatable {
+    case file(path: AbsolutePath)
+    case folderReference(path: AbsolutePath)
+
+    var path: AbsolutePath {
+        switch self {
+        case let .file(path):
+            return path
+        case let .folderReference(path):
+            return path
+        }
+    }
+
+    var isReference: Bool {
+        switch self {
+        case .file:
+            return false
+        case .folderReference:
+            return true
+        }
+    }
+}

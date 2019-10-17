@@ -1,4 +1,4 @@
-import TapestryConfig
+import PackageDescription
 
 let config = TapestryConfig(
     release: ReleaseAction(add: nil,
