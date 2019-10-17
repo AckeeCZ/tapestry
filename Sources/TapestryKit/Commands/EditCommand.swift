@@ -25,8 +25,6 @@ final class EditCommand: NSObject, Command {
     func run(with arguments: ArgumentParser.Result) throws {
         let path = try self.path(arguments: arguments)
         
-        // TODO: Create Tapestries folder here
-        
         Printer.shared.print("""
         ✏️  Opening Tapestries project
             

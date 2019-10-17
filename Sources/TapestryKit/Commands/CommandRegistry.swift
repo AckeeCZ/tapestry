@@ -28,6 +28,7 @@ public final class CommandRegistry {
         register(command: InitCommand.self)
         register(command: ReleaseCommand.self)
         register(command: EditCommand.self)
+        register(command: UpCommand.self)
     }
 
     init(errorHandler: ErrorHandling,
