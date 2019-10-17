@@ -27,35 +27,16 @@ class ConfigModelLoader: ConfigModelLoading {
         self.manifestLoader = manifestLoader
     }
     
+    // TODO: Possible improvement - traversing children
+    
     /// Load a TusitConfig model at the specified path
     ///
     /// - Parameter path: The absolute path for the tuistconfig model to load
     /// - Returns: The tuistconfig loaded from the specified path
     /// - Throws: Error encountered during the loading process (e.g. Missing tuistconfig)
     func loadTapestryConfig(at path: AbsolutePath) throws -> TapestryGen.TapestryConfig {
-        guard let tapestryConfigPath = locateDirectoryTraversingParents(from: path, path: "TapestryConfig.swift") else {
-            fatalError("woops")
-            // Return default
-        }
-        let manifest = try manifestLoader.loadTapestryConfig(at: tapestryConfigPath.parentDirectory)
+        let manifest = try manifestLoader.loadTapestryConfig(at: path.parentDirectory)
         return try TapestryGen.TapestryConfig.from(manifest: manifest, path: path)
-    }
-
-    /// Traverses the parent directories until the given path is found.
-    ///
-    /// - Parameters:
-    ///   - from: A path to a directory from which search the TuistConfig.swift.
-    /// - Returns: The found path.
-    fileprivate func locateDirectoryTraversingParents(from: AbsolutePath, path: String) -> AbsolutePath? {
-        let tuistConfigPath = from.appending(component: path)
-
-        if FileHandler.shared.exists(tuistConfigPath) {
-            return tuistConfigPath
-        } else if from == AbsolutePath("/") {
-            return nil
-        } else {
-            return locateDirectoryTraversingParents(from: from.parentDirectory, path: path)
-        }
     }
 }
 

@@ -7,7 +7,7 @@ import TapestryCore
 import class TuistCore.System
 
 protocol ResourceLocating: AnyObject {
-    func projectDescription() throws -> AbsolutePath
+    func projectDescription(path: AbsolutePath) throws -> AbsolutePath
     func cliPath() throws -> AbsolutePath
 }
 
@@ -39,8 +39,8 @@ enum ResourceLocatingError: FatalError {
 final class ResourceLocator: ResourceLocating {
     // MARK: - ResourceLocating
 
-    func projectDescription() throws -> AbsolutePath {
-        return try frameworkPath("ProjectDescription")
+    func projectDescription(path: AbsolutePath) throws -> AbsolutePath {
+        return try frameworkPath("PackageDescription", path: path)
     }
 
     func cliPath() throws -> AbsolutePath {
@@ -49,17 +49,19 @@ final class ResourceLocator: ResourceLocating {
 
     // MARK: - Fileprivate
 
-    private func frameworkPath(_ name: String) throws -> AbsolutePath {
-        let frameworkNames = ["\(name).framework", "lib\(name).dylib"]
-        let bundlePath = AbsolutePath(Bundle(for: GraphManifestLoader.self).bundleURL.path)
-        let paths = [
-            bundlePath,
-            bundlePath.parentDirectory,
-        ]
-        let candidates = paths.flatMap { path in
-            frameworkNames.map { path.appending(component: $0) }
+    private func frameworkPath(_ name: String, path: AbsolutePath) throws -> AbsolutePath {
+        let pathComponents = path.pathString.components(separatedBy: "/")
+        guard
+            let tapestriesIndex = path.pathString.components(separatedBy: "/").firstIndex(where: { $0 == "Tapestries" })
+        else {
+            throw ResourceLocatingError.notFound(name)
         }
-        guard let frameworkPath = candidates.first(where: { FileHandler.shared.exists($0) }) else {
+        
+        let tapestriesPath = AbsolutePath(pathComponents.prefix(through: tapestriesIndex).joined(separator: "/"))
+        
+        // TODO: Candidates
+        let frameworkPath = tapestriesPath.appending(RelativePath(".build/debug/lib\(name).dylib"))
+        guard FileHandler.shared.exists(frameworkPath) else {
             throw ResourceLocatingError.notFound(name)
         }
         return frameworkPath
@@ -204,7 +206,7 @@ class GraphManifestLoader: GraphManifestLoading {
     }
 
     private func loadManifestData(at path: AbsolutePath) throws -> Data {
-        let projectDescriptionPath = try resourceLocator.projectDescription()
+        let projectDescriptionPath = try resourceLocator.projectDescription(path: path)
         var arguments: [String] = [
             "/usr/bin/xcrun",
             "swiftc",
@@ -213,7 +215,7 @@ class GraphManifestLoader: GraphManifestLoading {
             "-I", projectDescriptionPath.parentDirectory.pathString,
             "-L", projectDescriptionPath.parentDirectory.pathString,
             "-F", projectDescriptionPath.parentDirectory.pathString,
-            "-lProjectDescription",
+            "-lPackageDescription",
         ]
         arguments.append(path.pathString)
         arguments.append("--dump")

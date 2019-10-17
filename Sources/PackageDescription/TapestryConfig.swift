@@ -7,6 +7,7 @@ public final class TapestryConfig: Codable {
 
     public init(release: ReleaseAction? = nil) {
         self.release = release
+        dumpIfNeeded(self)
     }
 }
 
