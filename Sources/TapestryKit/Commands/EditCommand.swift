@@ -12,15 +12,7 @@ final class EditCommand: NSObject, Command {
 
     let pathArgument: OptionArgument<String>
     
-    private let configGenerator: EditConfigGenerating
-    
-    required convenience init(parser: ArgumentParser) {
-        self.init(parser: parser,
-                  configGenerator: EditConfigGenerator())
-    }
-    
-    init(parser: ArgumentParser,
-         configGenerator: EditConfigGenerating) {
+    required init(parser: ArgumentParser) {
         let subParser = parser.add(subparser: EditCommand.command, overview: EditCommand.overview)
         
         pathArgument = subParser.add(option: "--path",
@@ -28,46 +20,22 @@ final class EditCommand: NSObject, Command {
                                      kind: String.self,
                                      usage: "The path to the `Tapestry.swift` file.",
                                      completion: .filename)
-        
-        self.configGenerator = configGenerator
     }
     
     func run(with arguments: ArgumentParser.Result) throws {
         let path = try self.path(arguments: arguments)
-        let name = try self.name(path: path)
         
-        try configGenerator.generateProject(path: path,
-                                             name: name,
-                                             bundleId: "tapestry")
+        // TODO: Create Tapestries folder here
         
         Printer.shared.print("""
-        ✏️  Opening \(name)\(EditConfigGenerator.configFilename).xcodeproj/
+        ✏️  Opening Tapestries project
             
-        Press the return key once you're done
+        To edit `TapestryConfig` navigate to `TapestryConfig.swift`
         """)
-        try System.shared.run("open", "\(name)\(EditConfigGenerator.configFilename).xcodeproj/")
-        readLine(until: .whitespacesAndNewlines)
-        try FileHandler.shared.delete(path.appending(RelativePath("\(name)\(EditConfigGenerator.configFilename).xcodeproj/")))
-    }
-    
-    private func readLine(until characterSet: CharacterSet) {
-        if (Swift.readLine() ?? "").rangeOfCharacter(from: characterSet) != nil {
-            readLine(until: characterSet)
-        }
+        try System.shared.run("xed", path.pathString + "/Tapestries/")
     }
     
     // TODO: Share between commands
-    /// Obtain package name
-    /// - Parameters:
-    ///     - path: Name is derived from this path (last component)
-    private func name(path: AbsolutePath) throws -> String {
-        if let name = path.components.last {
-            return name
-        } else {
-            throw InitCommandError.ungettableProjectName(AbsolutePath.current)
-        }
-    }
-    
     /// Obtain package path
     private func path(arguments: ArgumentParser.Result) throws -> AbsolutePath {
         if let path = arguments.get(pathArgument) {
