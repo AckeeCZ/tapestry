@@ -16,9 +16,8 @@ protocol TapestryRunning {
 
 public final class TapestryRunner: TapestryRunning {
     func run(with arguments: [String], path: AbsolutePath) throws {
-        Printer.shared.print((["swift", "run", "--package-path", path.pathString, "--build-path", path.appending(component: ".build").pathString, "tapestry", "--current"] + arguments.dropFirst()).joined(separator: " "))
-        Printer.shared.print("Running local tapestry...")
-        try System.shared.run(["swift", "build", "--package-path", path.pathString, "--build-path", path.appending(component: ".build").pathString])
+        // Print if errored
+        try System.shared.run(["swift", "build", "--package-path", path.pathString])
         
         var environment = ProcessInfo.processInfo.environment
         environment[Constants.EnvironmentVariables.colouredOutput] = "true"
@@ -104,7 +103,7 @@ public final class CommandRegistry {
                 try tapestryRunner.run(with: processedArguments, path: tapestriesPath)
                 return
             }
-            Printer.shared.print(processArguments().joined())
+            
             // Hidden command
             if let hiddenCommand = hiddenCommand() {
                 try hiddenCommand.run(arguments: argumentsDroppingCommand())
