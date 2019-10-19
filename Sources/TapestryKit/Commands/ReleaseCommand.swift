@@ -77,9 +77,14 @@ final class ReleaseCommand: NSObject, Command {
         
         let graphManifestLoader = GraphManifestLoader()
         let configModelLoader = ConfigModelLoader(manifestLoader: graphManifestLoader)
-        let config = try configModelLoader.loadTapestryConfig(at: path.appending(RelativePath("Tapestries/Sources/TapestryConfig/TapestryConfig.swift")))
         
         guard try !gitController.tagExists(version, path: path) else { throw ReleaseError.tagExists(version) }
+        
+        let config = try configModelLoader.loadTapestryConfig(at: path.appending(RelativePath("Tapestries/Sources/TapestryConfig/TapestryConfig.swift")))
+        
+        let preActions = config.release.actions.filter { $0.isPre }
+        
+        
         
         try gitController.commit("Version \(version.description)", path: path)
         
@@ -90,6 +95,12 @@ final class ReleaseCommand: NSObject, Command {
     }
     
     // MARK: - Helpers
+    
+    private func runReleaseAction(_ action: ReleaseAction, version: Version) {
+//        switch action. {
+//        case .docsUpdate
+//        }
+    }
     
     /// Obtain package path
     private func path(arguments: ArgumentParser.Result) throws -> AbsolutePath {

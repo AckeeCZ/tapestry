@@ -31,3 +31,23 @@ public struct ReleaseAction {
         self.arguments = arguments
     }
 }
+
+extension ReleaseAction {
+    public var isPre: Bool {
+        switch self.order {
+        case .pre:
+            return true
+        case .post:
+            return false
+        }
+    }
+    
+    public var isPost: Bool {
+        switch self.order {
+        case .pre:
+            return false
+        case .post:
+            return true
+        }
+    }
+}
