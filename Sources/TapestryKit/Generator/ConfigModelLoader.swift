@@ -2,6 +2,7 @@ import TapestryGen
 import PackageDescription
 import TapestryCore
 import Basic
+import class TuistCore.Glob
 
 /// Entity responsible for providing generator models
 ///
@@ -46,22 +47,43 @@ extension TapestryGen.TapestryConfig {
                      path: AbsolutePath) throws -> TapestryGen.TapestryConfig {
         guard let releaseManifest = manifest.release else {
             // Provide default
-            fatalError("woops")
+            fatalError()
         }
-        let releaseAction = TapestryGen.ReleaseAction.from(manifest: releaseManifest)
-        return TapestryGen.TapestryConfig(releaseAction: releaseAction)
+        let release = TapestryGen.Release.from(manifest: releaseManifest)
+        return TapestryGen.TapestryConfig(release: release)
+    }
+}
+
+extension TapestryGen.Release {
+    static func from(manifest: PackageDescription.Release) -> TapestryGen.Release {
+        // TODO: Fix glob
+        // Convert to globs
+//        let add = manifest.add?.globs.map { RelativePath($0.glob) } ?? []
+        let add: [Glob] = manifest.add?.globs.map { Glob(pattern: $0.glob) } ?? []
+        return TapestryGen.Release(actions: [],
+                                   add: add,
+                                   commitMessage: manifest.commitMessage,
+                                   push: manifest.push)
     }
 }
 
 extension TapestryGen.ReleaseAction {
-    static func from(manifest: PackageDescription.ReleaseAction) -> TapestryGen.ReleaseAction {
-        // TODO: Fix glob
-        // Convert to globs
-//        let add = manifest.add?.globs.map { RelativePath($0.glob) } ?? []
-        let add: [RelativePath] = []
-        return TapestryGen.ReleaseAction(add: add,
-                                         commitMessage: manifest.commitMessage,
-                                         push: manifest.push)
+        static func from(manifest: PackageDescription.ReleaseAction) -> TapestryGen.ReleaseAction {
+            let order = TapestryGen.ReleaseAction.Order.from(manifest: manifest.order)
+            return TapestryGen.ReleaseAction(order: order,
+                                             tool: manifest.tool,
+                                             arguments: manifest.arguments)
+        }
+}
+
+extension TapestryGen.ReleaseAction.Order {
+    static func from(manifest: PackageDescription.ReleaseAction.Order) -> TapestryGen.ReleaseAction.Order {
+        switch manifest {
+        case .pre:
+            return .pre
+        case .post:
+            return .post
+        }
     }
 }
 

@@ -81,14 +81,6 @@ final class ReleaseCommand: NSObject, Command {
         
         guard try !gitController.tagExists(version, path: path) else { throw ReleaseError.tagExists(version) }
         
-        try updateVersionInPodspec(path: path,
-                                   name: name,
-                                   version: version)
-        
-        try updateVersionInReadme(path: path,
-                                  name: name,
-                                  version: version)
-        
         try gitController.commit("Version \(version.description)", path: path)
         
         try gitController.tagVersion(version,
@@ -117,48 +109,5 @@ final class ReleaseCommand: NSObject, Command {
         } else {
             throw InitCommandError.ungettableProjectName(AbsolutePath.current)
         }
-    }
-    
-    private func updateVersionInPodspec(path: AbsolutePath,
-                                        name: String,
-                                        version: Version) throws {
-        let podspecPath = path.appending(component: "\(name).podspec")
-        guard FileHandler.shared.exists(podspecPath) else {
-            Printer.shared.print(warning: "Podspec at \(podspecPath.pathString) does not exist, skipping...")
-            return
-        }
-        var content = try FileHandler.shared.readTextFile(podspecPath)
-        content = content.replacingOccurrences(
-            of: #"s\.version = \"(([0-9]|[\.])*)\""#,
-            with: "s.version = \"\(version.description)\"",
-            options: .regularExpression
-        )
-        try content.write(to: podspecPath.url, atomically: true, encoding: .utf8)
-    }
-    
-    private func updateVersionInReadme(path: AbsolutePath,
-                                       name: String,
-                                       version: Version) throws {
-        let readmePath = path.appending(component: "README.md")
-        guard FileHandler.shared.exists(readmePath) else {
-            Printer.shared.print(warning: "Podspec at \(readmePath.pathString) does not exist, skipping...")
-            return
-        }
-        var content = try FileHandler.shared.readTextFile(readmePath)
-        // Replacing pods version
-        content = content
-        .replacingOccurrences(
-            of: "pod \"\(name)\"" + #", "~>[ ]?([0-9]|[\.])*""#,
-            with: "pod \"\(name)\", \"~> \(version.description)\"",
-            options: .regularExpression
-        )
-        // Replacing SPM version
-        .replacingOccurrences(
-            of: "\(name)" + #"\.git", \.upToNextMajor\(from:[ ]?"([0-9]|[\.])*""#,
-            with: "\(name).git\", .upToNextMajor(from: \"\(version.description)\"",
-            options: .regularExpression
-        )
-
-        try content.write(to: readmePath.url, atomically: true, encoding: .utf8)
     }
 }

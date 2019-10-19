@@ -1,11 +1,13 @@
-public struct Release: Codable {
+import class TuistCore.Glob
+
+public struct Release {
     public let actions: [ReleaseAction]
-    public let add: SourceFilesList?
+    public let add: [Glob]
     public let commitMessage: String
     public let push: Bool
     
     public init(actions: [ReleaseAction] = [],
-                add: SourceFilesList? = nil,
+                add: [Glob] = [],
                 commitMessage: String,
                 push: Bool = false) {
         self.actions = actions

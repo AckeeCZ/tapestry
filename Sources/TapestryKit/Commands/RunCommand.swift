@@ -12,6 +12,7 @@ final class RunCommand: NSObject, Command {
 
     // upToNextOption ArgumentType
     let pathArgument: OptionArgument<String>
+    let toolArgument: PositionalArgument<String>
     let toolArguments: PositionalArgument<[String]>
     
     required init(parser: ArgumentParser) {
@@ -22,18 +23,19 @@ final class RunCommand: NSObject, Command {
                                      kind: String.self,
                                      usage: "The path to your Swift framework",
                                      completion: .filename)
-        toolArguments = subParser.add(positional: "tool call", kind: [String].self, strategy: .remaining)
+        toolArgument = subParser.add(positional: "tool", kind: String.self)
+        toolArguments = subParser.add(positional: "tool arguments", kind: [String].self, strategy: .remaining)
     }
     
     func run(with arguments: ArgumentParser.Result) throws {
         let path = try self.path(arguments: arguments)
         
         guard
-            let toolArguments = arguments.get(toolArguments),
-            let tool = toolArguments.first
+            let tool = arguments.get(toolArgument),
+            let toolArguments = arguments.get(toolArguments)
         else { fatalError() }
         
-        try System.shared.runAndPrint(["swift", "run", "--package-path", path.appending(component: "Tapestries").pathString] + toolArguments)
+        try System.shared.runAndPrint(["swift", "run", "--package-path", path.appending(component: "Tapestries").pathString, tool] + toolArguments)
     }
     
     // TODO: Share between commands

@@ -1,21 +1,16 @@
 // MARK: - FileList
 
-/// A model to refer to source files that supports passing compiler flags.
+/// A model to refer to source files
 public final class SourceFileGlob: ExpressibleByStringLiteral, Codable {
     /// Relative glob pattern.
     public let glob: String
-
-    /// Compiler flags.
-    public let compilerFlags: String?
 
     /// Initializes a SourceFileGlob instance.
     ///
     /// - Parameters:
     ///   - glob: Relative glob pattern.
-    ///   - compilerFlags: Compiler flags.
-    public init(_ glob: String, compilerFlags: String? = nil) {
+    public init(_ glob: String) {
         self.glob = glob
-        self.compilerFlags = compilerFlags
     }
 
     public convenience init(stringLiteral value: String) {

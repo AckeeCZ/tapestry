@@ -1,4 +1,4 @@
-public struct ReleaseAction {
+public struct ReleaseAction: Codable {
     /// Order when the action gets executed.
     ///
     /// - pre: Before the sources and resources build phase.
@@ -26,35 +26,36 @@ public struct ReleaseAction {
     init(order: Order,
          tool: String,
          arguments: [String]) {
+        self.order = order
         self.tool = tool
         self.arguments = arguments
     }
     
     public static func pre(tool: String,
-                           arguments: [String] = []) {
+                           arguments: [String] = []) -> ReleaseAction {
         return ReleaseAction(order: .pre,
                              tool: tool,
                              arguments: arguments)
     }
     
     public static func post(tool: String,
-                            arguments: [String] = []) {
+                            arguments: [String] = []) -> ReleaseAction {
         return ReleaseAction(order: .post,
                              tool: tool,
                              arguments: arguments)
     }
     
-    public static func pre(_ predefinedAction: PredefinedAction) {
+    public static func pre(_ predefinedAction: PredefinedAction) -> ReleaseAction {
         return releaseAction(predefinedAction,
                              order: .pre)
     }
     
-    public static func post(_ predefinedAction: PredefinedAction) {
+    public static func post(_ predefinedAction: PredefinedAction) -> ReleaseAction {
         return releaseAction(predefinedAction,
                              order: .post)
     }
     
-    static func releaseAction(_ predefinedAction: PredefinedAction, order: Order) {
+    static func releaseAction(_ predefinedAction: PredefinedAction, order: Order) -> ReleaseAction {
         switch predefinedAction {
         case .docsUpdate:
             return ReleaseAction(order: order,
