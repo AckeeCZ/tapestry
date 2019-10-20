@@ -96,7 +96,7 @@ final class ReleaseCommand: NSObject, Command {
             .map { updateArguments(for: $0, version: version) }
         try preActions.forEach { try runReleaseAction($0, path: path, version: version) }
         
-        let addFiles = config.release.add.map { AbsolutePath($0) }
+        let addFiles = config.release.add.map { path.appending(RelativePath($0)) }
         try gitController.add(files: addFiles, path: path)
         try gitController.commit(config.release.commitMessage.replacingOccurrences(of: Argument.version.rawValue, with: version.description), path: path)
         
@@ -104,6 +104,10 @@ final class ReleaseCommand: NSObject, Command {
         
         try gitController.tagVersion(version,
                                      path: path)
+        
+        if config.release.push {
+            try gitController.push(path: path)
+        }
         
         let postActions: [ReleaseAction.Action] = config.release.actions
             .filter { $0.isPost }
@@ -137,7 +141,8 @@ final class ReleaseCommand: NSObject, Command {
             case let .run(tool: tool, arguments: arguments):
                 try packageController.run(tool, arguments: arguments, path: path)
             case let .dependenciesCompatibility(dependenciesManagers):
-                try dependenciesCompatibilityChecker.checkCompatibility(with: dependenciesManagers, path: path)
+                break
+//                try dependenciesCompatibilityChecker.checkCompatibility(with: dependenciesManagers, path: path)
             }
         }
     }
