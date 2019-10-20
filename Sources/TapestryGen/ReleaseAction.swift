@@ -8,8 +8,9 @@ public struct ReleaseAction {
         case post
     }
     
-    public enum PredefinedAction: String {
-        case docsUpdate = "docs-update"
+    public enum PredefinedAction {
+        case docsUpdate
+        case run(tool: String, arguments: [String])
         /// Check dependencies
 //        case dependenciesCompatibility
     }

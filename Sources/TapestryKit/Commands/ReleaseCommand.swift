@@ -119,6 +119,8 @@ final class ReleaseCommand: NSObject, Command {
             switch action {
             case .docsUpdate:
                 try docsUpdater.updateDocs(path: path, version: version)
+            case let .run(tool: tool, arguments: arguments):
+                break
             }
         }
     }

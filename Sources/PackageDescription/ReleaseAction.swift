@@ -8,10 +8,92 @@ public struct ReleaseAction: Codable {
         case post
     }
     
-    public enum PredefinedAction: String {
-        case docsUpdate = "docs-update"
+    public enum Action: Codable {
+        case custom(tool: String, arguments: [String])
+        case predefined(PredefinedAction)
+        
+        private enum Kind: String, Codable {
+            case custom
+            case predefined
+        }
+
+        enum CodingKeys: String, CodingKey {
+            case kind
+            case tool
+            case arguments
+            case action
+        }
+
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let kind = try container.decode(Kind.self, forKey: .kind)
+            switch kind {
+            case .custom:
+                let tool = try container.decode(String.self, forKey: .tool)
+                let arguments = try container.decode([String].self, forKey: .arguments)
+                self = .custom(tool: tool, arguments: arguments)
+            case .predefined:
+                let action = try container.decode(PredefinedAction.self, forKey: .action)
+                self = .predefined(action)
+            }
+        }
+
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            switch self {
+            case let .custom(tool: tool, arguments: arguments):
+                try container.encode(Kind.custom, forKey: .kind)
+                try container.encode(tool, forKey: .tool)
+                try container.encode(arguments, forKey: .arguments)
+            case let .predefined(action):
+                try container.encode(Kind.predefined, forKey: .kind)
+                try container.encode(action, forKey: .action)
+            }
+        }
+    }
+    
+    public enum PredefinedAction: Codable {
+        case docsUpdate
+        case run(tool: String, arguments: [String])
         /// Check dependencies
 //        case dependenciesCompatibility
+    
+        private enum Kind: String, Codable {
+            case docsUpdate
+            case run
+        }
+        
+        enum CodingKeys: String, CodingKey {
+            case kind
+            case tool
+            case arguments
+        }
+
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let kind = try container.decode(Kind.self, forKey: .kind)
+            switch kind {
+            case .docsUpdate:
+                self = .docsUpdate
+            case .run:
+                let tool = try container.decode(String.self, forKey: .tool)
+                let arguments = try container.decode([String].self, forKey: .arguments)
+                self = .run(tool: tool, arguments: arguments)
+            }
+        }
+
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            switch self {
+            case .docsUpdate:
+                try container.encode(Kind.docsUpdate, forKey: .kind)
+            case let .run(tool: tool, arguments: arguments):
+                try container.encode(Kind.run, forKey: .kind)
+                try container.encode(tool, forKey: .tool)
+                try container.encode(arguments, forKey: .arguments)
+            }
+        }
+
     }
     
     public enum Argument: String {
@@ -21,32 +103,24 @@ public struct ReleaseAction: Codable {
     /// Release action order.
     public let order: Order
     
-    /// Name of the tool to execute. Tapestry will look up the tool in `Tapestries`, otherwise run the locally installed version of the tool.
-    public let tool: String
-    
-    /// Arguments that to be passed.
-    public let arguments: [String]
+    public let action: Action
     
     init(order: Order,
-         tool: String,
-         arguments: [String]) {
+         action: Action) {
         self.order = order
-        self.tool = tool
-        self.arguments = arguments
+        self.action = action
     }
     
     public static func pre(tool: String,
                            arguments: [String] = []) -> ReleaseAction {
         return ReleaseAction(order: .pre,
-                             tool: tool,
-                             arguments: arguments)
+                             action: .custom(tool: tool, arguments: arguments))
     }
     
     public static func post(tool: String,
                             arguments: [String] = []) -> ReleaseAction {
         return ReleaseAction(order: .post,
-                             tool: tool,
-                             arguments: arguments)
+                            action: .custom(tool: tool, arguments: arguments))
     }
     
     public static func pre(_ predefinedAction: PredefinedAction) -> ReleaseAction {
@@ -60,8 +134,6 @@ public struct ReleaseAction: Codable {
     }
     
     static func releaseAction(_ predefinedAction: PredefinedAction, order: Order) -> ReleaseAction {
-        return ReleaseAction(order: order,
-                             tool: "tapestry",
-                             arguments: [predefinedAction.rawValue])
+        ReleaseAction(order: order, action: .predefined(predefinedAction))
     }
 }

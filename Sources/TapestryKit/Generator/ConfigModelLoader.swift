@@ -69,10 +69,16 @@ extension TapestryGen.ReleaseAction {
         static func from(manifest: PackageDescription.ReleaseAction) -> TapestryGen.ReleaseAction {
             let order = TapestryGen.ReleaseAction.Order.from(manifest: manifest.order)
             let action: Action
-            if manifest.tool == "tapestry", let predefinedAction = TapestryGen.ReleaseAction.PredefinedAction(rawValue: manifest.arguments.first ?? "") {
-                action = .predefined(predefinedAction)
-            } else {
-                action = .custom(tool: manifest.tool, arguments: manifest.arguments)
+            switch manifest.action {
+            case let .custom(tool: tool, arguments: arguments):
+                action = .custom(tool: tool, arguments: arguments)
+            case let .predefined(predefinedAction):
+                switch predefinedAction {
+                case .docsUpdate:
+                    action = .predefined(.docsUpdate)
+                case let .run(tool: tool, arguments: arguments):
+                    action = .predefined(.run(tool: tool, arguments: arguments))
+                }
             }
             return TapestryGen.ReleaseAction(order: order,
                                              action: action)
