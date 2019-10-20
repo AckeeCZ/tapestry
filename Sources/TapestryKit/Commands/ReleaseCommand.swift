@@ -49,14 +49,17 @@ final class ReleaseCommand: NSObject, Command {
     let pathArgument: OptionArgument<String>
 
     private let gitController: GitControlling
+    private let docsUpdater: DocsUpdating
 
     required convenience init(parser: ArgumentParser) {
         self.init(parser: parser,
-                  gitController: GitController())
+                  gitController: GitController(),
+                  docsUpdater: DocsUpdater())
     }
 
     init(parser: ArgumentParser,
-         gitController: GitControlling) {
+         gitController: GitControlling,
+         docsUpdater: DocsUpdating) {
         let subParser = parser.add(subparser: ReleaseCommand.command, overview: ReleaseCommand.overview)
         versionArgument = subParser.add(positional: "Version", kind: Version.self)
         pathArgument = subParser.add(option: "--path",
@@ -66,6 +69,7 @@ final class ReleaseCommand: NSObject, Command {
                                      completion: .filename)
 
         self.gitController = gitController
+        self.docsUpdater = docsUpdater
     }
 
     func run(with arguments: ArgumentParser.Result) throws {
@@ -74,7 +78,6 @@ final class ReleaseCommand: NSObject, Command {
         Printer.shared.print("Updating version 🚀")
         
         let path = try self.path(arguments: arguments)
-        let name = try self.name(path: path)
         
         let graphManifestLoader = GraphManifestLoader()
         let configModelLoader = ConfigModelLoader(manifestLoader: graphManifestLoader)
@@ -83,13 +86,17 @@ final class ReleaseCommand: NSObject, Command {
         
         let config = try configModelLoader.loadTapestryConfig(at: path.appending(RelativePath("Tapestries/Sources/TapestryConfig/TapestryConfig.swift")))
         
-        let preActions: [ReleaseAction] = config.release.actions
+        let preActions: [ReleaseAction.Action] = config.release.actions
             .filter { $0.isPre }
             .map {
-                let arguments = $0.arguments.map { $0 == "$VERSION" ? version.description : $0 }
-                return ReleaseAction(order: $0.order,
-                                     tool: $0.tool,
-                                     arguments: arguments)
+                switch $0.action {
+                case let .custom(tool: tool, arguments: arguments):
+                    let actionArguments = arguments.map { $0 == "$VERSION" ? version.description : $0 }
+                    return .custom(tool: tool,
+                                   arguments: actionArguments)
+                case let .predefined(action):
+                    return .predefined(action)
+                }
             }
         
         try preActions.forEach { try runReleaseAction($0, path: path, version: version) }
@@ -104,8 +111,16 @@ final class ReleaseCommand: NSObject, Command {
     
     // MARK: - Helpers
     
-    private func runReleaseAction(_ action: ReleaseAction, path: AbsolutePath, version: Version) throws {
-        try System.shared.runAndPrint([action.tool] + action.arguments + ["--path", path.pathString])
+    private func runReleaseAction(_ action: ReleaseAction.Action, path: AbsolutePath, version: Version) throws {
+        switch action {
+        case let .custom(tool: tool, arguments: arguments):
+            try System.shared.runAndPrint([tool] + arguments)
+        case let .predefined(action):
+            switch action {
+            case .docsUpdate:
+                try docsUpdater.updateDocs(path: path, version: version)
+            }
+        }
     }
     
     /// Obtain package path

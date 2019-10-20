@@ -75,12 +75,12 @@ final class ActionCommand: NSObject, Command {
     }
 }
 
-protocol DocsUpdating {
+public protocol DocsUpdating {
     func updateDocs(path: AbsolutePath, version: Version) throws
 }
 
 public final class DocsUpdater: DocsUpdating {
-    func updateDocs(path: AbsolutePath, version: Version) throws {
+    public func updateDocs(path: AbsolutePath, version: Version) throws {
         let name = try self.name(path: path)
         
         try updateVersionInPodspec(path: path,

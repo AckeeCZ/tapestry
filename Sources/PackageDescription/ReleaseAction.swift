@@ -8,8 +8,8 @@ public struct ReleaseAction: Codable {
         case post
     }
     
-    public enum PredefinedAction {
-        case docsUpdate
+    public enum PredefinedAction: String {
+        case docsUpdate = "docs-update"
         /// Check dependencies
 //        case dependenciesCompatibility
     }
@@ -60,11 +60,8 @@ public struct ReleaseAction: Codable {
     }
     
     static func releaseAction(_ predefinedAction: PredefinedAction, order: Order) -> ReleaseAction {
-        switch predefinedAction {
-        case .docsUpdate:
-            return ReleaseAction(order: order,
-                                 tool: "tapestry",
-                                 arguments: ["action", "docs-update", Argument.version.rawValue])
-        }
+        return ReleaseAction(order: order,
+                             tool: "tapestry",
+                             arguments: [predefinedAction.rawValue])
     }
 }

@@ -8,27 +8,26 @@ public struct ReleaseAction {
         case post
     }
     
-    public enum PredefinedAction {
-        case docsUpdate
+    public enum PredefinedAction: String {
+        case docsUpdate = "docs-update"
         /// Check dependencies
 //        case dependenciesCompatibility
+    }
+    
+    public enum Action {
+        case custom(tool: String, arguments: [String])
+        case predefined(PredefinedAction)
     }
     
     /// Release action order.
     public let order: Order
     
-    /// Name of the tool to execute. Tapestry will look up the tool in `Tapestries`, otherwise run the locally installed version of the tool.
-    public let tool: String
-    
-    /// Arguments that to be passed.
-    public let arguments: [String]
+    public let action: Action
     
     public init(order: Order,
-                tool: String,
-                arguments: [String]) {
+                action: Action) {
         self.order = order
-        self.tool = tool
-        self.arguments = arguments
+        self.action = action
     }
 }
 
