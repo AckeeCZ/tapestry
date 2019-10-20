@@ -82,6 +82,7 @@ public final class CommandRegistry {
             let tapestriesPath = FileHandler.shared.currentPath.appending(component: "Tapestries")
             let processedArguments = processAllArguments()
             if !processedArguments.contains("--current"), FileHandler.shared.exists(tapestriesPath) {
+                Printer.shared.print("Building local tapestry...")
                 try packageController.run("tapestry", arguments: ["--current"] + processedArguments.dropFirst(), path: FileHandler.shared.currentPath)
                 return
             }

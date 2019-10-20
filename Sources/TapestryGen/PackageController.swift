@@ -50,7 +50,10 @@ public final class PackageController: PackageControlling {
         let tapestriesPath = path.appending(component: "Tapestries")
         
         // Print if errored
-        try System.shared.run(["swift", "build", "--package-path", tapestriesPath.pathString])
+        try FileHandler.shared.inDirectory(tapestriesPath) {
+            try System.shared.run(["swift", "build"])
+            try System.shared.run(["swift", "run", tool])
+        }
         
         var environment = ProcessInfo.processInfo.environment
         environment[Constants.EnvironmentVariables.colouredOutput] = "true"

@@ -83,12 +83,11 @@ final class ReleaseCommand: NSObject, Command {
         
         let path = try self.path(arguments: arguments)
         
-        let graphManifestLoader = GraphManifestLoader()
-        let configModelLoader = ConfigModelLoader(manifestLoader: graphManifestLoader)
-        
         guard try !gitController.tagExists(version, path: path) else { throw ReleaseError.tagExists(version) }
         
-        let config = try configModelLoader.loadTapestryConfig(at: path.appending(RelativePath("Tapestries/Sources/TapestryConfig/TapestryConfig.swift")))
+        let graphManifestLoader = GraphManifestLoader()
+        let configModelLoader = ConfigModelLoader(manifestLoader: graphManifestLoader)
+        let config = try configModelLoader.loadTapestryConfig(at: path.appending(RelativePath("Tapestries/Sources/TapestryConfig/TapestryConfig.swif")))
         
         let preActions: [ReleaseAction.Action] = config.release.actions
             .filter { $0.isPre }
