@@ -57,7 +57,7 @@ extension TapestryGen.TapestryConfig {
 extension TapestryGen.Release {
     static func from(manifest: PackageDescription.Release) -> TapestryGen.Release {
         let actions = manifest.actions.map(TapestryGen.ReleaseAction.from)
-        let add: [Glob] = manifest.add?.globs.map { Glob(pattern: $0.glob) } ?? []
+        let add: [String] = manifest.add?.globs.map { $0.glob } ?? []
         return TapestryGen.Release(actions: actions,
                                    add: add,
                                    commitMessage: manifest.commitMessage,

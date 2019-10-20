@@ -2,12 +2,12 @@ import class TuistCore.Glob
 
 public struct Release {
     public let actions: [ReleaseAction]
-    public let add: [Glob]
+    public let add: [String]
     public let commitMessage: String
     public let push: Bool
     
     public init(actions: [ReleaseAction] = [],
-                add: [Glob] = [],
+                add: [String] = [],
                 commitMessage: String,
                 push: Bool = false) {
         self.actions = actions

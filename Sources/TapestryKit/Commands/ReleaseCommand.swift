@@ -93,30 +93,38 @@ final class ReleaseCommand: NSObject, Command {
         
         let preActions: [ReleaseAction.Action] = config.release.actions
             .filter { $0.isPre }
-            .map {
-                switch $0.action {
-                case let .custom(tool: tool, arguments: arguments):
-                    let actionArguments = arguments.map { $0 == "$VERSION" ? version.description : $0 }
-                    return .custom(tool: tool,
-                                   arguments: actionArguments)
-                case let .predefined(action):
-                    return .predefined(action)
-                }
-            }
-        
+            .map { updateArguments(for: $0, version: version) }
         try preActions.forEach { try runReleaseAction($0, path: path, version: version) }
         
-        try gitController.commit("Version \(version.description)", path: path)
+        let addFiles = config.release.add.map { AbsolutePath($0) }
+        try gitController.add(files: addFiles, path: path)
+        try gitController.commit(config.release.commitMessage.replacingOccurrences(of: Argument.version.rawValue, with: version.description), path: path)
         
         Printer.shared.print("Updating version 🚀")
         
         try gitController.tagVersion(version,
                                      path: path)
         
+        let postActions: [ReleaseAction.Action] = config.release.actions
+            .filter { $0.isPost }
+            .map { updateArguments(for: $0, version: version) }
+        try postActions.forEach { try runReleaseAction($0, path: path, version: version) }
+        
         Printer.shared.print(success: "Version updated to \(version.description) 🎉")
     }
     
     // MARK: - Helpers
+    
+    private func updateArguments(for releaseAction: ReleaseAction, version: Version) -> ReleaseAction.Action {
+        switch releaseAction.action {
+        case let .custom(tool: tool, arguments: arguments):
+            let actionArguments = arguments.map { $0 == Argument.version.rawValue ? version.description : $0 }
+            return .custom(tool: tool,
+                           arguments: actionArguments)
+        case let .predefined(action):
+            return .predefined(action)
+        }
+    }
     
     private func runReleaseAction(_ action: ReleaseAction.Action, path: AbsolutePath, version: Version) throws {
         switch action {

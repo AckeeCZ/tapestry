@@ -59,6 +59,7 @@ public protocol GitControlling {
     ///     - path: Path of the git directory
     /// - Returns: True if `version` exists
     func tagExists(_ version: Version, path: AbsolutePath?) throws -> Bool
+    func add(files: [AbsolutePath], path: AbsolutePath?) throws
 }
 
 /// Class for interacting with git
@@ -86,7 +87,15 @@ public final class GitController: GitControlling {
     
     public func commit(_ message: String, path: AbsolutePath?) throws {
         try FileHandler.shared.inDirectory(path ?? FileHandler.shared.currentPath) {
-            try System.shared.run("git", "commit", "-am", message)
+            try System.shared.run("git", "commit", "-m", message)
+        }
+    }
+    
+    public func add(files: [AbsolutePath], path: AbsolutePath?) throws {
+        try FileHandler.shared.inDirectory(path ?? FileHandler.shared.currentPath) {
+            try files.forEach {
+                try System.shared.run("git", "add", $0.pathString)
+            }
         }
     }
     

@@ -54,5 +54,5 @@ public final class ExampleGenerator: ExampleGenerating {
             }
             """
             try content.write(to: path.appending(component: "\(name).swift").url, atomically: true, encoding: .utf8)
-        }
+    }
 }
