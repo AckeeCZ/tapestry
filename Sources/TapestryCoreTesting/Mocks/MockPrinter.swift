@@ -6,15 +6,6 @@ public final class MockPrinter: Printing {
     var standardOutput: String = ""
     var standardError: String = ""
     
-    public func print(_ text: String, output: PrinterOutput, includeNewline: Bool) {
-        switch output {
-        case .standardError:
-            standardError.append("\(text)" + (includeNewline ? "\n" : ""))
-        case .standardOutput:
-            standardOutput.append("\(text)" + (includeNewline ? "\n" : ""))
-        }
-    }
-    
     public func print(_ text: String, includeNewline: Bool) {
         standardOutput.append("\(text)" + (includeNewline ? "\n" : ""))
     }
