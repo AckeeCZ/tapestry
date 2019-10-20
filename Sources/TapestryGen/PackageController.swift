@@ -66,9 +66,13 @@ public final class PackageController: PackageControlling {
         try FileHandler.shared.inDirectory(path) {
             var environment = ProcessInfo.processInfo.environment
             environment[Constants.EnvironmentVariables.colouredOutput] = "true"
-            try System.shared.runAndPrint([toolPath.pathString] + arguments,
-                                   verbose: false,
-                                   environment: environment)
+            if tool == "tapestry" {
+                try System.shared.runAndPrint([toolPath.pathString] + arguments,
+                                       verbose: false,
+                                       environment: environment)
+            } else {
+                try System.shared.runAndPrint([toolPath.pathString] + arguments)
+            }
         }
     }
 }
