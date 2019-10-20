@@ -51,18 +51,21 @@ final class ReleaseCommand: NSObject, Command {
     private let gitController: GitControlling
     private let docsUpdater: DocsUpdating
     private let packageController: PackageControlling
+    private let dependenciesCompatibilityChecker: DependenciesComptabilityChecking
 
     required convenience init(parser: ArgumentParser) {
         self.init(parser: parser,
                   gitController: GitController(),
                   docsUpdater: DocsUpdater(),
-                  packageController: PackageController())
+                  packageController: PackageController(),
+                  dependenciesCompatibilityChecker: DependenciesComptabilityChecker())
     }
 
     init(parser: ArgumentParser,
          gitController: GitControlling,
          docsUpdater: DocsUpdating,
-         packageController: PackageControlling) {
+         packageController: PackageControlling,
+         dependenciesCompatibilityChecker: DependenciesComptabilityChecking) {
         let subParser = parser.add(subparser: ReleaseCommand.command, overview: ReleaseCommand.overview)
         versionArgument = subParser.add(positional: "Version", kind: Version.self)
         pathArgument = subParser.add(option: "--path",
@@ -74,12 +77,11 @@ final class ReleaseCommand: NSObject, Command {
         self.gitController = gitController
         self.docsUpdater = docsUpdater
         self.packageController = packageController
+        self.dependenciesCompatibilityChecker = dependenciesCompatibilityChecker
     }
 
     func run(with arguments: ArgumentParser.Result) throws {
         guard let version = arguments.get(versionArgument) else { throw ReleaseError.noVersion }
-        
-        Printer.shared.print("Updating version 🚀")
         
         let path = try self.path(arguments: arguments)
         
@@ -87,7 +89,7 @@ final class ReleaseCommand: NSObject, Command {
         
         let graphManifestLoader = GraphManifestLoader()
         let configModelLoader = ConfigModelLoader(manifestLoader: graphManifestLoader)
-        let config = try configModelLoader.loadTapestryConfig(at: path.appending(RelativePath("Tapestries/Sources/TapestryConfig/TapestryConfig.swif")))
+        let config = try configModelLoader.loadTapestryConfig(at: path.appending(RelativePath("Tapestries/Sources/TapestryConfig/TapestryConfig.swift")))
         
         let preActions: [ReleaseAction.Action] = config.release.actions
             .filter { $0.isPre }
@@ -105,6 +107,8 @@ final class ReleaseCommand: NSObject, Command {
         try preActions.forEach { try runReleaseAction($0, path: path, version: version) }
         
         try gitController.commit("Version \(version.description)", path: path)
+        
+        Printer.shared.print("Updating version 🚀")
         
         try gitController.tagVersion(version,
                                      path: path)
@@ -124,6 +128,8 @@ final class ReleaseCommand: NSObject, Command {
                 try docsUpdater.updateDocs(path: path, version: version)
             case let .run(tool: tool, arguments: arguments):
                 try packageController.run(tool, arguments: arguments, path: path)
+            case let .dependenciesCompatibility(dependenciesManagers):
+                try dependenciesCompatibilityChecker.checkCompatibility(with: dependenciesManagers, path: path)
             }
         }
     }
@@ -145,6 +151,51 @@ final class ReleaseCommand: NSObject, Command {
             return name
         } else {
             throw InitCommandError.ungettableProjectName(AbsolutePath.current)
+        }
+    }
+}
+
+protocol DependenciesComptabilityChecking {
+    func checkCompatibility(with dependenciesManagers: [ReleaseAction.DependendenciesManager], path: AbsolutePath) throws
+}
+
+public final class DependenciesComptabilityChecker: DependenciesComptabilityChecking {
+    public func checkCompatibility(with dependenciesManagers: [ReleaseAction.DependendenciesManager], path: AbsolutePath) throws {
+        try dependenciesManagers.forEach {
+            switch $0 {
+            case .carthage:
+                try checkCarthageCompatibility(path: path)
+            case .cocoapods:
+                try checkCocoapodsCompatibility(path: path)
+            case .spm:
+                try checkSPMCompatibility(path: path)
+            }
+        }
+    }
+    
+    // MARK: - Helpers
+    
+    private func checkCarthageCompatibility(path: AbsolutePath) throws {
+        Printer.shared.print("Checking Carthage compatibility...")
+        // Print if errored
+        try FileHandler.shared.inDirectory(path) {
+            try System.shared.run(["carthage", "build", "--no-skip-current"])
+        }
+    }
+    
+    private func checkCocoapodsCompatibility(path: AbsolutePath) throws {
+        Printer.shared.print("Checking Cococapods compatibility...")
+        // Print if errored
+        try FileHandler.shared.inDirectory(path) {
+            try System.shared.run(["pod", "lib", "lint"])
+        }
+    }
+    
+    private func checkSPMCompatibility(path: AbsolutePath) throws {
+        Printer.shared.print("Checking SPM compatibility...")
+        // Print if errored
+        try FileHandler.shared.inDirectory(path) {
+            try System.shared.run(["swift", "build"])
         }
     }
 }

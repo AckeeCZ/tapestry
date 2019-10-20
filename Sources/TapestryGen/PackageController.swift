@@ -55,15 +55,17 @@ public final class PackageController: PackageControlling {
             try System.shared.run(["swift", "run", tool])
         }
         
-        var environment = ProcessInfo.processInfo.environment
-        environment[Constants.EnvironmentVariables.colouredOutput] = "true"
         // TODO: Candidates (Linux)
         let toolPath = path.appending(component: tool)
+        
+        try? FileHandler.shared.delete(toolPath)
         try FileHandler.shared.copy(from: tapestriesPath.appending(RelativePath(".build/x86_64-apple-macosx/debug/\(tool)")), to: toolPath)
         
         defer { try? FileHandler.shared.delete(toolPath) }
         
         try FileHandler.shared.inDirectory(path) {
+            var environment = ProcessInfo.processInfo.environment
+            environment[Constants.EnvironmentVariables.colouredOutput] = "true"
             try System.shared.runAndPrint([toolPath.pathString] + arguments,
                                    verbose: false,
                                    environment: environment)

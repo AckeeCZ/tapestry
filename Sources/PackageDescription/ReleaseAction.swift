@@ -52,21 +52,29 @@ public struct ReleaseAction: Codable {
         }
     }
     
+    public enum DependendenciesManager: String, Codable {
+        case cocoapods
+        case carthage
+        case spm
+    }
+    
     public enum PredefinedAction: Codable {
         case docsUpdate
         case run(tool: String, arguments: [String])
-        /// Check dependencies
-//        case dependenciesCompatibility
+        case dependenciesCompatibility([DependendenciesManager])
+        // case test
     
         private enum Kind: String, Codable {
             case docsUpdate
             case run
+            case dependenciesCompatibility
         }
         
         enum CodingKeys: String, CodingKey {
             case kind
             case tool
             case arguments
+            case dependenciesManagers
         }
 
         public init(from decoder: Decoder) throws {
@@ -79,6 +87,9 @@ public struct ReleaseAction: Codable {
                 let tool = try container.decode(String.self, forKey: .tool)
                 let arguments = try container.decode([String].self, forKey: .arguments)
                 self = .run(tool: tool, arguments: arguments)
+            case .dependenciesCompatibility:
+                let dependenciesManagers = try container.decode([DependendenciesManager].self, forKey: .dependenciesManagers)
+                self = .dependenciesCompatibility(dependenciesManagers)
             }
         }
 
@@ -91,6 +102,9 @@ public struct ReleaseAction: Codable {
                 try container.encode(Kind.run, forKey: .kind)
                 try container.encode(tool, forKey: .tool)
                 try container.encode(arguments, forKey: .arguments)
+            case let .dependenciesCompatibility(dependenciesManagers):
+                try container.encode(Kind.dependenciesCompatibility, forKey: .kind)
+                try container.encode(dependenciesManagers, forKey: .dependenciesManagers)
             }
         }
 

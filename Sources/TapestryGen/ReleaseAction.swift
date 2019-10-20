@@ -8,11 +8,16 @@ public struct ReleaseAction {
         case post
     }
     
+    public enum DependendenciesManager: String {
+        case cocoapods
+        case carthage
+        case spm
+    }
+    
     public enum PredefinedAction {
         case docsUpdate
         case run(tool: String, arguments: [String])
-        /// Check dependencies
-//        case dependenciesCompatibility
+        case dependenciesCompatibility([DependendenciesManager])
     }
     
     public enum Action {

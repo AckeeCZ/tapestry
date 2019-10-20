@@ -86,7 +86,6 @@ public final class CommandRegistry {
                 try packageController.run("tapestry", arguments: ["--current"] + processedArguments.dropFirst(), path: FileHandler.shared.currentPath)
                 return
             }
-            
             // Hidden command
             if let hiddenCommand = hiddenCommand() {
                 try hiddenCommand.run(arguments: argumentsDroppingCommand())

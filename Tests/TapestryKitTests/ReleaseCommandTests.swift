@@ -18,7 +18,8 @@ final class ReleaseCommandTests: TapestryUnitTestCase {
         subject = ReleaseCommand(parser: parser,
                                  gitController: gitController,
                                  docsUpdater: MockDocsUpdater(),
-                                 packageController: MockPackageController())
+                                 packageController: MockPackageController(),
+                                 dependenciesCompatibilityChecker: MockDependenciesCompatibilityChecker())
     }
     
     func test_updateVersionInPodspec() throws {
