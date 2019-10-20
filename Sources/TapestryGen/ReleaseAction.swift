@@ -24,8 +24,8 @@ public struct ReleaseAction {
     public let arguments: [String]
     
     public init(order: Order,
-         tool: String,
-         arguments: [String]) {
+                tool: String,
+                arguments: [String]) {
         self.order = order
         self.tool = tool
         self.arguments = arguments

@@ -14,6 +14,10 @@ public struct ReleaseAction: Codable {
 //        case dependenciesCompatibility
     }
     
+    public enum Argument: String {
+        case version = "$VERSION"
+    }
+    
     /// Release action order.
     public let order: Order
     
@@ -60,7 +64,7 @@ public struct ReleaseAction: Codable {
         case .docsUpdate:
             return ReleaseAction(order: order,
                                  tool: "tapestry",
-                                 arguments: ["action", "docs-update"])
+                                 arguments: ["action", "docs-update", Argument.version.rawValue])
         }
     }
 }

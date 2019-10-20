@@ -1,11 +1,12 @@
 import Foundation
 import protocol TuistCore.FatalError
 import protocol TuistCore.Command
+import class TuistCore.System
 import enum TuistCore.ErrorType
 import TapestryCore
+import TapestryGen
 import Basic
 import SPMUtility
-import PackageDescription
 
 enum ReleaseError: FatalError, Equatable {
     case noVersion, ungettableProjectName(AbsolutePath), tagExists(Version)
@@ -82,9 +83,16 @@ final class ReleaseCommand: NSObject, Command {
         
         let config = try configModelLoader.loadTapestryConfig(at: path.appending(RelativePath("Tapestries/Sources/TapestryConfig/TapestryConfig.swift")))
         
-        let preActions = config.release.actions.filter { $0.isPre }
+        let preActions: [ReleaseAction] = config.release.actions
+            .filter { $0.isPre }
+            .map {
+                let arguments = $0.arguments.map { $0 == "$VERSION" ? version.description : $0 }
+                return ReleaseAction(order: $0.order,
+                                     tool: $0.tool,
+                                     arguments: arguments)
+            }
         
-        
+        try preActions.forEach { try runReleaseAction($0, path: path, version: version) }
         
         try gitController.commit("Version \(version.description)", path: path)
         
@@ -96,10 +104,8 @@ final class ReleaseCommand: NSObject, Command {
     
     // MARK: - Helpers
     
-    private func runReleaseAction(_ action: ReleaseAction, version: Version) {
-//        switch action. {
-//        case .docsUpdate
-//        }
+    private func runReleaseAction(_ action: ReleaseAction, path: AbsolutePath, version: Version) throws {
+        try System.shared.runAndPrint([action.tool] + action.arguments + ["--path", path.pathString])
     }
     
     /// Obtain package path
