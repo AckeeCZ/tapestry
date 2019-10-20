@@ -1,12 +1,32 @@
 import Basic
 import TapestryCore
 import protocol TuistCore.Command
+import protocol TuistCore.FatalError
+import enum TuistCore.ErrorType
 import class TuistCore.System
 import SPMUtility
 import Foundation
+import TapestryGen
+
+enum ActionError: FatalError {
+    case versionInvalid
+    case dependenciesInvalid
+    
+    var type: ErrorType { .abort }
+    
+    var description: String {
+        switch self {
+        case .versionInvalid:
+            return "Please provide version in the format of major.minor.patch (0.0.1)"
+        case .dependenciesInvalid:
+            return "Please provide dependencies - carthage, spm, cocoapods"
+        }
+    }
+}
 
 public enum Action: String, ArgumentKind {
     case docsUpdate = "docs-update"
+    case dependenciesCompatibility = "compatibility"
     
     public init(argument: String) throws {
         guard let action = Action(rawValue: argument) else {
@@ -29,14 +49,17 @@ final class ActionCommand: NSObject, Command {
     let actionArguments: PositionalArgument<[String]>
     
     private let docsUpdater: DocsUpdating
+    private let dependenciesCompatibilityChecker: DependenciesComptabilityChecking
     
     required convenience init(parser: ArgumentParser) {
         self.init(parser: parser,
-                  docsUpdater: DocsUpdater())
+                  docsUpdater: DocsUpdater(),
+                  dependenciesCompatibilityChecker: DependenciesComptabilityChecker())
     }
     
     init(parser: ArgumentParser,
-         docsUpdater: DocsUpdating) {
+         docsUpdater: DocsUpdating,
+         dependenciesCompatibilityChecker: DependenciesComptabilityChecking) {
         let subParser = parser.add(subparser: ActionCommand.command, overview: ActionCommand.overview)
         
         pathArgument = subParser.add(option: "--path",
@@ -48,6 +71,7 @@ final class ActionCommand: NSObject, Command {
         actionArguments = subParser.add(positional: "tapestry action arguments", kind: [String].self, strategy: .upToNextOption)
         
         self.docsUpdater = docsUpdater
+        self.dependenciesCompatibilityChecker = dependenciesCompatibilityChecker
     }
     
     func run(with arguments: ArgumentParser.Result) throws {
@@ -59,8 +83,22 @@ final class ActionCommand: NSObject, Command {
                 let actionArguments = arguments.get(self.actionArguments),
                 actionArguments.count == 1,
                 let version = Version(string: actionArguments[0])
-            else { fatalError() }
+            else { throw ActionError.versionInvalid }
             try docsUpdater.updateDocs(path: path, version: version)
+            Printer.shared.print(success: "Docs updated ✅")
+        case .dependenciesCompatibility:
+            guard
+                let actionArguments = arguments.get(self.actionArguments),
+                actionArguments.count > 0
+            else { throw ActionError.dependenciesInvalid }
+            let managers: [ReleaseAction.DependenciesManager] = try actionArguments.map {
+                guard let manager = ReleaseAction.DependenciesManager(rawValue: $0) else { throw ActionError.dependenciesInvalid }
+                return manager
+            }
+            
+            try dependenciesCompatibilityChecker.checkCompatibility(with: managers, path: path)
+            
+            Printer.shared.print(success: "Compatible with \(managers.map { $0.rawValue }.joined(separator: ", ")) ✅")
         }
     }
     

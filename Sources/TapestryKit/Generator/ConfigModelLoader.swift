@@ -79,7 +79,7 @@ extension TapestryGen.ReleaseAction {
                 case let .run(tool: tool, arguments: arguments):
                     action = .predefined(.run(tool: tool, arguments: arguments))
                 case let .dependenciesCompatibility(dependenciesManagers):
-                    action = .predefined(.dependenciesCompatibility(dependenciesManagers.compactMap { TapestryGen.ReleaseAction.DependendenciesManager(rawValue: $0.rawValue) }))
+                    action = .predefined(.dependenciesCompatibility(dependenciesManagers.compactMap { TapestryGen.ReleaseAction.DependenciesManager(rawValue: $0.rawValue) }))
                 }
             }
             return TapestryGen.ReleaseAction(order: order,

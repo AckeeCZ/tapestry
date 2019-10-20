@@ -11,6 +11,10 @@ import TuistCore
 import Basic
 import TapestryGen
 
+enum RunError: Error {
+    case commandNotFound
+}
+
 public final class CommandRegistry {
     // MARK: - Attributes
 

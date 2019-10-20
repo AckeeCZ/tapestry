@@ -106,6 +106,7 @@ final class ReleaseCommand: NSObject, Command {
                                      path: path)
         
         if config.release.push {
+            Printer.shared.print("Pushing...")
             try gitController.push(path: path)
         }
         
@@ -169,11 +170,11 @@ final class ReleaseCommand: NSObject, Command {
 }
 
 protocol DependenciesComptabilityChecking {
-    func checkCompatibility(with dependenciesManagers: [ReleaseAction.DependendenciesManager], path: AbsolutePath) throws
+    func checkCompatibility(with dependenciesManagers: [ReleaseAction.DependenciesManager], path: AbsolutePath) throws
 }
 
 public final class DependenciesComptabilityChecker: DependenciesComptabilityChecking {
-    public func checkCompatibility(with dependenciesManagers: [ReleaseAction.DependendenciesManager], path: AbsolutePath) throws {
+    public func checkCompatibility(with dependenciesManagers: [ReleaseAction.DependenciesManager], path: AbsolutePath) throws {
         try dependenciesManagers.forEach {
             switch $0 {
             case .carthage:
