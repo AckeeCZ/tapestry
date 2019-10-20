@@ -17,7 +17,8 @@ final class ReleaseCommandTests: TapestryUnitTestCase {
         parser = ArgumentParser.test()
         subject = ReleaseCommand(parser: parser,
                                  gitController: gitController,
-                                 docsUpdater: MockDocsUpdater())
+                                 docsUpdater: MockDocsUpdater(),
+                                 packageController: MockPackageController())
     }
     
     func test_updateVersionInPodspec() throws {

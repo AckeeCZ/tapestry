@@ -50,16 +50,19 @@ final class ReleaseCommand: NSObject, Command {
 
     private let gitController: GitControlling
     private let docsUpdater: DocsUpdating
+    private let packageController: PackageControlling
 
     required convenience init(parser: ArgumentParser) {
         self.init(parser: parser,
                   gitController: GitController(),
-                  docsUpdater: DocsUpdater())
+                  docsUpdater: DocsUpdater(),
+                  packageController: PackageController())
     }
 
     init(parser: ArgumentParser,
          gitController: GitControlling,
-         docsUpdater: DocsUpdating) {
+         docsUpdater: DocsUpdating,
+         packageController: PackageControlling) {
         let subParser = parser.add(subparser: ReleaseCommand.command, overview: ReleaseCommand.overview)
         versionArgument = subParser.add(positional: "Version", kind: Version.self)
         pathArgument = subParser.add(option: "--path",
@@ -70,6 +73,7 @@ final class ReleaseCommand: NSObject, Command {
 
         self.gitController = gitController
         self.docsUpdater = docsUpdater
+        self.packageController = packageController
     }
 
     func run(with arguments: ArgumentParser.Result) throws {
@@ -120,7 +124,7 @@ final class ReleaseCommand: NSObject, Command {
             case .docsUpdate:
                 try docsUpdater.updateDocs(path: path, version: version)
             case let .run(tool: tool, arguments: arguments):
-                break
+                try packageController.run(tool, arguments: arguments, path: path)
             }
         }
     }

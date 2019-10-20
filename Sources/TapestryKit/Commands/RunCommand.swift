@@ -1,5 +1,6 @@
 import Basic
 import TapestryCore
+import TapestryGen
 import protocol TuistCore.Command
 import class TuistCore.System
 import SPMUtility
@@ -15,7 +16,15 @@ final class RunCommand: NSObject, Command {
     let toolArgument: PositionalArgument<String>
     let toolArguments: PositionalArgument<[String]>
     
-    required init(parser: ArgumentParser) {
+    private let packageController: PackageControlling
+    
+    required convenience init(parser: ArgumentParser) {
+        self.init(parser: parser,
+                  packageController: PackageController())
+    }
+    
+    init(parser: ArgumentParser,
+         packageController: PackageControlling) {
         let subParser = parser.add(subparser: RunCommand.command, overview: RunCommand.overview)
         
         pathArgument = subParser.add(option: "--path",
@@ -25,6 +34,8 @@ final class RunCommand: NSObject, Command {
                                      completion: .filename)
         toolArgument = subParser.add(positional: "tool", kind: String.self)
         toolArguments = subParser.add(positional: "tool arguments", kind: [String].self, strategy: .remaining)
+        
+        self.packageController = packageController
     }
     
     func run(with arguments: ArgumentParser.Result) throws {

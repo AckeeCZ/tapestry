@@ -9,25 +9,7 @@ import SPMUtility
 import Foundation
 import TuistCore
 import Basic
-
-protocol TapestryRunning {
-    func run(with arguments: [String], path: AbsolutePath) throws
-}
-
-public final class TapestryRunner: TapestryRunning {
-    func run(with arguments: [String], path: AbsolutePath) throws {
-        // Print if errored
-        try System.shared.run(["swift", "build", "--package-path", path.pathString])
-        
-        var environment = ProcessInfo.processInfo.environment
-        environment[Constants.EnvironmentVariables.colouredOutput] = "true"
-        // Candidates
-        try? System.shared.runAndPrint([path.appending(RelativePath(".build/x86_64-apple-macosx/debug/tapestry")).pathString,
-                                        "--current"] + arguments.dropFirst(),
-                                       verbose: false,
-                                       environment: environment)
-    }
-}
+import TapestryGen
 
 public final class CommandRegistry {
     // MARK: - Attributes
@@ -39,7 +21,7 @@ public final class CommandRegistry {
     private let errorHandler: ErrorHandling
     private let processArguments: () -> [String]
     private let processAllArguments: () -> [String]
-    private let tapestryRunner: TapestryRunning
+    private let packageController: PackageControlling
 
     // MARK: - Init
 
@@ -47,7 +29,7 @@ public final class CommandRegistry {
         self.init(errorHandler: ErrorHandler(),
                   processArguments: CommandRegistry.processArguments,
                   processAllArguments: CommandRegistry.processAllArguments,
-                  tapestryRunner: TapestryRunner())
+                  packageController: PackageController())
         register(command: InitCommand.self)
         register(command: ReleaseCommand.self)
         register(command: EditCommand.self)
@@ -59,14 +41,14 @@ public final class CommandRegistry {
     init(errorHandler: ErrorHandling,
          processArguments: @escaping () -> [String],
          processAllArguments: @escaping () -> [String],
-         tapestryRunner: TapestryRunning) {
+         packageController: PackageControlling) {
         self.errorHandler = errorHandler
         parser = ArgumentParser(commandName: "tapestry",
                                 usage: "<command> <options>",
                                 overview: "Generate and maintain your package projects.")
         self.processArguments = processArguments
         self.processAllArguments = processAllArguments
-        self.tapestryRunner = tapestryRunner
+        self.packageController = packageController
     }
 
     public static func processArguments() -> [String] {
@@ -100,7 +82,7 @@ public final class CommandRegistry {
             let tapestriesPath = FileHandler.shared.currentPath.appending(component: "Tapestries")
             let processedArguments = processAllArguments()
             if !processedArguments.contains("--current"), FileHandler.shared.exists(tapestriesPath) {
-                try tapestryRunner.run(with: processedArguments, path: tapestriesPath)
+                try packageController.run("tapestry", arguments: ["--current"] + processedArguments.dropFirst(), path: FileHandler.shared.currentPath)
                 return
             }
             

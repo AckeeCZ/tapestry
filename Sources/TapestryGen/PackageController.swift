@@ -1,6 +1,8 @@
 import Basic
 import TapestryCore
-import TuistCore
+import class TuistCore.System
+import class TuistCore.Constants
+import Foundation
 
 /// Supported package types
 public enum PackageType: String, CaseIterable {
@@ -20,6 +22,8 @@ public protocol PackageControlling {
     /// - Parameters:
     ///     - path: The path of package we should generate xcodeproj for
     func generateXcodeproj(path: AbsolutePath) throws
+    
+    func run(_ tool: String, arguments: [String], path: AbsolutePath) throws
 }
 
 /// Class that access underlying swift package commands
@@ -40,5 +44,26 @@ public final class PackageController: PackageControlling {
     
     public func generateXcodeproj(path: AbsolutePath) throws {
         try System.shared.run(["swift", "package", "--package-path", path.pathString, "generate-xcodeproj"])
+    }
+    
+    public func run(_ tool: String, arguments: [String], path: AbsolutePath) throws {
+        let tapestriesPath = path.appending(component: "Tapestries")
+        
+        // Print if errored
+        try System.shared.run(["swift", "build", "--package-path", tapestriesPath.pathString])
+        
+        var environment = ProcessInfo.processInfo.environment
+        environment[Constants.EnvironmentVariables.colouredOutput] = "true"
+        // TODO: Candidates (Linux)
+        let toolPath = path.appending(component: tool)
+        try FileHandler.shared.copy(from: tapestriesPath.appending(RelativePath(".build/x86_64-apple-macosx/debug/\(tool)")), to: toolPath)
+        
+        defer { try? FileHandler.shared.delete(toolPath) }
+        
+        try FileHandler.shared.inDirectory(path) {
+            try System.shared.runAndPrint([toolPath.pathString] + arguments,
+                                   verbose: false,
+                                   environment: environment)
+        }
     }
 }

@@ -83,6 +83,8 @@ public final class DocsUpdater: DocsUpdating {
     public func updateDocs(path: AbsolutePath, version: Version) throws {
         let name = try self.name(path: path)
         
+        Printer.shared.print("Updating docs 📚")
+        
         try updateVersionInPodspec(path: path,
                            name: name,
                            version: version)
