@@ -110,8 +110,12 @@ public struct ReleaseAction: Codable {
 
     }
     
-    public enum Argument: String {
+    public enum Argument: String, CustomStringConvertible {
         case version = "$VERSION"
+        
+        var description: String {
+            return rawValue
+        }
     }
     
     /// Release action order.
