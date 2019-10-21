@@ -56,4 +56,12 @@ final class PackageControllerTests: TapestryUnitTestCase {
         // Then
         XCTAssertNoThrow(try subject.run(tool, arguments: arguments, path: fileHandler.currentPath))
     }
+    
+    func test_name_succeeds() throws {
+        // Given
+        let name = "test"
+        
+        // Then
+        XCTAssertEqual(try subject.name(from: fileHandler.currentPath.appending(component: name)), name)
+    }
 }
