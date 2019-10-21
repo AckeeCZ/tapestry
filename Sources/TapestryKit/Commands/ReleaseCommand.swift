@@ -98,7 +98,9 @@ final class ReleaseCommand: NSObject, Command {
         
         let addFiles = config.release.add.map { path.appending(RelativePath($0)) }
         try gitController.add(files: addFiles, path: path)
-        try gitController.commit(config.release.commitMessage.replacingOccurrences(of: Argument.version.rawValue, with: version.description), path: path)
+        if !addFiles.isEmpty {
+            try gitController.commit(config.release.commitMessage.replacingOccurrences(of: Argument.version.rawValue, with: version.description), path: path)
+        }
         
         Printer.shared.print("Updating version 🚀")
         

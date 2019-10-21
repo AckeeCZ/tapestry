@@ -1,7 +1,7 @@
 // MARK: - FileList
 
 /// A model to refer to source files
-public final class SourceFileGlob: ExpressibleByStringLiteral, Codable {
+public final class SourceFileGlob: Equatable, ExpressibleByStringLiteral, Codable {
     /// Relative glob pattern.
     public let glob: String
 
@@ -16,9 +16,13 @@ public final class SourceFileGlob: ExpressibleByStringLiteral, Codable {
     public convenience init(stringLiteral value: String) {
         self.init(value)
     }
+    
+    public static func == (lhs: SourceFileGlob, rhs: SourceFileGlob) -> Bool {
+        return lhs.glob == rhs.glob
+    }
 }
 
-public final class SourceFilesList: Codable {
+public final class SourceFilesList: Equatable, Codable {
     public enum CodingKeys: String, CodingKey {
         case globs
     }
@@ -48,6 +52,10 @@ public final class SourceFilesList: Codable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         try container.encode(globs)
+    }
+    
+    public static func == (lhs: SourceFilesList, rhs: SourceFilesList) -> Bool {
+        return lhs.globs == rhs.globs
     }
 }
 

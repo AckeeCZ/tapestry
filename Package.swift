@@ -56,6 +56,9 @@ let package = Package(
             dependencies: ["TapestryCore", "TapestryCoreTesting"]),
         .testTarget(
             name: "TapestryGenTests",
-            dependencies: ["TapestryGen", "TapestryCoreTesting"])
+            dependencies: ["TapestryGen", "TapestryCoreTesting"]),
+        .testTarget(
+            name: "PackageDescriptionTests",
+            dependencies: ["PackageDescription", "TapestryCoreTesting"]),
     ]
 )

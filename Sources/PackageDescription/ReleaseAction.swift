@@ -1,4 +1,4 @@
-public struct ReleaseAction: Codable {
+public struct ReleaseAction: Equatable, Codable {
     /// Order when the action gets executed.
     ///
     /// - pre: Before the sources and resources build phase.
@@ -144,5 +144,26 @@ public struct ReleaseAction: Codable {
     
     static func releaseAction(_ predefinedAction: PredefinedAction, order: Order) -> ReleaseAction {
         ReleaseAction(order: order, action: .predefined(predefinedAction))
+    }
+    
+    public static func == (lhs: ReleaseAction, rhs: ReleaseAction) -> Bool {
+        guard lhs.order == rhs.order else { return false }
+        switch (lhs.action, rhs.action) {
+            case let (.custom(tool: lhsTool, arguments: lhsArguments), .custom(tool: rhsTool, arguments: rhsArguments)):
+            return lhsTool == rhsTool && lhsArguments == rhsArguments
+        case let (.predefined(lhsAction), .predefined(rhsAction)):
+            switch (lhsAction, rhsAction) {
+            case (.docsUpdate, .docsUpdate):
+                return true
+            case let (.dependenciesCompatibility(lhsManagers), .dependenciesCompatibility(rhsManagers)):
+                return lhsManagers == rhsManagers
+            case let (.run(tool: lhsTool, arguments: lhsArguments), .run(tool: rhsTool, arguments: rhsArguments)):
+                return lhsTool == rhsTool && lhsArguments == rhsArguments
+            default:
+                return false
+            }
+        default:
+            return false
+        }
     }
 }
