@@ -4,7 +4,7 @@ import class TuistCore.Printer
 import protocol TuistCore.Command
 import Foundation
 
-/// This command initializes Swift package with example in current empty directory
+/// List all available actions
 final class ActionsCommand: NSObject, Command {
     static var command: String = "actions"
     static var overview: String = "Show available actions"

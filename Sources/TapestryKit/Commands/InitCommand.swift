@@ -25,8 +25,6 @@ enum InitCommandError: FatalError, Equatable {
         switch (lhs, rhs) {
         case let (.nonEmptyDirectory(lhsPath), .nonEmptyDirectory(rhsPath)):
             return lhsPath == rhsPath
-        default:
-            return false
         }
     }
 }

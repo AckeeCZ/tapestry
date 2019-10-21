@@ -42,7 +42,7 @@ public enum Action: String, ArgumentKind, CaseIterable {
     public static let completion: ShellCompletion = .none
 }
 
-/// This command initializes Swift package with example in current empty directory
+/// Runs one of predefined actions
 final class ActionCommand: NSObject, Command {
     static var command: String = "action"
     static var overview: String = "Run one of predefined actions"
@@ -53,17 +53,17 @@ final class ActionCommand: NSObject, Command {
     let actionArguments: PositionalArgument<[String]>
     
     private let docsUpdater: DocsUpdating
-    private let dependenciesCompatibilityChecker: DependenciesComptabilityChecking
+    private let dependenciesCompatibilityChecker: DependenciesCompatibilityChecking
     
     required convenience init(parser: ArgumentParser) {
         self.init(parser: parser,
                   docsUpdater: DocsUpdater(),
-                  dependenciesCompatibilityChecker: DependenciesComptabilityChecker())
+                  dependenciesCompatibilityChecker: DependenciesCompatibilityChecker())
     }
     
     init(parser: ArgumentParser,
          docsUpdater: DocsUpdating,
-         dependenciesCompatibilityChecker: DependenciesComptabilityChecking) {
+         dependenciesCompatibilityChecker: DependenciesCompatibilityChecking) {
         let subParser = parser.add(subparser: ActionCommand.command, overview: ActionCommand.overview)
         
         pathArgument = subParser.add(option: "--path",

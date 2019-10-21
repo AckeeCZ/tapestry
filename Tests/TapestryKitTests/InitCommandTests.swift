@@ -225,7 +225,7 @@ final class InitCommandTests: TapestryUnitTestCase {
         XCTAssertFalse(travisContent.contains(expectedName + ExampleGenerator.exampleAppendix))
     }
     
-    func test_package_xcodeProj_is_generated() throws {
+    func test_package_xcodeProj_is_generated_when_library() throws {
         // Given
         var path: AbsolutePath?
         packageController.generateXcodeprojStub = {
@@ -241,5 +241,23 @@ final class InitCommandTests: TapestryUnitTestCase {
         
         // Then
         XCTAssertEqual(fileHandler.currentPath, path)
+    }
+    
+    func test_package_xcodeProj_is_not_generated_when_executable() throws {
+        // Given
+        var path: AbsolutePath?
+        packageController.generateXcodeprojStub = {
+            path = $0
+        }
+        packageController.initPackageStub = { _, _ in
+            .executable
+        }
+        let result = try parser.parse(["init"])
+        
+        // When
+        try subject.run(with: result)
+        
+        // Then
+        XCTAssertNil(path)
     }
 }
