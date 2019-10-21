@@ -25,7 +25,8 @@ final class InitCommandTests: TapestryUnitTestCase {
                               exampleGenerator: exampleGenerator,
                               gitController: gitController,
                               packageController: packageController,
-                              inputReader: inputReader)
+                              inputReader: inputReader,
+                              tapestriesGenerator: MockTapestriesGenerator())
     }
     
     func test_run_when_the_directory_is_not_empty() throws {

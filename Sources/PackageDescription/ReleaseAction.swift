@@ -62,7 +62,6 @@ public struct ReleaseAction: Codable {
         case docsUpdate
         case run(tool: String, arguments: [String])
         case dependenciesCompatibility([DependendenciesManager])
-        // case test
     
         private enum Kind: String, Codable {
             case docsUpdate
@@ -110,7 +109,7 @@ public struct ReleaseAction: Codable {
 
     }
     
-    /// Release action order.
+    /// Release action order
     public let order: Order
     
     public let action: Action

@@ -47,20 +47,23 @@ final class InitCommand: NSObject, Command {
     private let gitController: GitControlling
     private let packageController: PackageControlling
     private let inputReader: InputReading
+    private let tapestriesGenerator: TapestriesGenerating
 
     required convenience init(parser: ArgumentParser) {
         self.init(parser: parser,
                   exampleGenerator: ExampleGenerator(),
                   gitController: GitController(),
                   packageController: PackageController(),
-                  inputReader: InputReader())
+                  inputReader: InputReader(),
+                  tapestriesGenerator: TapestriesGenerator())
     }
 
     init(parser: ArgumentParser,
          exampleGenerator: ExampleGenerating,
          gitController: GitControlling,
          packageController: PackageControlling,
-         inputReader: InputReading) {
+         inputReader: InputReading,
+         tapestriesGenerator: TapestriesGenerating) {
         let subParser = parser.add(subparser: InitCommand.command, overview: InitCommand.overview)
 
         pathArgument = subParser.add(option: "--path",
@@ -73,6 +76,7 @@ final class InitCommand: NSObject, Command {
         self.gitController = gitController
         self.packageController = packageController
         self.inputReader = inputReader
+        self.tapestriesGenerator = tapestriesGenerator
     }
 
     func run(with arguments: ArgumentParser.Result) throws {
@@ -111,14 +115,21 @@ final class InitCommand: NSObject, Command {
         try generateTravis(path: path,
                            packageType: packageType,
                            name: name)
+        
         try generatePodspec(path: path,
                             name: name,
                             username: username,
                             authorName: authorName,
                             email: email)
-
-        try packageController.generateXcodeproj(path: path)
-
+        
+        try tapestriesGenerator.generateTapestries(at: path)
+        
+        switch packageType {
+        case .executable:
+            try packageController.generateXcodeproj(path: path)
+        case .library:
+            break
+        }
         Printer.shared.print(success: "Package generated ✅")
     }
 

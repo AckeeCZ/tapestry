@@ -1,9 +1,9 @@
 import Basic
-import TapestryCore
 import protocol TuistCore.Command
-import class TuistCore.System
-import SPMUtility
 import Foundation
+import TapestryGen
+import SPMUtility
+import TapestryCore
 
 /// This command initializes Swift package with example in current empty directory
 final class UpCommand: NSObject, Command {
@@ -11,8 +11,15 @@ final class UpCommand: NSObject, Command {
     static var overview: String = "Configure developer depednencies management alongside with `TapestryConfig` to automate mundane tasks"
 
     let pathArgument: OptionArgument<String>
+    private let tapestriesGenerator: TapestriesGenerating
     
-    required init(parser: ArgumentParser) {
+    required convenience init(parser: ArgumentParser) {
+        self.init(parser: parser,
+                  tapestriesGenerator: TapestriesGenerator())
+    }
+    
+    init(parser: ArgumentParser,
+         tapestriesGenerator: TapestriesGenerating) {
         let subParser = parser.add(subparser: UpCommand.command, overview: UpCommand.overview)
         
         pathArgument = subParser.add(option: "--path",
@@ -20,53 +27,14 @@ final class UpCommand: NSObject, Command {
                                      kind: String.self,
                                      usage: "The path to your Swift framework",
                                      completion: .filename)
+        
+        self.tapestriesGenerator = tapestriesGenerator
     }
     
     func run(with arguments: ArgumentParser.Result) throws {
         let path = try self.path(arguments: arguments)
         
-        // TODO: Check if tapestries path already exists
-        
-        let tapestriesPath = path.appending(component: "Tapestries")
-        let configPath = tapestriesPath.appending(RelativePath("Sources/TapestryConfig"))
-        try FileHandler.shared.createFolder(configPath)
-        
-        let contents = """
-        import PackageDescription
-
-        let config = TapestryConfig(release: ReleaseAction(add: nil,
-                                                           commitMessage: nil,
-                                                           push: false))
-        """
-        
-        try contents.write(to: configPath.appending(component: "TapestryConfig.swift").url, atomically: true, encoding: .utf8)
-        
-        // TODO: Fix directory and swift tools version!
-        let packageContents = """
-        // swift-tools-version:5.1
-        // The swift-tools-version declares the minimum version of Swift required to build this package.
-
-        import PackageDescription
-
-        let package = Package(
-            name: "Tapestries",
-            products: [
-            .library(name: "TapestryConfig", targets: ["TapestryConfig"])
-            ],
-            dependencies: [
-                // Tapestry
-                .package(path: "/Users/marekfort/Development/ackee/tapestry"),
-                .package(url: "https://github.com/nicklockwood/SwiftFormat", .upToNextMajor(from: "0.40.13")),
-            ],
-            targets: [
-                .target(name: "TapestryConfig",
-                        dependencies: [
-                            "PackageDescription"
-                ])
-            ]
-        )
-        """
-        try packageContents.write(to: tapestriesPath.appending(component: "Package.swift").url, atomically: true, encoding: .utf8)
+        try tapestriesGenerator.generateTapestries(at: path)
     }
     
     // TODO: Share between commands
