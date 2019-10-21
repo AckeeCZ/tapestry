@@ -51,8 +51,7 @@ public final class PackageController: PackageControlling {
         
         // Print if errored
         try FileHandler.shared.inDirectory(tapestriesPath) {
-            try System.shared.run(["swift", "build"])
-            try System.shared.run(["swift", "run", tool])
+            try System.shared.runAndPrint(["swift", "run", tool])
         }
         
         // TODO: Candidates (Linux)

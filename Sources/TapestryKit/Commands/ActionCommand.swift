@@ -11,6 +11,7 @@ import TapestryGen
 enum ActionError: FatalError {
     case versionInvalid
     case dependenciesInvalid
+    case actionMissing
     
     var type: ErrorType { .abort }
     
@@ -20,6 +21,8 @@ enum ActionError: FatalError {
             return "Please provide version in the format of major.minor.patch (0.0.1)"
         case .dependenciesInvalid:
             return "Please provide dependencies - carthage, spm, cocoapods"
+        case .actionMissing:
+            return "You must provide action name"
         }
     }
 }
@@ -67,8 +70,8 @@ final class ActionCommand: NSObject, Command {
                                      kind: String.self,
                                      usage: "The path where to run action from.",
                                      completion: .filename)
-        actionArgument = subParser.add(positional: "tapestry action", kind: Action.self)
-        actionArguments = subParser.add(positional: "tapestry action arguments", kind: [String].self, strategy: .upToNextOption)
+        actionArgument = subParser.add(positional: "action", kind: Action.self)
+        actionArguments = subParser.add(positional: "action arguments", kind: [String].self, strategy: .upToNextOption)
         
         self.docsUpdater = docsUpdater
         self.dependenciesCompatibilityChecker = dependenciesCompatibilityChecker
@@ -77,11 +80,8 @@ final class ActionCommand: NSObject, Command {
     func run(with arguments: ArgumentParser.Result) throws {
         let path = try self.path(arguments: arguments)
         
-        if let action = arguments.get(actionArgument) {
-            try runAction(action)
-        } else {
-            printActions()
-        }
+        guard let action = arguments.get(actionArgument) else { throw ActionError.actionMissing }
+        try runAction(action, path: path, arguments: arguments)
     }
     
     private func printActions() {
@@ -90,12 +90,12 @@ final class ActionCommand: NSObject, Command {
             case .docsUpdate:
                 Printer.shared.print("docs-update\tUpdate docs with a given version")
             case .dependenciesCompatibility:
-                Printer.shared.print("compatibility\Check compatibility with given dependency managers")
+                Printer.shared.print("compatibility\tCheck compatibility with given dependency managers")
             }
         }
     }
     
-    private func runAction(_ action: Action) throws {
+    private func runAction(_ action: Action, path: AbsolutePath, arguments: ArgumentParser.Result) throws {
         switch action {
         case .docsUpdate:
             guard
