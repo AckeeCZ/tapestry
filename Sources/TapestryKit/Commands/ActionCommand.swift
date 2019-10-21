@@ -24,7 +24,7 @@ enum ActionError: FatalError {
     }
 }
 
-public enum Action: String, ArgumentKind {
+public enum Action: String, ArgumentKind, CaseIterable {
     case docsUpdate = "docs-update"
     case dependenciesCompatibility = "compatibility"
     
@@ -76,7 +76,26 @@ final class ActionCommand: NSObject, Command {
     
     func run(with arguments: ArgumentParser.Result) throws {
         let path = try self.path(arguments: arguments)
-        guard let action = arguments.get(actionArgument) else { fatalError() }
+        
+        if let action = arguments.get(actionArgument) {
+            try runAction(action)
+        } else {
+            printActions()
+        }
+    }
+    
+    private func printActions() {
+        Action.allCases.forEach {
+            switch $0 {
+            case .docsUpdate:
+                Printer.shared.print("docs-update\tUpdate docs with a given version")
+            case .dependenciesCompatibility:
+                Printer.shared.print("compatibility\Check compatibility with given dependency managers")
+            }
+        }
+    }
+    
+    private func runAction(_ action: Action) throws {
         switch action {
         case .docsUpdate:
             guard
@@ -102,7 +121,6 @@ final class ActionCommand: NSObject, Command {
         }
     }
     
-    // TODO: Share between commands
     /// Obtain package path
     private func path(arguments: ArgumentParser.Result) throws -> AbsolutePath {
         if let path = arguments.get(pathArgument) {

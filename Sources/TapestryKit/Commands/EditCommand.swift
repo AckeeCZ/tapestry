@@ -33,7 +33,6 @@ final class EditCommand: NSObject, Command {
         try System.shared.run("xed", path.pathString + "/Tapestries/")
     }
     
-    // TODO: Share between commands
     /// Obtain package path
     private func path(arguments: ArgumentParser.Result) throws -> AbsolutePath {
         if let path = arguments.get(pathArgument) {

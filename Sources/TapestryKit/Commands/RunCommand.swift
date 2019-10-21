@@ -49,7 +49,6 @@ final class RunCommand: NSObject, Command {
         try System.shared.runAndPrint(["swift", "run", "--package-path", path.appending(component: "Tapestries").pathString, tool] + toolArguments)
     }
     
-    // TODO: Share between commands
     /// Obtain package path
     private func path(arguments: ArgumentParser.Result) throws -> AbsolutePath {
         if let path = arguments.get(pathArgument) {

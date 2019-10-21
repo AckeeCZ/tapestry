@@ -37,7 +37,6 @@ final class UpCommand: NSObject, Command {
         try tapestriesGenerator.generateTapestries(at: path)
     }
     
-    // TODO: Share between commands
     /// Obtain package path
     private func path(arguments: ArgumentParser.Result) throws -> AbsolutePath {
         if let path = arguments.get(pathArgument) {
