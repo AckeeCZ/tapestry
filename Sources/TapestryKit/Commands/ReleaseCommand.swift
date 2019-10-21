@@ -51,7 +51,6 @@ final class ReleaseCommand: NSObject, Command {
     private let configModelLoader: ConfigModelLoading
     private let gitController: GitControlling
     private let docsUpdater: DocsUpdating
-    private let packageController: PackageControlling
     private let dependenciesCompatibilityChecker: DependenciesComptabilityChecking
 
     required convenience init(parser: ArgumentParser) {
@@ -61,7 +60,6 @@ final class ReleaseCommand: NSObject, Command {
                   configModelLoader: configModelLoader,
                   gitController: GitController(),
                   docsUpdater: DocsUpdater(),
-                  packageController: PackageController(),
                   dependenciesCompatibilityChecker: DependenciesComptabilityChecker())
     }
 
@@ -69,7 +67,6 @@ final class ReleaseCommand: NSObject, Command {
          configModelLoader: ConfigModelLoading,
          gitController: GitControlling,
          docsUpdater: DocsUpdating,
-         packageController: PackageControlling,
          dependenciesCompatibilityChecker: DependenciesComptabilityChecking) {
         let subParser = parser.add(subparser: ReleaseCommand.command, overview: ReleaseCommand.overview)
         versionArgument = subParser.add(positional: "Version", kind: Version.self)
@@ -82,7 +79,6 @@ final class ReleaseCommand: NSObject, Command {
         self.configModelLoader = configModelLoader
         self.gitController = gitController
         self.docsUpdater = docsUpdater
-        self.packageController = packageController
         self.dependenciesCompatibilityChecker = dependenciesCompatibilityChecker
     }
 
@@ -146,7 +142,7 @@ final class ReleaseCommand: NSObject, Command {
             case .docsUpdate:
                 try docsUpdater.updateDocs(path: path, version: version)
             case let .run(tool: tool, arguments: arguments):
-                try packageController.run(tool, arguments: arguments, path: path)
+                try PackageController.shared.run(tool, arguments: arguments, path: path)
             case let .dependenciesCompatibility(dependenciesManagers):
                 break
 //                try dependenciesCompatibilityChecker.checkCompatibility(with: dependenciesManagers, path: path)
@@ -160,17 +156,6 @@ final class ReleaseCommand: NSObject, Command {
             return AbsolutePath(path, relativeTo: FileHandler.shared.currentPath)
         } else {
             return FileHandler.shared.currentPath
-        }
-    }
-    
-    /// Obtain package name
-    /// - Parameters:
-    ///     - path: Name is derived from this path (last component)
-    private func name(path: AbsolutePath) throws -> String {
-        if let name = path.components.last {
-            return name
-        } else {
-            throw InitCommandError.ungettableProjectName(AbsolutePath.current)
         }
     }
 }

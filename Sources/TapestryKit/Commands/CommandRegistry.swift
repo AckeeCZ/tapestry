@@ -7,9 +7,17 @@
 
 import SPMUtility
 import Foundation
-import TuistCore
+import protocol TuistCore.Command
+import protocol TuistCore.RawCommand
+import protocol TuistCore.HiddenCommand
+import protocol TuistCore.ErrorHandling
+import protocol TuistCore.FatalError
+import struct TuistCore.UnhandledError
+import class TuistCore.ErrorHandler
+import class TuistCore.Printer
 import Basic
 import TapestryGen
+import TapestryCore
 
 enum RunError: Error {
     case commandNotFound
@@ -25,15 +33,13 @@ public final class CommandRegistry {
     private let errorHandler: ErrorHandling
     private let processArguments: () -> [String]
     private let processAllArguments: () -> [String]
-    private let packageController: PackageControlling
 
     // MARK: - Init
 
     public convenience init() {
         self.init(errorHandler: ErrorHandler(),
                   processArguments: CommandRegistry.processArguments,
-                  processAllArguments: CommandRegistry.processAllArguments,
-                  packageController: PackageController())
+                  processAllArguments: CommandRegistry.processAllArguments)
         register(command: InitCommand.self)
         register(command: ReleaseCommand.self)
         register(command: EditCommand.self)
@@ -45,15 +51,13 @@ public final class CommandRegistry {
 
     init(errorHandler: ErrorHandling,
          processArguments: @escaping () -> [String],
-         processAllArguments: @escaping () -> [String],
-         packageController: PackageControlling) {
+         processAllArguments: @escaping () -> [String]) {
         self.errorHandler = errorHandler
         parser = ArgumentParser(commandName: "tapestry",
                                 usage: "<command> <options>",
                                 overview: "Generate and maintain your package projects.")
         self.processArguments = processArguments
         self.processAllArguments = processAllArguments
-        self.packageController = packageController
     }
 
     public static func processArguments() -> [String] {
@@ -88,7 +92,7 @@ public final class CommandRegistry {
             let processedArguments = processAllArguments()
             if !processArguments().contains(EditCommand.command), !processedArguments.contains("--current"), FileHandler.shared.exists(tapestriesPath) {
                 Printer.shared.print("Building local tapestry...")
-                try packageController.run("tapestry", arguments: ["--current"] + processedArguments.dropFirst(), path: FileHandler.shared.currentPath)
+                try PackageController.shared.run("tapestry", arguments: ["--current"] + processedArguments.dropFirst(), path: FileHandler.shared.currentPath)
                 return
             }
             // Hidden command

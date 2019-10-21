@@ -1,16 +1,14 @@
 import XCTest
 import Basic
 @testable import TapestryCoreTesting
-@testable import TapestryGen
+@testable import TapestryCore
 
 final class PackageControllerTests: TapestryUnitTestCase {
     private var subject: PackageController!
-    private var inputReader: MockInputReader!
     
     override func setUp() {
         super.setUp()
-        inputReader = MockInputReader()
-        subject = PackageController(inputReader: inputReader)
+        subject = PackageController()
     }
     
     

@@ -8,7 +8,7 @@ import SPMUtility
 import Foundation
 import TapestryGen
 
-enum ActionError: FatalError {
+enum ActionError: FatalError, Equatable {
     case versionInvalid
     case dependenciesInvalid
     case actionMissing
@@ -45,10 +45,11 @@ public enum Action: String, ArgumentKind, CaseIterable {
 /// This command initializes Swift package with example in current empty directory
 final class ActionCommand: NSObject, Command {
     static var command: String = "action"
-    static var overview: String = "Run one of predefined actions."
+    static var overview: String = "Run one of predefined actions"
 
     let pathArgument: OptionArgument<String>
     let actionArgument: PositionalArgument<Action>
+    // TODO: Rewrite this, this does not allow actions with no arguments
     let actionArguments: PositionalArgument<[String]>
     
     private let docsUpdater: DocsUpdating
@@ -84,17 +85,13 @@ final class ActionCommand: NSObject, Command {
         try runAction(action, path: path, arguments: arguments)
     }
     
-    private func printActions() {
-        Action.allCases.forEach {
-            switch $0 {
-            case .docsUpdate:
-                Printer.shared.print("docs-update\tUpdate docs with a given version")
-            case .dependenciesCompatibility:
-                Printer.shared.print("compatibility\tCheck compatibility with given dependency managers")
-            }
-        }
-    }
+    // MARK: - Helpers
     
+    /// Runs given action
+    /// - Parameters:
+    ///     - action: Action to run
+    ///     - path: Path where to run action from
+    ///     - arguments: Arguments for `action`
     private func runAction(_ action: Action, path: AbsolutePath, arguments: ArgumentParser.Result) throws {
         switch action {
         case .docsUpdate:
@@ -127,83 +124,6 @@ final class ActionCommand: NSObject, Command {
             return AbsolutePath(path, relativeTo: FileHandler.shared.currentPath)
         } else {
             return FileHandler.shared.currentPath
-        }
-    }
-}
-
-public protocol DocsUpdating {
-    func updateDocs(path: AbsolutePath, version: Version) throws
-}
-
-public final class DocsUpdater: DocsUpdating {
-    public func updateDocs(path: AbsolutePath, version: Version) throws {
-        let name = try self.name(path: path)
-        
-        Printer.shared.print("Updating docs 📚")
-        
-        try updateVersionInPodspec(path: path,
-                           name: name,
-                           version: version)
-        
-        try updateVersionInReadme(path: path,
-                                  name: name,
-                                  version: version)
-    }
-    
-    // MARK: - Helpers
-    
-    private func updateVersionInPodspec(path: AbsolutePath,
-                                        name: String,
-                                        version: Version) throws {
-        let podspecPath = path.appending(component: "\(name).podspec")
-        guard FileHandler.shared.exists(podspecPath) else {
-            Printer.shared.print(warning: "Podspec at \(podspecPath.pathString) does not exist, skipping...")
-            return
-        }
-        var content = try FileHandler.shared.readTextFile(podspecPath)
-        content = content.replacingOccurrences(
-            of: #"s\.version = \"(([0-9]|[\.])*)\""#,
-            with: "s.version = \"\(version.description)\"",
-            options: .regularExpression
-        )
-        try content.write(to: podspecPath.url, atomically: true, encoding: .utf8)
-    }
-    
-    private func updateVersionInReadme(path: AbsolutePath,
-                                       name: String,
-                                       version: Version) throws {
-        let readmePath = path.appending(component: "README.md")
-        guard FileHandler.shared.exists(readmePath) else {
-            Printer.shared.print(warning: "Podspec at \(readmePath.pathString) does not exist, skipping...")
-            return
-        }
-        var content = try FileHandler.shared.readTextFile(readmePath)
-        // Replacing pods version
-        content = content
-        .replacingOccurrences(
-            of: "pod \"\(name)\"" + #", "~>[ ]?([0-9]|[\.])*""#,
-            with: "pod \"\(name)\", \"~> \(version.description)\"",
-            options: .regularExpression
-        )
-        // Replacing SPM version
-        .replacingOccurrences(
-            of: "\(name)" + #"\.git", \.upToNextMajor\(from:[ ]?"([0-9]|[\.])*""#,
-            with: "\(name).git\", .upToNextMajor(from: \"\(version.description)\"",
-            options: .regularExpression
-        )
-
-        try content.write(to: readmePath.url, atomically: true, encoding: .utf8)
-    }
-    
-    
-    /// Obtain package name
-    /// - Parameters:
-    ///     - path: Name is derived from this path (last component)
-    private func name(path: AbsolutePath) throws -> String {
-        if let name = path.components.last {
-            return name
-        } else {
-            throw InitCommandError.ungettableProjectName(AbsolutePath.current)
         }
     }
 }

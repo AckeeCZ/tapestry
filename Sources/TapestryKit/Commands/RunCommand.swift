@@ -16,15 +16,7 @@ final class RunCommand: NSObject, Command {
     let toolArgument: PositionalArgument<String>
     let toolArguments: PositionalArgument<[String]>
     
-    private let packageController: PackageControlling
-    
-    required convenience init(parser: ArgumentParser) {
-        self.init(parser: parser,
-                  packageController: PackageController())
-    }
-    
-    init(parser: ArgumentParser,
-         packageController: PackageControlling) {
+    required init(parser: ArgumentParser) {
         let subParser = parser.add(subparser: RunCommand.command, overview: RunCommand.overview)
         
         pathArgument = subParser.add(option: "--path",
@@ -34,8 +26,6 @@ final class RunCommand: NSObject, Command {
                                      completion: .filename)
         toolArgument = subParser.add(positional: "tool", kind: String.self)
         toolArguments = subParser.add(positional: "tool arguments", kind: [String].self, strategy: .remaining)
-        
-        self.packageController = packageController
     }
     
     func run(with arguments: ArgumentParser.Result) throws {

@@ -34,7 +34,8 @@ extension InputReading {
 
 /// Handles taking in and processing user input
 public final class InputReader: InputReading {
-    public init() {}
+    /// Shared instance
+    public static var shared: InputReading = InputReader()
     
     public func readString(options: [String], question: String) throws -> String {
         let acho = Acho<String>()

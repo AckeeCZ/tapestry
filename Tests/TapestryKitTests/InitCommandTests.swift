@@ -8,24 +8,18 @@ import XCTest
 
 final class InitCommandTests: TapestryUnitTestCase {
     private var subject: InitCommand!
-    private var packageController: MockPackageController!
     private var gitController: MockGitController!
-    private var inputReader: MockInputReader!
     private var exampleGenerator: MockExampleGenerator!
     private var parser: ArgumentParser!
     
     override func setUp() {
         super.setUp()
-        packageController = MockPackageController()
         gitController = MockGitController()
-        inputReader = MockInputReader()
         exampleGenerator = MockExampleGenerator()
         parser = ArgumentParser.test()
         subject = InitCommand(parser: parser,
                               exampleGenerator: exampleGenerator,
                               gitController: gitController,
-                              packageController: packageController,
-                              inputReader: inputReader,
                               tapestriesGenerator: MockTapestriesGenerator())
     }
     
@@ -50,6 +44,10 @@ final class InitCommandTests: TapestryUnitTestCase {
         packageController.initPackageStub = { _, packageName in
             initializedPackageName = packageName
             return .library
+        }
+        
+        packageController.nameStub = { _ in
+            name
         }
         
         // When
@@ -88,7 +86,11 @@ final class InitCommandTests: TapestryUnitTestCase {
         inputReader.promptCommand("📝 Bundle ID", output: expectedBundleId)
         
         packageController.initPackageStub = { _, _ in
-            return .library
+            .library
+        }
+        
+        packageController.nameStub = { _ in
+            name
         }
         
         exampleGenerator.generateProjectStub = { path, name, bundleId in
@@ -164,6 +166,10 @@ final class InitCommandTests: TapestryUnitTestCase {
         let expectedUsername = "testname"
         inputReader.promptCommand("🍷 Username", output: expectedUsername)
         
+        packageController.nameStub = { _ in
+            expectedName
+        }
+        
         // When
         try subject.run(with: result)
         
@@ -179,9 +185,13 @@ final class InitCommandTests: TapestryUnitTestCase {
         let path = fileHandler.currentPath.appending(component: expectedName)
         try fileHandler.createFolder(path)
         packageController.initPackageStub = { _, _ in
-            return .library
+            .library
         }
         let result = try parser.parse(["init", "--path", path.pathString])
+        
+        packageController.nameStub = { _ in
+            expectedName
+        }
         
         // When
         try subject.run(with: result)
@@ -201,6 +211,10 @@ final class InitCommandTests: TapestryUnitTestCase {
             .executable
         }
         let result = try parser.parse(["init", "--path", path.pathString])
+        
+        packageController.nameStub = { _ in
+            expectedName
+        }
         
         // When
         try subject.run(with: result)

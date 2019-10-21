@@ -1,12 +1,14 @@
 import Foundation
 import XCTest
 import TuistCore
-import TapestryCore
+@testable import TapestryCore
 
 public class TapestryUnitTestCase: TapestryTestCase {
     public var system: MockSystem!
     public var fileHandler: MockFileHandler!
     public var xcodeController: MockXcodeController!
+    public var packageController: MockPackageController!
+    public var inputReader: MockInputReader!
 
     public override func setUp() {
         super.setUp()
@@ -22,6 +24,14 @@ public class TapestryUnitTestCase: TapestryTestCase {
         // XcodeController
         xcodeController = MockXcodeController()
         XcodeController.shared = xcodeController
+        
+        // PackageController
+        packageController = MockPackageController()
+        PackageController.shared = packageController
+        
+        // InputReader
+        inputReader = MockInputReader()
+        InputReader.shared = inputReader
     }
 
     public override func tearDown() {
@@ -37,6 +47,14 @@ public class TapestryUnitTestCase: TapestryTestCase {
         // XcodeController
         xcodeController = nil
         XcodeController.shared = XcodeController()
+        
+        // PackageController
+        packageController = nil
+        PackageController.shared = PackageController()
+        
+        // InputReader
+        inputReader = nil
+        InputReader.shared = InputReader()
 
         super.tearDown()
     }

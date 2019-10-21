@@ -1,8 +1,32 @@
 import Basic
-import TapestryCore
 import class TuistCore.System
 import class TuistCore.Constants
+import protocol TuistCore.FatalError
+import enum TuistCore.ErrorType
+import class TuistCore.Constants
 import Foundation
+
+enum PackageControllerError: FatalError, Equatable {
+    case ungettableProjectName(AbsolutePath)
+    
+    var type: ErrorType { .abort }
+    
+    var description: String {
+        switch self {
+        case let .ungettableProjectName(path):
+            return "Couldn't infer the project name from path \(path.pathString)"
+        }
+    }
+    
+    static func == (lhs: PackageControllerError, rhs: PackageControllerError) -> Bool {
+        switch (lhs, rhs) {
+        case let (.ungettableProjectName(lhsPath), .ungettableProjectName(rhsPath)):
+            return lhsPath == rhsPath
+        default:
+            return false
+        }
+    }
+}
 
 /// Supported package types
 public enum PackageType: String, CaseIterable {
@@ -29,18 +53,20 @@ public protocol PackageControlling {
     ///     - arguments: Arguments to pass to tool
     ///     - path: Where should this be run from
     func run(_ tool: String, arguments: [String], path: AbsolutePath) throws
+    
+    /// Obtain package name
+    /// - Parameters:
+    ///     - path: Name is derived from this path (last component)
+    func name(from path: AbsolutePath) throws -> String
 }
 
 /// Class that access underlying swift package commands
 public final class PackageController: PackageControlling {
-    private let inputReader: InputReading
-
-    public init(inputReader: InputReading = InputReader()) {
-        self.inputReader = inputReader
-    }
+    /// Shared instance
+    public static var shared: PackageControlling = PackageController()
     
     public func initPackage(path: AbsolutePath, name: String) throws -> PackageType {
-        let supportedPackageType: PackageType = try inputReader.readEnumInput(question: "Choose package type:")
+        let supportedPackageType: PackageType = try InputReader.shared.readEnumInput(question: "Choose package type:")
 
         try System.shared.run(["swift", "package", "--package-path", path.pathString, "init", "--type" , "\(supportedPackageType.rawValue)"])
 
@@ -70,10 +96,19 @@ public final class PackageController: PackageControlling {
         
         try FileHandler.shared.inDirectory(path) {
             var environment = ProcessInfo.processInfo.environment
-            environment[Constants.EnvironmentVariables.colouredOutput] = "true"
+            environment[TuistCore.Constants.EnvironmentVariables.colouredOutput] = "true"
             try System.shared.runAndPrint([toolPath.pathString] + arguments,
                                    verbose: false,
                                    environment: environment)
         }
     }
+    
+    public func name(from path: AbsolutePath) throws -> String {
+        if let name = path.components.last {
+            return name
+        } else {
+            throw PackageControllerError.ungettableProjectName(AbsolutePath.current)
+        }
+    }
+
 }
