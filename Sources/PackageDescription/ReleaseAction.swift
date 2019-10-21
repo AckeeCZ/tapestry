@@ -1,66 +1,33 @@
+/// Describes individual release action
 public struct ReleaseAction: Equatable, Codable {
     /// Order when the action gets executed.
     ///
-    /// - pre: Before the sources and resources build phase.
-    /// - post: After the sources and resources build phase.
+    /// - pre: Before commiting and tagging new version.
+    /// - post: After tcommiting and tagging new version.
     public enum Order: String, Codable {
         case pre
         case post
     }
     
-    public enum Action: Codable {
-        case custom(tool: String, arguments: [String])
-        case predefined(PredefinedAction)
-        
-        private enum Kind: String, Codable {
-            case custom
-            case predefined
-        }
-
-        enum CodingKeys: String, CodingKey {
-            case kind
-            case tool
-            case arguments
-            case action
-        }
-
-        public init(from decoder: Decoder) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            let kind = try container.decode(Kind.self, forKey: .kind)
-            switch kind {
-            case .custom:
-                let tool = try container.decode(String.self, forKey: .tool)
-                let arguments = try container.decode([String].self, forKey: .arguments)
-                self = .custom(tool: tool, arguments: arguments)
-            case .predefined:
-                let action = try container.decode(PredefinedAction.self, forKey: .action)
-                self = .predefined(action)
-            }
-        }
-
-        public func encode(to encoder: Encoder) throws {
-            var container = encoder.container(keyedBy: CodingKeys.self)
-            switch self {
-            case let .custom(tool: tool, arguments: arguments):
-                try container.encode(Kind.custom, forKey: .kind)
-                try container.encode(tool, forKey: .tool)
-                try container.encode(arguments, forKey: .arguments)
-            case let .predefined(action):
-                try container.encode(Kind.predefined, forKey: .kind)
-                try container.encode(action, forKey: .action)
-            }
-        }
-    }
-    
+    /// Describes dependencies manager that you can add to your release action
+    /// You can use this enum for `PredefinedAction.dependenciesCompatibility`
     public enum DependendenciesManager: String, Codable {
+        /// Cococapods
         case cocoapods
+        /// Carthage
         case carthage
+        /// Swift Package Manager
         case spm
     }
     
+    /// You can choose one of `PredefinedAction`s that tapestry provides for you
+    /// You can list all using `tapestry actions` and run individual actions `tapestry action action-name`
     public enum PredefinedAction: Codable {
+        /// Updates version in `README.md` and `YourLibrary.podspec`
         case docsUpdate
+        /// Runs `tool` with given `arguments` from `Tapestries/Package.swift`
         case run(tool: String, arguments: [String])
+        /// Checks compatibility of your library with given dependencies managers
         case dependenciesCompatibility([DependendenciesManager])
     
         private enum Kind: String, Codable {
@@ -109,9 +76,58 @@ public struct ReleaseAction: Equatable, Codable {
 
     }
     
+    /// Describes what should be run
+    ///
+    /// - custom: is run from root of your library
+    /// - predefined: Runs one of `PredefinedAction`s that is provided by tapestry
+    public enum Action: Codable {
+        case custom(tool: String, arguments: [String])
+        case predefined(PredefinedAction)
+        
+        private enum Kind: String, Codable {
+            case custom
+            case predefined
+        }
+
+        enum CodingKeys: String, CodingKey {
+            case kind
+            case tool
+            case arguments
+            case action
+        }
+
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let kind = try container.decode(Kind.self, forKey: .kind)
+            switch kind {
+            case .custom:
+                let tool = try container.decode(String.self, forKey: .tool)
+                let arguments = try container.decode([String].self, forKey: .arguments)
+                self = .custom(tool: tool, arguments: arguments)
+            case .predefined:
+                let action = try container.decode(PredefinedAction.self, forKey: .action)
+                self = .predefined(action)
+            }
+        }
+
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            switch self {
+            case let .custom(tool: tool, arguments: arguments):
+                try container.encode(Kind.custom, forKey: .kind)
+                try container.encode(tool, forKey: .tool)
+                try container.encode(arguments, forKey: .arguments)
+            case let .predefined(action):
+                try container.encode(Kind.predefined, forKey: .kind)
+                try container.encode(action, forKey: .action)
+            }
+        }
+    }
+    
     /// Release action order
     public let order: Order
     
+    /// Action to run
     public let action: Action
     
     init(order: Order,
@@ -120,23 +136,27 @@ public struct ReleaseAction: Equatable, Codable {
         self.action = action
     }
     
+    /// Creates custom pre action
     public static func pre(tool: String,
                            arguments: [String] = []) -> ReleaseAction {
         return ReleaseAction(order: .pre,
                              action: .custom(tool: tool, arguments: arguments))
     }
     
+    /// Creates custom post action
     public static func post(tool: String,
                             arguments: [String] = []) -> ReleaseAction {
         return ReleaseAction(order: .post,
                             action: .custom(tool: tool, arguments: arguments))
     }
     
+    /// Creates predefined pre action
     public static func pre(_ predefinedAction: PredefinedAction) -> ReleaseAction {
         return releaseAction(predefinedAction,
                              order: .pre)
     }
     
+    /// Creates predefined post action
     public static func post(_ predefinedAction: PredefinedAction) -> ReleaseAction {
         return releaseAction(predefinedAction,
                              order: .post)

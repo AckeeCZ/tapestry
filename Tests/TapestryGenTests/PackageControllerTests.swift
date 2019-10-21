@@ -43,4 +43,19 @@ final class PackageControllerTests: TapestryUnitTestCase {
         
         XCTAssertThrowsError(try subject.initPackage(path: path, name: path.components.last ?? ""))
     }
+    
+    func test_runs_succeeds() throws {
+        // Given
+        let tool = "testtool"
+        let arguments = ["arg", "arg2"]
+        system.succeedCommand(["swift", "run", tool])
+        let debugPath = fileHandler.currentPath.appending(RelativePath("Tapestries/.build/x86_64-apple-macosx/debug/"))
+        let toolPath = fileHandler.currentPath.appending(component: tool)
+        try fileHandler.createFolder(debugPath)
+        try fileHandler.touch(debugPath.appending(component: tool))
+        system.succeedCommand([toolPath.pathString] + arguments)
+        
+        // Then
+        XCTAssertNoThrow(try subject.run(tool, arguments: arguments, path: fileHandler.currentPath))
+    }
 }

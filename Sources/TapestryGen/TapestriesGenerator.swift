@@ -2,8 +2,9 @@ import Basic
 import class TuistCore.FileHandler
 import protocol TuistCore.FatalError
 import enum TuistCore.ErrorType
+import TapestryCore
 
-enum TapestriesGeneratorError: FatalError {
+enum TapestriesGeneratorError: FatalError, Equatable {
     case tapestriesFolderExists(AbsolutePath)
     
     var type: ErrorType { .abort }
@@ -16,14 +17,16 @@ enum TapestriesGeneratorError: FatalError {
     }
 }
 
+/// Interface for generating tapestries folder
 public protocol TapestriesGenerating {
+    /// Creates Tapestries folder
+    /// There are defined local tapestry, developer dependencies and TapestryConfig
     func generateTapestries(at path: AbsolutePath) throws
 }
 
 public final class TapestriesGenerator: TapestriesGenerating {
     public init() { }
     
-    // TODO: Change local package to remote one!!!!
     public func generateTapestries(at path: AbsolutePath) throws {
         let tapestriesPath = path.appending(component: "Tapestries")
         guard !FileHandler.shared.exists(tapestriesPath) else { throw TapestriesGeneratorError.tapestriesFolderExists(tapestriesPath) }
@@ -38,7 +41,7 @@ public final class TapestriesGenerator: TapestriesGenerating {
     
     private func generatePackageManifest(path: AbsolutePath) throws {
         let contents = """
-        // swift-tools-version:5.1
+        // swift-tools-version:\(Constants.swiftVersion)
         // The swift-tools-version declares the minimum version of Swift required to build this package.
 
         import PackageDescription
@@ -50,7 +53,7 @@ public final class TapestriesGenerator: TapestriesGenerating {
             ],
             dependencies: [
                 // Tapestry
-                .package(path: "../"),
+                .package(url: "\(Constants.gitRepositoryURL)", .upToNextMajor(from: "\(Constants.version)")),
                 .package(url: "https://github.com/nicklockwood/SwiftFormat", .upToNextMajor(from: "0.40.13")),
             ],
             targets: [

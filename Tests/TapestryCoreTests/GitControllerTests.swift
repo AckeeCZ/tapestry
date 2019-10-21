@@ -70,4 +70,21 @@ final class GitControllerTests: TapestryUnitTestCase {
         // Then
         XCTAssertNoThrow(try subject.commit(message, path: path))
     }
+    
+    func test_add_succeeds() throws {
+        // Given
+        let path = AbsolutePath("/test")
+        system.succeedCommand(["git", "add", path.pathString])
+        
+        // Then
+        XCTAssertNoThrow(try subject.add(files: [path], path: path))
+    }
+    
+    func test_push_succeeds() {
+        // Given
+        system.succeedCommand(["git", "push"])
+        
+        // Then
+        XCTAssertNoThrow(try subject.push(path: nil))
+    }
 }

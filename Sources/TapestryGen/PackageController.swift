@@ -23,6 +23,11 @@ public protocol PackageControlling {
     ///     - path: The path of package we should generate xcodeproj for
     func generateXcodeproj(path: AbsolutePath) throws
     
+    /// Runs tool using tapestry
+    /// - Parameters:
+    ///     - tool: Name of tool to run
+    ///     - arguments: Arguments to pass to tool
+    ///     - path: Where should this be run from
     func run(_ tool: String, arguments: [String], path: AbsolutePath) throws
 }
 
@@ -49,7 +54,8 @@ public final class PackageController: PackageControlling {
     public func run(_ tool: String, arguments: [String], path: AbsolutePath) throws {
         let tapestriesPath = path.appending(component: "Tapestries")
         
-        // Print if errored
+        // TODO: Show progress without cluttering command line
+        
         try FileHandler.shared.inDirectory(tapestriesPath) {
             try System.shared.runAndPrint(["swift", "run", tool])
         }

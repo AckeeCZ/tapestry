@@ -59,7 +59,14 @@ public protocol GitControlling {
     ///     - path: Path of the git directory
     /// - Returns: True if `version` exists
     func tagExists(_ version: Version, path: AbsolutePath?) throws -> Bool
+    /// Stages `files` for commit
+    /// - Parameters:
+    ///     - files: Files to stage
+    ///     - path: Path of the git directory
     func add(files: [AbsolutePath], path: AbsolutePath?) throws
+    /// Push to the remote repository
+    /// - Parameters:
+    ///     - path: Path of the git directory
     func push(path: AbsolutePath?) throws
 }
 
