@@ -126,9 +126,9 @@ final class InitCommand: NSObject, Command {
         
         switch packageType {
         case .executable:
-            try packageController.generateXcodeproj(path: path)
-        case .library:
             break
+        case .library:
+            try packageController.generateXcodeproj(path: path)
         }
         Printer.shared.print(success: "Package generated ✅")
     }

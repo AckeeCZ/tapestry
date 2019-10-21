@@ -48,13 +48,17 @@ final class ReleaseCommand: NSObject, Command {
     let versionArgument: PositionalArgument<Version>
     let pathArgument: OptionArgument<String>
 
+    private let configModelLoader: ConfigModelLoading
     private let gitController: GitControlling
     private let docsUpdater: DocsUpdating
     private let packageController: PackageControlling
     private let dependenciesCompatibilityChecker: DependenciesComptabilityChecking
 
     required convenience init(parser: ArgumentParser) {
+        let graphManifestLoader = GraphManifestLoader()
+        let configModelLoader = ConfigModelLoader(manifestLoader: graphManifestLoader)
         self.init(parser: parser,
+                  configModelLoader: configModelLoader,
                   gitController: GitController(),
                   docsUpdater: DocsUpdater(),
                   packageController: PackageController(),
@@ -62,6 +66,7 @@ final class ReleaseCommand: NSObject, Command {
     }
 
     init(parser: ArgumentParser,
+         configModelLoader: ConfigModelLoading,
          gitController: GitControlling,
          docsUpdater: DocsUpdating,
          packageController: PackageControlling,
@@ -74,6 +79,7 @@ final class ReleaseCommand: NSObject, Command {
                                      usage: "The path to the folder where the project will be generated (Default: Current directory).",
                                      completion: .filename)
 
+        self.configModelLoader = configModelLoader
         self.gitController = gitController
         self.docsUpdater = docsUpdater
         self.packageController = packageController
@@ -87,8 +93,6 @@ final class ReleaseCommand: NSObject, Command {
         
         guard try !gitController.tagExists(version, path: path) else { throw ReleaseError.tagExists(version) }
         
-        let graphManifestLoader = GraphManifestLoader()
-        let configModelLoader = ConfigModelLoader(manifestLoader: graphManifestLoader)
         let config = try configModelLoader.loadTapestryConfig(at: path.appending(RelativePath("Tapestries/Sources/TapestryConfig/TapestryConfig.swift")))
         
         let preActions: [ReleaseAction.Action] = config.release.actions

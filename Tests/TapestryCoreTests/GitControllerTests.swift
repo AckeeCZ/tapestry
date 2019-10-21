@@ -65,7 +65,7 @@ final class GitControllerTests: TapestryUnitTestCase {
         // Given
         let path = AbsolutePath("/test")
         let message = "Test commit"
-        system.succeedCommand(["git", "commit", "-am", message])
+        system.succeedCommand(["git", "commit", "-m", message])
         
         // Then
         XCTAssertNoThrow(try subject.commit(message, path: path))

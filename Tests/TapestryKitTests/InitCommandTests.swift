@@ -198,7 +198,7 @@ final class InitCommandTests: TapestryUnitTestCase {
         let path = fileHandler.currentPath.appending(component: expectedName)
         try fileHandler.createFolder(path)
         packageController.initPackageStub = { _, _ in
-            return .executable
+            .executable
         }
         let result = try parser.parse(["init", "--path", path.pathString])
         
@@ -216,6 +216,9 @@ final class InitCommandTests: TapestryUnitTestCase {
         var path: AbsolutePath?
         packageController.generateXcodeprojStub = {
             path = $0
+        }
+        packageController.initPackageStub = { _, _ in
+            .library
         }
         let result = try parser.parse(["init"])
         
