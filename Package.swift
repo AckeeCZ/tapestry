@@ -3,19 +3,6 @@
 
 import PackageDescription
 
-let enableDevDepedencies = true
-
-extension Package {
-    convenience init(name: String,
-                     products: [Product] = [],
-                     dependencies: [Package.Dependency] = [],
-                     developerDependencies: [Package.Dependency],
-                     targets: [Target] = []) {
-        let allDependencies = enableDevDepedencies ? dependencies : dependencies + developerDependencies
-        self.init(name: name, products: products, dependencies: allDependencies, targets: targets)
-    }
-}
-
 let package = Package(
     name: "tapestry",
     products: [
