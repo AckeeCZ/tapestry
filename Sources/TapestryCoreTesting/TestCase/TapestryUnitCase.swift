@@ -6,6 +6,7 @@ import TapestryCore
 public class TapestryUnitTestCase: TapestryTestCase {
     public var system: MockSystem!
     public var fileHandler: MockFileHandler!
+    public var xcodeController: MockXcodeController!
 
     public override func setUp() {
         super.setUp()
@@ -17,6 +18,10 @@ public class TapestryUnitTestCase: TapestryTestCase {
         // swiftlint:disable force_try
         fileHandler = try! MockFileHandler()
         FileHandler.shared = fileHandler
+        
+        // XcodeController
+        xcodeController = MockXcodeController()
+        XcodeController.shared = xcodeController
     }
 
     public override func tearDown() {
@@ -27,6 +32,11 @@ public class TapestryUnitTestCase: TapestryTestCase {
         // File handler
         fileHandler = nil
         TapestryCore.FileHandler.shared = TapestryCore.FileHandler()
+        
+        
+        // XcodeController
+        xcodeController = nil
+        XcodeController.shared = XcodeController()
 
         super.tearDown()
     }

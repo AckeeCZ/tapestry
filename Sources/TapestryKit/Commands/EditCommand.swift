@@ -30,7 +30,7 @@ final class EditCommand: NSObject, Command {
             
         To edit `TapestryConfig` navigate to `TapestryConfig.swift`
         """)
-        try System.shared.run("xed", path.pathString + "/Tapestries/")
+        try XcodeController.shared.open(at: path.appending(component: "Tapestries"))
     }
     
     /// Obtain package path
