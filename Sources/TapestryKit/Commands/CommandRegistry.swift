@@ -86,7 +86,10 @@ public final class CommandRegistry {
             // Run local version
             let tapestriesPath = FileHandler.shared.currentPath.appending(component: "Tapestries")
             let processedArguments = processAllArguments()
-            if !processArguments().contains(EditCommand.command), !processedArguments.contains("--current"), FileHandler.shared.exists(tapestriesPath) {
+            if !processArguments().contains(EditCommand.command),
+                !processArguments().contains(UpCommand.command),
+                !processedArguments.contains("--current"),
+                FileHandler.shared.exists(tapestriesPath) {
                 try PackageController.shared.run("tapestry", arguments: ["--current"] + processedArguments.dropFirst(), path: FileHandler.shared.currentPath)
                 return
             }
