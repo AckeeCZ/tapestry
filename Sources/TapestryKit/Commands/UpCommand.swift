@@ -34,7 +34,11 @@ final class UpCommand: NSObject, Command {
     func run(with arguments: ArgumentParser.Result) throws {
         let path = try self.path(arguments: arguments)
         
+        Printer.shared.print("Generating tapestry 🎨")
+        
         try tapestriesGenerator.generateTapestries(at: path)
+        
+        Printer.shared.print(success: "Generation succeeded! ✅")
     }
     
     /// Obtain package path

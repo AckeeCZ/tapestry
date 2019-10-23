@@ -13,7 +13,7 @@ public class TapestryUnitTestCase: TapestryTestCase {
         super.setUp()
         // System
         system = MockSystem()
-        System.shared = MockSystem()
+        System.shared = system
 
         // File handler
         // swiftlint:disable force_try

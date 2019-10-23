@@ -6,9 +6,10 @@
 //
 
 import Foundation
-import TuistCore
 import Basic
 import SPMUtility
+import protocol TuistCore.FatalError
+import enum TuistCore.ErrorType
 
 enum GitError: FatalError, Equatable {
     case tagExists(Version)
