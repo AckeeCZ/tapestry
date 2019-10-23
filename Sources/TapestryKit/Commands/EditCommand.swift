@@ -1,7 +1,6 @@
 import Basic
 import TapestryCore
 import protocol TuistCore.Command
-import class TuistCore.System
 import SPMUtility
 import Foundation
 

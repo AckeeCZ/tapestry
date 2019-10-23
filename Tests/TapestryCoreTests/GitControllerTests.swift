@@ -1,7 +1,6 @@
 import XCTest
 import Basic
 import SPMUtility
-import class TuistCore.System
 @testable import TapestryCore
 @testable import TapestryCoreTesting
 

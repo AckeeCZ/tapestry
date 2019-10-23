@@ -19,10 +19,6 @@ import Basic
 import TapestryGen
 import TapestryCore
 
-enum RunError: Error {
-    case commandNotFound
-}
-
 public final class CommandRegistry {
     // MARK: - Attributes
 
@@ -91,7 +87,6 @@ public final class CommandRegistry {
             let tapestriesPath = FileHandler.shared.currentPath.appending(component: "Tapestries")
             let processedArguments = processAllArguments()
             if !processArguments().contains(EditCommand.command), !processedArguments.contains("--current"), FileHandler.shared.exists(tapestriesPath) {
-                Printer.shared.print("Building local tapestry...")
                 try PackageController.shared.run("tapestry", arguments: ["--current"] + processedArguments.dropFirst(), path: FileHandler.shared.currentPath)
                 return
             }

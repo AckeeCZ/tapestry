@@ -8,7 +8,7 @@ import TapestryCore
 /// This command initializes Swift package with example in current empty directory
 final class UpCommand: NSObject, Command {
     static var command: String = "up"
-    static var overview: String = "Configure developer depednencies management alongside with `TapestryConfig` to automate mundane tasks"
+    static var overview: String = "Sets up tapestry in given directory"
 
     let pathArgument: OptionArgument<String>
     private let tapestriesGenerator: TapestriesGenerating

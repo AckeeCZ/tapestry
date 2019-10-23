@@ -18,10 +18,6 @@ public class Printer: Printing {
     /// Shared instance
     public static var shared: Printing = Printer()
 
-    // MARK: - Init
-
-    public init() {}
-
     // MARK: - Public
 
     public func print(_ text: String) {

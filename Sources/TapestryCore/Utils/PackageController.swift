@@ -1,13 +1,14 @@
 import Basic
-import class TuistCore.System
 import class TuistCore.Constants
 import protocol TuistCore.FatalError
 import enum TuistCore.ErrorType
 import class TuistCore.Constants
 import Foundation
+import SPMUtility
 
 enum PackageControllerError: FatalError, Equatable {
     case ungettableProjectName(AbsolutePath)
+    case buildFailed(String)
     
     var type: ErrorType { .abort }
     
@@ -15,6 +16,8 @@ enum PackageControllerError: FatalError, Equatable {
         switch self {
         case let .ungettableProjectName(path):
             return "Couldn't infer the project name from path \(path.pathString)"
+        case let .buildFailed(tool):
+            return "Building \(tool) failed - try running `swift run \(tool)` to debug"
         }
     }
     
@@ -22,6 +25,8 @@ enum PackageControllerError: FatalError, Equatable {
         switch (lhs, rhs) {
         case let (.ungettableProjectName(lhsPath), .ungettableProjectName(rhsPath)):
             return lhsPath == rhsPath
+        case let (.buildFailed(lhsTool), .buildFailed(rhsTool)):
+            return lhsTool == rhsTool
         default:
             return false
         }
@@ -80,10 +85,12 @@ public final class PackageController: PackageControlling {
     public func run(_ tool: String, arguments: [String], path: AbsolutePath) throws {
         let tapestriesPath = path.appending(component: "Tapestries")
         
-        // TODO: Show progress without cluttering command line
-        
         try FileHandler.shared.inDirectory(tapestriesPath) {
-            try System.shared.runAndPrint(["swift", "run", tool])
+            do {
+                try swiftRunTool(tool)
+            } catch {
+                throw PackageControllerError.buildFailed(tool)
+            }
         }
         
         // TODO: Candidates (Linux)
@@ -109,6 +116,57 @@ public final class PackageController: PackageControlling {
         } else {
             throw PackageControllerError.ungettableProjectName(AbsolutePath.current)
         }
+    }
+    
+    // MARK: - Helpers
+    
+    /// Runs tool using swift
+    /// - Parameters:
+    ///     - tool: Name of tool to run
+    private func swiftRunTool(_ tool: String) throws {
+        let progressAnimation = NinjaProgressAnimation(stream: Basic.stdoutStream)
+        var downloadPrinted = false
+        var animationUpdated = false
+        try System.shared.runAndPrint(["swift", "run", tool],
+                                      verbose: false,
+                                      environment: Process.env,
+                                      redirection: .stream(stdout: { bytes in
+                                        // do nothing
+                                      }, stderr: { bytes in
+                                        guard
+                                            // TODO: Enable for building other tools, too
+                                            // The bug right now is that it prints updates on a new line, rather than current
+                                            tool == "tapestry",
+                                            let output = String(bytes: bytes, encoding: .utf8) else { return }
+                                        if !downloadPrinted, output.contains("Fetching") || output.contains("Updating") {
+                                            Printer.shared.print("Fetching dependencies...")
+                                            downloadPrinted = true
+                                            return
+                                        }
+                                        guard let (step, total) = self.progress(for: progressAnimation, with: output) else { return }
+                                        progressAnimation.update(step: step, total: total, text: "Building \(tool)")
+                                        animationUpdated = true
+                                      }))
+        if animationUpdated, let dataOutput = " ✅".data(using: .utf8) {
+            FileHandle.standardOutput.write(dataOutput)
+            progressAnimation.complete(success: true)
+        }
+    }
+    
+    /// - Returns: Returns current steps and total steps for running build action
+    private func progress(for progressAnimation: NinjaProgressAnimation, with output: String) -> (Int, Int)? {
+        guard let range = output.range(of: "\\[.*\\]", options: .regularExpression) else { return nil }
+        let numbers = output[range]
+            .replacingOccurrences(of: "[", with: "")
+            .replacingOccurrences(of: "]", with: "")
+            .split(separator: "/")
+        guard
+            numbers.count == 2,
+            let step = Int(numbers[0]),
+            let total = Int(numbers[1])
+        else { return nil }
+        
+        return (step, total)
     }
 
 }

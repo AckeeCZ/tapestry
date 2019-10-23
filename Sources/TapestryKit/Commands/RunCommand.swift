@@ -2,18 +2,30 @@ import Basic
 import TapestryCore
 import TapestryGen
 import protocol TuistCore.Command
-import class TuistCore.System
+import enum TuistCore.ErrorType
+import protocol TuistCore.FatalError
 import SPMUtility
 import Foundation
+
+enum RunError: FatalError, Equatable {
+    case executableCallMissing
+    
+    var type: ErrorType { .abort }
+    
+    var description: String {
+        switch self {
+        case .executableCallMissing:
+            return "Please provide info about what to run"
+        }
+    }
+}
 
 /// This command initializes Swift package with example in current empty directory
 final class RunCommand: NSObject, Command {
     static var command: String = "run"
-    static var overview: String = "Configure developer depednencies management alongside with `TapestryConfig` to automate mundane tasks"
+    static var overview: String = "Runs executable that is defined in Tapestries/Package.swift file"
 
-    // upToNextOption ArgumentType
     let pathArgument: OptionArgument<String>
-    let toolArgument: PositionalArgument<String>
     let toolArguments: PositionalArgument<[String]>
     
     required init(parser: ArgumentParser) {
@@ -24,19 +36,18 @@ final class RunCommand: NSObject, Command {
                                      kind: String.self,
                                      usage: "The path to your Swift framework",
                                      completion: .filename)
-        toolArgument = subParser.add(positional: "tool", kind: String.self)
-        toolArguments = subParser.add(positional: "tool arguments", kind: [String].self, strategy: .remaining)
+        toolArguments = subParser.add(positional: "executable call", kind: [String].self, strategy: .remaining)
     }
     
     func run(with arguments: ArgumentParser.Result) throws {
         let path = try self.path(arguments: arguments)
         
         guard
-            let tool = arguments.get(toolArgument),
-            let toolArguments = arguments.get(toolArguments)
-        else { fatalError() }
+            let toolArguments = arguments.get(toolArguments),
+            let tool = toolArguments.first
+        else { throw RunError.executableCallMissing }
         
-        try System.shared.runAndPrint(["swift", "run", "--package-path", path.appending(component: "Tapestries").pathString, tool] + toolArguments)
+        try PackageController.shared.run(tool, arguments: Array(toolArguments.dropFirst()), path: path)
     }
     
     /// Obtain package path

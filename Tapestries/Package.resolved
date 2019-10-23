@@ -83,15 +83,6 @@
         }
       },
       {
-        "package": "tuist",
-        "repositoryURL": "https://github.com/tuist/tuist.git",
-        "state": {
-          "branch": "master",
-          "revision": "5d984889ad403e6167cce082a6e7c32151dec1c4",
-          "version": null
-        }
-      },
-      {
         "package": "XcodeProj",
         "repositoryURL": "https://github.com/tuist/XcodeProj",
         "state": {

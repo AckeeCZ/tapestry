@@ -4,20 +4,13 @@ import TapestryCore
 import Basic
 import class TuistCore.Glob
 
-/// Entity responsible for providing generator models
-///
-/// Assumptions:
-///   - TuistGenerator creates a graph of Project dependencies
-///   - The projects are associated with unique paths
-///   - Each path only contains one Project
-///   - Whenever a dependency is encountered referencing another path,
-///     this entity is consulted again to load the model at that path
+/// Entity responsible for package configuration
 public protocol ConfigModelLoading {
-    /// Load a TusitConfig model at the specified path
+    /// Load a Tapestry model at the specified path
     ///
-    /// - Parameter path: The absolute path for the tuistconfig model to load
-    /// - Returns: The tuistconfig loaded from the specified path
-    /// - Throws: Error encountered during the loading process (e.g. Missing tuistconfig)
+    /// - Parameter path: The absolute path for the tapestryconfig model to load
+    /// - Returns: The tapestryconfig loaded from the specified path
+    /// - Throws: Error encountered during the loading process (e.g. Missing tapestryconfig)
     func loadTapestryConfig(at path: AbsolutePath) throws -> TapestryGen.TapestryConfig
 }
 
@@ -32,9 +25,9 @@ class ConfigModelLoader: ConfigModelLoading {
     
     /// Load a TusitConfig model at the specified path
     ///
-    /// - Parameter path: The absolute path for the tuistconfig model to load
-    /// - Returns: The tuistconfig loaded from the specified path
-    /// - Throws: Error encountered during the loading process (e.g. Missing tuistconfig)
+    /// - Parameter path: The absolute path for the tapestryconfig model to load
+    /// - Returns: The tapestryconfig loaded from the specified path
+    /// - Throws: Error encountered during the loading process (e.g. Missing tapestryconfig)
     func loadTapestryConfig(at path: AbsolutePath) throws -> TapestryGen.TapestryConfig {
         let manifest = try manifestLoader.loadTapestryConfig(at: path.parentDirectory)
         return try TapestryGen.TapestryConfig.from(manifest: manifest, path: path)
@@ -94,29 +87,6 @@ extension TapestryGen.ReleaseAction.Order {
             return .pre
         case .post:
             return .post
-        }
-    }
-}
-
-public enum FileElement: Equatable {
-    case file(path: AbsolutePath)
-    case folderReference(path: AbsolutePath)
-
-    var path: AbsolutePath {
-        switch self {
-        case let .file(path):
-            return path
-        case let .folderReference(path):
-            return path
-        }
-    }
-
-    var isReference: Bool {
-        switch self {
-        case .file:
-            return false
-        case .folderReference:
-            return true
         }
     }
 }

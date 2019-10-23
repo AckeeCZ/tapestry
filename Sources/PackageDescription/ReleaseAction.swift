@@ -3,7 +3,7 @@ public struct ReleaseAction: Equatable, Codable {
     /// Order when the action gets executed.
     ///
     /// - pre: Before commiting and tagging new version.
-    /// - post: After tcommiting and tagging new version.
+    /// - post: After commiting and tagging new version.
     public enum Order: String, Codable {
         case pre
         case post
@@ -137,6 +137,9 @@ public struct ReleaseAction: Equatable, Codable {
     }
     
     /// Creates custom pre action
+    /// - Parameters:
+    ///     - tool: Name of tool you want to run
+    ///     - arguments: Arguments to pass to the tool
     public static func pre(tool: String,
                            arguments: [String] = []) -> ReleaseAction {
         return ReleaseAction(order: .pre,
@@ -144,6 +147,9 @@ public struct ReleaseAction: Equatable, Codable {
     }
     
     /// Creates custom post action
+    /// - Parameters:
+    ///     - tool: Name of tool you want to run
+    ///     - arguments: Arguments to pass to the tool
     public static func post(tool: String,
                             arguments: [String] = []) -> ReleaseAction {
         return ReleaseAction(order: .post,
@@ -151,12 +157,16 @@ public struct ReleaseAction: Equatable, Codable {
     }
     
     /// Creates predefined pre action
+    /// - Parameters:
+    ///     - predefinedAction: Specify which `PredefinedAction` to run
     public static func pre(_ predefinedAction: PredefinedAction) -> ReleaseAction {
         return releaseAction(predefinedAction,
                              order: .pre)
     }
     
     /// Creates predefined post action
+    /// - Parameters:
+    ///     - predefinedAction: Specify which `PredefinedAction` to run
     public static func post(_ predefinedAction: PredefinedAction) -> ReleaseAction {
         return releaseAction(predefinedAction,
                              order: .post)

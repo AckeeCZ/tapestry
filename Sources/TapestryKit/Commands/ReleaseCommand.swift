@@ -1,7 +1,6 @@
 import Foundation
 import protocol TuistCore.FatalError
 import protocol TuistCore.Command
-import class TuistCore.System
 import enum TuistCore.ErrorType
 import TapestryCore
 import TapestryGen
@@ -43,7 +42,7 @@ enum ReleaseError: FatalError, Equatable {
 /// This command initializes Swift package with example in current empty directory
 final class ReleaseCommand: NSObject, Command {
     static var command: String = "release"
-    static var overview: String = "Tags a new release and updates documentation and Pod accordingly"
+    static var overview: String = "Runs release steps defined in `TapestryConfig.swift` file"
 
     let versionArgument: PositionalArgument<Version>
     let pathArgument: OptionArgument<String>

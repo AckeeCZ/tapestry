@@ -1,6 +1,5 @@
 import Foundation
 import XCTest
-import TuistCore
 @testable import TapestryCore
 
 public class TapestryUnitTestCase: TapestryTestCase {
@@ -14,7 +13,7 @@ public class TapestryUnitTestCase: TapestryTestCase {
         super.setUp()
         // System
         system = MockSystem()
-        System.shared = system
+        System.shared = MockSystem()
 
         // File handler
         // swiftlint:disable force_try
@@ -35,13 +34,17 @@ public class TapestryUnitTestCase: TapestryTestCase {
     }
 
     public override func tearDown() {
+        // System
+        system = nil
+        System.shared = System()
+        
         // Printer
         printer = nil
-        TapestryCore.Printer.shared = TapestryCore.Printer()
+        Printer.shared = Printer()
 
         // File handler
         fileHandler = nil
-        TapestryCore.FileHandler.shared = TapestryCore.FileHandler()
+        FileHandler.shared = FileHandler()
         
         
         // XcodeController

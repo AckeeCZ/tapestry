@@ -3,7 +3,6 @@ import TapestryCore
 import protocol TuistCore.Command
 import protocol TuistCore.FatalError
 import enum TuistCore.ErrorType
-import class TuistCore.System
 import SPMUtility
 import Foundation
 import TapestryGen

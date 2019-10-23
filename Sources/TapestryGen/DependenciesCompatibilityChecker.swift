@@ -1,5 +1,4 @@
 import Basic
-import class TuistCore.System
 import TapestryCore
 
 /// Check compatibility with various dependency managers
