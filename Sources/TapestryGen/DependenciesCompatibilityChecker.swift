@@ -70,7 +70,7 @@ public final class DependenciesCompatibilityChecker: DependenciesCompatibilityCh
         Printer.shared.print("Checking Cococapods compatibility...")
         try FileHandler.shared.inDirectory(path) {
             do {
-                try System.shared.run(["pod", "lib", "lint"])
+                try System.shared.run(["pod", "lib", "lint", "--allow-warnings"])
             } catch {
                 throw DependenciesCompatibilityError.cocoapods
             }
