@@ -42,8 +42,8 @@ public final class DependenciesCompatibilityChecker: DependenciesCompatibilityCh
                 try checkCarthageCompatibility(path: path)
             case .cocoapods:
                 try checkCocoapodsCompatibility(path: path)
-            case .spm:
-                try checkSPMCompatibility(path: path)
+            case let .spm(platform):
+                try checkSPMCompatibility(path: path, platform: platform)
             }
         }
     }
@@ -72,11 +72,22 @@ public final class DependenciesCompatibilityChecker: DependenciesCompatibilityCh
         }
     }
     
-    private func checkSPMCompatibility(path: AbsolutePath) throws {
+    private func checkSPMCompatibility(path: AbsolutePath, platform: ReleaseAction.Platform) throws {
         Printer.shared.print("Checking SPM compatibility...")
         try FileHandler.shared.inDirectory(path) {
             do {
-                try System.shared.run(["swift", "build"])
+                let projectPath = path.appending(component: "spm_compatibility.xcodeproj")
+                defer { try? FileHandler.shared.delete(projectPath) }
+                try PackageController.shared.generateXcodeproj(path: path, output: projectPath)
+                let name = try PackageController.shared.name(from: path)
+                let device: Device?
+                switch platform {
+                case let .iOS(deviceName):
+                    device = .iOS(deviceName)
+                case .all:
+                    device = nil
+                }
+                try XcodeController.shared.build(projectPath: projectPath, schemeName: name + "-Package", destination: device)
             } catch {
                 throw DependenciesCompatibilityError.spm
             }

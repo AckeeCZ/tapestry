@@ -48,14 +48,15 @@ final class DependenciesCompatibilityCheckerTests: TapestryUnitTestCase {
         system.succeedCommand(["swift", "build"])
         
         // Then
-        XCTAssertNoThrow(try subject.checkCompatibility(with: [.spm], path: fileHandler.currentPath))
+        XCTAssertNoThrow(try subject.checkCompatibility(with: [.spm(.all)], path: fileHandler.currentPath))
     }
     
     func test_check_fails_when_spm() {
         // Given
-        system.errorCommand(["swift", "build"])
-        
+        xcodeController.buildStub = { _, _, _ in
+            throw NSError.test()
+        }
         // Then
-        XCTAssertThrowsError(try subject.checkCompatibility(with: [.spm], path: fileHandler.currentPath))
+        XCTAssertThrowsError(try subject.checkCompatibility(with: [.spm(.all)], path: fileHandler.currentPath))
     }
 }

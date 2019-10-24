@@ -3,7 +3,7 @@ import TapestryCore
 
 public final class MockPackageController: PackageControlling {
     public var initPackageStub: ((AbsolutePath, String) throws -> PackageType)?
-    public var generateXcodeprojStub: ((AbsolutePath) throws -> ())?
+    public var generateXcodeprojStub: ((AbsolutePath, AbsolutePath?) throws -> ())?
     public var runStub: ((String, [String], AbsolutePath) throws -> ())?
     public var nameStub: ((AbsolutePath) throws -> String)?
     
@@ -11,8 +11,8 @@ public final class MockPackageController: PackageControlling {
         try initPackageStub?(path, name) ?? .library
     }
     
-    public func generateXcodeproj(path: AbsolutePath) throws {
-        try generateXcodeprojStub?(path)
+    public func generateXcodeproj(path: AbsolutePath, output: AbsolutePath?) throws {
+        try generateXcodeprojStub?(path, output)
     }
     
     public func run(_ tool: String, arguments: [String], path: AbsolutePath) throws {

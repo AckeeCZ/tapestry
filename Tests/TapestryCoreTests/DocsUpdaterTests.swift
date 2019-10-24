@@ -15,7 +15,7 @@ final class DocsUpdaterTests: TapestryUnitTestCase {
     func test_updateVersionInPodspec() throws {
         // Given
         let content = """
-        s.version = "0.0.1"
+        s.version    =     '0.0.1'
         s.dependency "BigInt", "~> 0.0.1"
         """
         let name = "TestPackage"
@@ -33,7 +33,7 @@ final class DocsUpdaterTests: TapestryUnitTestCase {
 
         // Then
         let expectedContent = """
-        s.version = "1.0.0"
+        s.version    =     '1.0.0'
         s.dependency "BigInt", "~> 0.0.1"
         """
         XCTAssertEqual(try fileHandler.readTextFile(podspecPath), expectedContent)

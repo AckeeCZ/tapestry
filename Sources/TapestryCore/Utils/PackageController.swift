@@ -50,7 +50,7 @@ public protocol PackageControlling {
     /// Generate Xcodeproj for package at given path
     /// - Parameters:
     ///     - path: The path of package we should generate xcodeproj for
-    func generateXcodeproj(path: AbsolutePath) throws
+    func generateXcodeproj(path: AbsolutePath, output: AbsolutePath?) throws
     
     /// Runs tool using tapestry
     /// - Parameters:
@@ -63,6 +63,12 @@ public protocol PackageControlling {
     /// - Parameters:
     ///     - path: Name is derived from this path (last component)
     func name(from path: AbsolutePath) throws -> String
+}
+
+extension PackageControlling {
+    public func generateXcodeproj(path: AbsolutePath) throws {
+        try generateXcodeproj(path: path, output: nil)
+    }
 }
 
 /// Class that access underlying swift package commands
@@ -78,8 +84,12 @@ public final class PackageController: PackageControlling {
         return supportedPackageType
     }
     
-    public func generateXcodeproj(path: AbsolutePath) throws {
-        try System.shared.run(["swift", "package", "--package-path", path.pathString, "generate-xcodeproj"])
+    public func generateXcodeproj(path: AbsolutePath, output: AbsolutePath?) throws {
+        var arguments = ["swift", "package", "--package-path", path.pathString, "generate-xcodeproj"]
+        if let output = output {
+            arguments += ["--output", output.pathString]
+        }
+        try System.shared.run(arguments)
     }
     
     public func run(_ tool: String, arguments: [String], path: AbsolutePath) throws {

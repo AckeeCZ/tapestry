@@ -71,6 +71,6 @@ final class ActionCommandTests: TapestryUnitTestCase {
         try subject.run(with: result)
         
         // Then
-        XCTAssertEqual(checkedManagers, [.carthage, .spm, .cocoapods])
+        XCTAssertEqual(checkedManagers, [.carthage, .spm(.all), .cocoapods])
     }
 }

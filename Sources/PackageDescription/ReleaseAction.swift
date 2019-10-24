@@ -11,13 +11,120 @@ public struct ReleaseAction: Equatable, Codable {
     
     /// Describes dependencies manager that you can add to your release action
     /// You can use this enum for `PredefinedAction.dependenciesCompatibility`
-    public enum DependendenciesManager: String, Codable {
+    public enum DependenciesManager: Codable, Equatable {
         /// Cococapods
         case cocoapods
         /// Carthage
         case carthage
         /// Swift Package Manager
-        case spm
+        case spm(Platform)
+        
+        private enum Kind: String, Codable {
+            case cocoapods
+            case carthage
+            case spm
+        }
+        
+        enum CodingKeys: String, CodingKey {
+            case kind
+            case platform
+        }
+        
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let kind = try container.decode(Kind.self, forKey: .kind)
+            switch kind {
+            case .cocoapods:
+                self = .cocoapods
+            case .carthage:
+                self = .carthage
+            case .spm:
+                let platform = try container.decode(Platform.self, forKey: .platform)
+                self = .spm(platform)
+            }
+        }
+            
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            switch self {
+            case .cocoapods:
+                try container.encode(Kind.cocoapods, forKey: .kind)
+            case .carthage:
+                try container.encode(Kind.carthage, forKey: .kind)
+            case let .spm(platform):
+                try container.encode(Kind.spm, forKey: .kind)
+                try container.encode(platform, forKey: .platform)
+            }
+        }
+        
+        public static func == (lhs: DependenciesManager, rhs: DependenciesManager) -> Bool {
+            switch (lhs, rhs) {
+            case (.cocoapods, .cocoapods):
+                return true
+            case (.carthage, .carthage):
+                return true
+            case let (.spm(lhsPlatform), .spm(rhsPlatform)):
+                return lhsPlatform == rhsPlatform
+            default:
+                return false
+            }
+        }
+    }
+    
+    /// Platforms that you want to support
+    /// Other platform-only support will be added in the future
+    public enum Platform: Codable, Equatable {
+        /// Support for iOS
+        /// - Parameters:
+        ///     - deviceName: What device you want to test this project with
+        case iOS(deviceName: String)
+        /// Support for all platforms
+        case all
+        
+        private enum Kind: String, Codable {
+            case iOS
+            case all
+        }
+        
+        enum CodingKeys: String, CodingKey {
+            case kind
+            case deviceName
+        }
+        
+        
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let kind = try container.decode(Kind.self, forKey: .kind)
+            switch kind {
+            case .iOS:
+                let deviceName = try container.decode(String.self, forKey: .deviceName)
+                self = .iOS(deviceName: deviceName)
+            case .all:
+                self = .all
+            }
+        }
+            
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            switch self {
+            case .all:
+                try container.encode(Kind.all, forKey: .kind)
+            case let .iOS(deviceName: deviceName):
+                try container.encode(Kind.iOS, forKey: .kind)
+                try container.encode(deviceName, forKey: .deviceName)
+            }
+        }
+        
+        public static func == (lhs: Platform, rhs: Platform) -> Bool {
+            switch (lhs, rhs) {
+            case (.all, .all):
+                return true
+            case let (.iOS(lhsDeviceName), .iOS(rhsDeviceName)):
+                return lhsDeviceName == rhsDeviceName
+            default:
+                return false
+            }
+        }
     }
     
     /// You can choose one of `PredefinedAction`s that tapestry provides for you
@@ -28,7 +135,7 @@ public struct ReleaseAction: Equatable, Codable {
         /// Runs `tool` with given `arguments` from `Tapestries/Package.swift`
         case run(tool: String, arguments: [String])
         /// Checks compatibility of your library with given dependencies managers
-        case dependenciesCompatibility([DependendenciesManager])
+        case dependenciesCompatibility([DependenciesManager])
     
         private enum Kind: String, Codable {
             case docsUpdate
@@ -54,7 +161,7 @@ public struct ReleaseAction: Equatable, Codable {
                 let arguments = try container.decode([String].self, forKey: .arguments)
                 self = .run(tool: tool, arguments: arguments)
             case .dependenciesCompatibility:
-                let dependenciesManagers = try container.decode([DependendenciesManager].self, forKey: .dependenciesManagers)
+                let dependenciesManagers = try container.decode([DependenciesManager].self, forKey: .dependenciesManagers)
                 self = .dependenciesCompatibility(dependenciesManagers)
             }
         }

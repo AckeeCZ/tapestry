@@ -151,7 +151,7 @@ final class ReleaseCommandTests: TapestryUnitTestCase {
         // Given
         configModelLoader.loadTapestryConfigStub = { _ in
             .test(release: .test(actions: [.init(order: .pre, action: .predefined(.docsUpdate)),
-                                           .init(order: .post, action: .predefined(.dependenciesCompatibility([.spm])))]))
+                                           .init(order: .post, action: .predefined(.dependenciesCompatibility([.spm(.all)])))]))
         }
         let result = try parser.parse(["release", "0.0.1"])
         

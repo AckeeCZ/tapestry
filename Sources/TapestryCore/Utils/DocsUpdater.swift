@@ -43,8 +43,8 @@ public final class DocsUpdater: DocsUpdating {
         }
         var content = try FileHandler.shared.readTextFile(podspecPath)
         content = content.replacingOccurrences(
-            of: #"s\.version = \"(([0-9]|[\.])*)\""#,
-            with: "s.version = \"\(version.description)\"",
+            of: #"s\.version([ ]*)=([ ]*)(["|'])([0-9]|[\.])*(["|'])"#,
+            with: "s.version$1=$2$3\(version.description)$5",
             options: .regularExpression
         )
         try content.write(to: podspecPath.url, atomically: true, encoding: .utf8)
@@ -80,7 +80,10 @@ public final class DocsUpdater: DocsUpdating {
     private func updateVersionInChangelog(path: AbsolutePath,
                                           version: Version) throws {
         let changelogPath = path.appending(component: "CHANGELOG.md")
-        
+        guard FileHandler.shared.exists(changelogPath) else {
+            Printer.shared.print(warning: "CHANGELOG.md at \(changelogPath.pathString) does not exist, skipping...")
+            return
+        }
         var content = try FileHandler.shared.readTextFile(changelogPath)
         content = content
         .replacingOccurrences(

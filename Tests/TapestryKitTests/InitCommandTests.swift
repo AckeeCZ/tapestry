@@ -228,8 +228,8 @@ final class InitCommandTests: TapestryUnitTestCase {
     func test_package_xcodeProj_is_generated_when_library() throws {
         // Given
         var path: AbsolutePath?
-        packageController.generateXcodeprojStub = {
-            path = $0
+        packageController.generateXcodeprojStub = { projPath, _ in
+            path = projPath
         }
         packageController.initPackageStub = { _, _ in
             .library
@@ -246,8 +246,8 @@ final class InitCommandTests: TapestryUnitTestCase {
     func test_package_xcodeProj_is_not_generated_when_executable() throws {
         // Given
         var path: AbsolutePath?
-        packageController.generateXcodeprojStub = {
-            path = $0
+        packageController.generateXcodeprojStub = { projPath, _ in
+            path = projPath
         }
         packageController.initPackageStub = { _, _ in
             .executable

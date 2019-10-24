@@ -106,14 +106,23 @@ final class ActionCommand: NSObject, Command {
                 let actionArguments = arguments.get(self.actionArguments),
                 actionArguments.count > 0
             else { throw ActionError.dependenciesInvalid }
+            // TODO: Add spm device support
             let managers: [ReleaseAction.DependenciesManager] = try actionArguments.map {
-                guard let manager = ReleaseAction.DependenciesManager(rawValue: $0) else { throw ActionError.dependenciesInvalid }
-                return manager
+                switch $0 {
+                case "cocoapods":
+                    return .cocoapods
+                case "carthage":
+                    return .carthage
+                case "spm":
+                    return .spm(.all)
+                default:
+                    throw ActionError.dependenciesInvalid
+                }
             }
             
             try dependenciesCompatibilityChecker.checkCompatibility(with: managers, path: path)
             
-            Printer.shared.print(success: "Compatible with \(managers.map { $0.rawValue }.joined(separator: ", ")) ✅")
+            Printer.shared.print(success: "Compatible with \(actionArguments.joined(separator: ", ")) ✅")
         }
     }
     

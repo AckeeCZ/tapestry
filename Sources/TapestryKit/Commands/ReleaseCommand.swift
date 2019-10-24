@@ -110,8 +110,8 @@ final class ReleaseCommand: NSObject, Command {
     /// Runs git stage of release
     private func updateGit(with config: TapestryConfig, version: Version, path: AbsolutePath) throws {
         let addFiles = config.release.add.map { path.appending(RelativePath($0)) }
-        try gitController.add(files: addFiles, path: path)
         if !addFiles.isEmpty {
+            try gitController.add(files: addFiles, path: path)
             try gitController.commit(config.release.commitMessage.replacingOccurrences(of: Argument.version.rawValue, with: version.description), path: path)
         }
         

@@ -13,13 +13,48 @@ public struct ReleaseAction {
     
     /// Describes dependencies manager that you can add to your release action
     /// You can use this enum for `PredefinedAction.dependenciesCompatibility`
-    public enum DependenciesManager: String {
+    public enum DependenciesManager: Equatable {
         /// Cococapods
         case cocoapods
         /// Carthage
         case carthage
         /// Swift Package Manager
-        case spm
+        case spm(Platform)
+        
+        public static func == (lhs: DependenciesManager, rhs: DependenciesManager) -> Bool {
+            switch (lhs, rhs) {
+            case (.cocoapods, .cocoapods):
+                return true
+            case (.carthage, .carthage):
+                return true
+            case let (.spm(lhsPlatform), .spm(rhsPlatform)):
+                return lhsPlatform == rhsPlatform
+            default:
+                return false
+            }
+        }
+    }
+    
+    /// Platforms that you want to support
+    /// Other platform-only support will be added in the future
+    public enum Platform {
+        /// Support for iOS
+        /// - Parameters:
+        ///     - deviceName: What device you want to test this project with
+        case iOS(deviceName: String)
+        /// Support for all platforms
+        case all
+        
+        public static func == (lhs: Platform, rhs: Platform) -> Bool {
+            switch (lhs, rhs) {
+            case (.all, .all):
+                return true
+            case let (.iOS(lhsDeviceName), .iOS(rhsDeviceName)):
+                return lhsDeviceName == rhsDeviceName
+            default:
+                return false
+            }
+        }
     }
     
     /// You can choose one of `PredefinedAction`s that tapestry provides for you

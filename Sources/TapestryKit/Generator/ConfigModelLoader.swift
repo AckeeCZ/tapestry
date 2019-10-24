@@ -72,7 +72,21 @@ extension TapestryGen.ReleaseAction {
                 case let .run(tool: tool, arguments: arguments):
                     action = .predefined(.run(tool: tool, arguments: arguments))
                 case let .dependenciesCompatibility(dependenciesManagers):
-                    action = .predefined(.dependenciesCompatibility(dependenciesManagers.compactMap { TapestryGen.ReleaseAction.DependenciesManager(rawValue: $0.rawValue) }))
+                    action = .predefined(.dependenciesCompatibility(dependenciesManagers.compactMap {
+                        switch $0 {
+                        case .cocoapods:
+                            return .cocoapods
+                        case .carthage:
+                            return .carthage
+                        case let .spm(platform):
+                            switch platform {
+                            case .all:
+                                return .spm(.all)
+                            case let .iOS(deviceName):
+                                return .spm(.iOS(deviceName: deviceName))
+                            }
+                        }
+                    }))
                 }
             }
             return TapestryGen.ReleaseAction(order: order,
