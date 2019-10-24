@@ -37,24 +37,13 @@ public struct ReleaseAction {
     
     /// Platforms that you want to support
     /// Other platform-only support will be added in the future
-    public enum Platform {
+    public enum Platform: String {
         /// Support for iOS
         /// - Parameters:
         ///     - deviceName: What device you want to test this project with
-        case iOS(deviceName: String)
+        case iOS
         /// Support for all platforms
         case all
-        
-        public static func == (lhs: Platform, rhs: Platform) -> Bool {
-            switch (lhs, rhs) {
-            case (.all, .all):
-                return true
-            case let (.iOS(lhsDeviceName), .iOS(rhsDeviceName)):
-                return lhsDeviceName == rhsDeviceName
-            default:
-                return false
-            }
-        }
     }
     
     /// You can choose one of `PredefinedAction`s that tapestry provides for you

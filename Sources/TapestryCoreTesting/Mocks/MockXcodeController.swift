@@ -3,7 +3,7 @@ import Basic
 
 public final class MockXcodeController: XcodeControlling {
     public var openStub: ((AbsolutePath) throws -> ())?
-    public var buildStub: ((AbsolutePath?, String?, Device?) throws -> ())?
+    public var buildStub: ((AbsolutePath?, String?, Platform?) throws -> ())?
     
     public init() { }
     
@@ -11,7 +11,7 @@ public final class MockXcodeController: XcodeControlling {
         try openStub?(path)
     }
     
-    public func build(projectPath: AbsolutePath?, schemeName: String?, destination: Device?) throws {
-        try buildStub?(projectPath, schemeName, destination)
+    public func build(projectPath: AbsolutePath?, schemeName: String?, sdk: Platform?) throws {
+        try buildStub?(projectPath, schemeName, sdk)
     }
 }

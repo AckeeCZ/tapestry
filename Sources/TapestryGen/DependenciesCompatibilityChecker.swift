@@ -80,14 +80,14 @@ public final class DependenciesCompatibilityChecker: DependenciesCompatibilityCh
                 defer { try? FileHandler.shared.delete(projectPath) }
                 try PackageController.shared.generateXcodeproj(path: path, output: projectPath)
                 let name = try PackageController.shared.name(from: path)
-                let device: Device?
+                let buildPlatform: Platform?
                 switch platform {
-                case let .iOS(deviceName):
-                    device = .iOS(deviceName)
+                case .iOS:
+                    buildPlatform = .iOS
                 case .all:
-                    device = nil
+                    buildPlatform = nil
                 }
-                try XcodeController.shared.build(projectPath: projectPath, schemeName: name + "-Package", destination: device)
+                try XcodeController.shared.build(projectPath: projectPath, schemeName: name + "-Package", sdk: buildPlatform)
             } catch {
                 throw DependenciesCompatibilityError.spm
             }

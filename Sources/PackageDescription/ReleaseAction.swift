@@ -73,58 +73,11 @@ public struct ReleaseAction: Equatable, Codable {
     
     /// Platforms that you want to support
     /// Other platform-only support will be added in the future
-    public enum Platform: Codable, Equatable {
+    public enum Platform: String, Codable, Equatable {
         /// Support for iOS
-        /// - Parameters:
-        ///     - deviceName: What device you want to test this project with
-        case iOS(deviceName: String)
+        case iOS
         /// Support for all platforms
         case all
-        
-        private enum Kind: String, Codable {
-            case iOS
-            case all
-        }
-        
-        enum CodingKeys: String, CodingKey {
-            case kind
-            case deviceName
-        }
-        
-        
-        public init(from decoder: Decoder) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            let kind = try container.decode(Kind.self, forKey: .kind)
-            switch kind {
-            case .iOS:
-                let deviceName = try container.decode(String.self, forKey: .deviceName)
-                self = .iOS(deviceName: deviceName)
-            case .all:
-                self = .all
-            }
-        }
-            
-        public func encode(to encoder: Encoder) throws {
-            var container = encoder.container(keyedBy: CodingKeys.self)
-            switch self {
-            case .all:
-                try container.encode(Kind.all, forKey: .kind)
-            case let .iOS(deviceName: deviceName):
-                try container.encode(Kind.iOS, forKey: .kind)
-                try container.encode(deviceName, forKey: .deviceName)
-            }
-        }
-        
-        public static func == (lhs: Platform, rhs: Platform) -> Bool {
-            switch (lhs, rhs) {
-            case (.all, .all):
-                return true
-            case let (.iOS(lhsDeviceName), .iOS(rhsDeviceName)):
-                return lhsDeviceName == rhsDeviceName
-            default:
-                return false
-            }
-        }
     }
     
     /// You can choose one of `PredefinedAction`s that tapestry provides for you

@@ -1,8 +1,8 @@
 import Basic
 
-/// Device for building
-public enum Device {
-    case iOS(String)
+/// Platform for building
+public enum Platform {
+    case iOS
 }
 
 /// Interact with xcode CLI tools
@@ -16,8 +16,8 @@ public protocol XcodeControlling {
     /// - Parameters:
     ///     - projectPath: Path to the xcodeproj to build
     ///     - scheme: Name of scheme to build
-    ///     - destination: Destination device
-    func build(projectPath: AbsolutePath?, schemeName: String?, destination: Device?) throws
+    ///     - sdk: Which platform's SDK to use
+    func build(projectPath: AbsolutePath?, schemeName: String?, sdk: Platform?) throws
 }
 
 /// Interact with xcode CLI tools
@@ -29,7 +29,7 @@ public final class XcodeController: XcodeControlling {
         try System.shared.run("xed", path.pathString)
     }
     
-    public func build(projectPath: AbsolutePath?, schemeName: String?, destination: Device?) throws {
+    public func build(projectPath: AbsolutePath?, schemeName: String?, sdk: Platform?) throws {
         var arguments: [String] = ["xcodebuild"]
         if let projectPath = projectPath {
             arguments += ["-project", projectPath.pathString]
@@ -37,13 +37,12 @@ public final class XcodeController: XcodeControlling {
         if let schemeName = schemeName {
             arguments += ["-scheme", schemeName]
         }
-        if let destination = destination {
-            switch destination {
-            case let .iOS(name):
+        if let sdk = sdk {
+            switch sdk {
+            case .iOS:
                 arguments += ["-sdk", "iphonesimulator"]
             }
         }
-        Printer.shared.print(arguments.joined(separator: " "))
-        try System.shared.runAndPrint(arguments)
+        try System.shared.run(arguments)
     }
 }

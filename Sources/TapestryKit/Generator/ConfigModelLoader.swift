@@ -82,8 +82,8 @@ extension TapestryGen.ReleaseAction {
                             switch platform {
                             case .all:
                                 return .spm(.all)
-                            case let .iOS(deviceName):
-                                return .spm(.iOS(deviceName: deviceName))
+                            case .iOS:
+                                return .spm(.iOS)
                             }
                         }
                     }))
