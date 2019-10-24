@@ -95,7 +95,7 @@ extension TapestryGen.ReleaseAction {
 }
 
 extension TapestryGen.ReleaseAction.Order {
-    static func from(manifest: PackageDescription.ReleaseAction.Order) -> TapestryGen.ReleaseAction.Order {
+    static func from(manifest: PackageDescription.Order) -> TapestryGen.ReleaseAction.Order {
         switch manifest {
         case .pre:
             return .pre
