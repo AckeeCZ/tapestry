@@ -90,8 +90,18 @@ public final class CommandRegistry {
                 !processArguments().contains(UpCommand.command),
                 !processedArguments.contains("--current"),
                 FileHandler.shared.exists(tapestriesPath) {
-                try PackageController.shared.run("tapestry", arguments: ["--current"] + processedArguments.dropFirst(), path: FileHandler.shared.currentPath)
-                return
+                do {
+                    try PackageController.shared.run("tapestry", arguments: ["--current"] + processedArguments.dropFirst(), path: FileHandler.shared.currentPath)
+                } catch let error as PackageControllerError {
+                    switch error {
+                    case .buildFailed:
+                        throw PackageControllerError.buildFailed("tapestry")
+                    default:
+                        return
+                    }
+                } catch {
+                    
+                }
             }
             // Hidden command
             else if let hiddenCommand = hiddenCommand() {

@@ -6,13 +6,13 @@ import class TuistCore.Constants
 import Foundation
 import SPMUtility
 
-enum PackageControllerError: FatalError, Equatable {
+public enum PackageControllerError: FatalError, Equatable {
     case ungettableProjectName(AbsolutePath)
     case buildFailed(String)
     
-    var type: ErrorType { .abort }
+    public var type: ErrorType { .abort }
     
-    var description: String {
+    public var description: String {
         switch self {
         case let .ungettableProjectName(path):
             return "Couldn't infer the project name from path \(path.pathString)"
@@ -21,7 +21,7 @@ enum PackageControllerError: FatalError, Equatable {
         }
     }
     
-    static func == (lhs: PackageControllerError, rhs: PackageControllerError) -> Bool {
+    public static func == (lhs: PackageControllerError, rhs: PackageControllerError) -> Bool {
         switch (lhs, rhs) {
         case let (.ungettableProjectName(lhsPath), .ungettableProjectName(rhsPath)):
             return lhsPath == rhsPath
@@ -137,7 +137,8 @@ public final class PackageController: PackageControlling {
                                             // TODO: Enable for building other tools, too
                                             // The bug right now is that it prints updates on a new line, rather than current
                                             tool == "tapestry",
-                                            let output = String(bytes: bytes, encoding: .utf8) else { return }
+                                            let output = String(bytes: bytes, encoding: .utf8)
+                                        else { return }
                                         if !downloadPrinted, output.contains("Fetching") || output.contains("Updating") {
                                             Printer.shared.print("Fetching dependencies...")
                                             downloadPrinted = true
