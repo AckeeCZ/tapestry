@@ -54,7 +54,6 @@ public final class TapestriesGenerator: TapestriesGenerating {
             dependencies: [
                 // Tapestry
                 .package(url: "\(Constants.gitRepositoryURL)", .upToNextMajor(from: "\(Constants.version)")),
-                .package(url: "https://github.com/nicklockwood/SwiftFormat", .upToNextMajor(from: "0.40.13")),
             ],
             targets: [
                 .target(name: "TapestryConfig",
@@ -72,11 +71,10 @@ public final class TapestriesGenerator: TapestriesGenerating {
         import PackageDescription
 
         let config = TapestryConfig(release: Release(actions: [.pre(.docsUpdate),
-                                                               .pre(.run(tool: "swiftformat", arguments: ["."])),
                                                                .pre(.dependenciesCompatibility([.cocoapods, .carthage, .spm]))],
                                                      add: ["README.md", "TapestryDemo.podspec"],
                                                      commitMessage: "Version \\(Argument.version)",
-                                                     push: true))
+                                                     push: false))
         """
         try contents.write(to: path.appending(component: "TapestryConfig.swift").url, atomically: true, encoding: .utf8)
     }

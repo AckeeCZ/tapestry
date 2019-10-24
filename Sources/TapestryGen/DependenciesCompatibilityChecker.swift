@@ -1,5 +1,26 @@
 import Basic
 import TapestryCore
+import protocol TuistCore.FatalError
+import enum TuistCore.ErrorType
+
+enum DependenciesCompatibilityError: FatalError {
+    case carthage
+    case cocoapods
+    case spm
+    
+    var type: ErrorType { .abort }
+    
+    var description: String {
+        switch self {
+        case .carthage:
+            return "Carthage compatibility check failed - try running carthage build --no-skip-current to debug"
+        case .cocoapods:
+            return "Cocoapods compatibility check failed - try running pod lib lint to debug"
+        case .spm:
+            return "SPM compatibility check failed - try running swift build to debug"
+        }
+    }
+}
 
 /// Check compatibility with various dependency managers
 public protocol DependenciesCompatibilityChecking {
@@ -29,26 +50,36 @@ public final class DependenciesCompatibilityChecker: DependenciesCompatibilityCh
     
     // MARK: - Helpers
     
-    // TODO: Print only if failed
-    
     private func checkCarthageCompatibility(path: AbsolutePath) throws {
         Printer.shared.print("Checking Carthage compatibility...")
         try FileHandler.shared.inDirectory(path) {
-            try System.shared.runAndPrint(["carthage", "build", "--no-skip-current"])
+            do {
+                try System.shared.run(["carthage", "build", "--no-skip-current"])
+            } catch {
+                throw DependenciesCompatibilityError.carthage
+            }
         }
     }
     
     private func checkCocoapodsCompatibility(path: AbsolutePath) throws {
         Printer.shared.print("Checking Cococapods compatibility...")
         try FileHandler.shared.inDirectory(path) {
-            try System.shared.runAndPrint(["pod", "lib", "lint"])
+            do {
+                try System.shared.run(["pod", "lib", "lint"])
+            } catch {
+                throw DependenciesCompatibilityError.cocoapods
+            }
         }
     }
     
     private func checkSPMCompatibility(path: AbsolutePath) throws {
         Printer.shared.print("Checking SPM compatibility...")
         try FileHandler.shared.inDirectory(path) {
-            try System.shared.runAndPrint(["swift", "build"])
+            do {
+                try System.shared.run(["swift", "build"])
+            } catch {
+                throw DependenciesCompatibilityError.spm
+            }
         }
     }
 }

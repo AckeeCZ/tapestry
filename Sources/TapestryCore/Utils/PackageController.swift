@@ -17,7 +17,7 @@ enum PackageControllerError: FatalError, Equatable {
         case let .ungettableProjectName(path):
             return "Couldn't infer the project name from path \(path.pathString)"
         case let .buildFailed(tool):
-            return "Building \(tool) failed - try running `swift run \(tool)` to debug"
+            return "Building \(tool) failed - try running `swift run --package-path Tapestries \(tool)` to debug"
         }
     }
     
