@@ -28,13 +28,14 @@ public final class TapestriesGenerator: TapestriesGenerating {
     public init() { }
     
     public func generateTapestries(at path: AbsolutePath) throws {
+        let name = try PackageController.shared.name(from: path)
         let tapestriesPath = path.appending(component: "Tapestries")
         guard !FileHandler.shared.exists(tapestriesPath) else { throw TapestriesGeneratorError.tapestriesFolderExists(tapestriesPath) }
         let tapestryConfigPath = tapestriesPath.appending(RelativePath("Sources/TapestryConfig"))
         try FileHandler.shared.createFolder(tapestryConfigPath)
         
         try generatePackageManifest(path: tapestriesPath)
-        try generateTapestryConfig(path: tapestryConfigPath)
+        try generateTapestryConfig(path: tapestryConfigPath, name: name)
         
         try updateGitignore(path: path)
     }
@@ -68,13 +69,15 @@ public final class TapestriesGenerator: TapestriesGenerating {
         try contents.write(to: path.appending(component: "Package.swift").url, atomically: true, encoding: .utf8)
     }
     
-    private func generateTapestryConfig(path: AbsolutePath) throws {
+    private func generateTapestryConfig(path: AbsolutePath, name: String) throws {
         let contents = """
         import PackageDescription
 
         let config = TapestryConfig(release: Release(actions: [.pre(.docsUpdate),
                                                                .pre(.dependenciesCompatibility([.cocoapods, .carthage, .spm(.all)]))],
-                                                     add: ["README.md", "TapestryDemo.podspec"],
+                                                     add: ["README.md",
+                                                           "\(name).podspec",
+                                                           "CHANGELOG.md"],
                                                      commitMessage: "Version \\(Argument.version)",
                                                      push: false))
         """
