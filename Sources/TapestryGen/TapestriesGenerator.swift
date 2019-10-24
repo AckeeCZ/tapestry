@@ -86,6 +86,10 @@ public final class TapestriesGenerator: TapestriesGenerating {
     
     private func updateGitignore(path: AbsolutePath) throws {
         let gitignorePath = path.appending(component: ".gitignore")
+        guard FileHandler.shared.exists(gitignorePath) else {
+            Printer.shared.print(warning: ".gitignore file not found, skipping...")
+            return
+        }
         var contents = try FileHandler.shared.readTextFile(gitignorePath)
         contents += "\n# Tapestry\ntapestries/.build\n"
         try FileHandler.shared.write(contents, path: gitignorePath, atomically: true)

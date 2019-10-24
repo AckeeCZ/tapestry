@@ -66,13 +66,18 @@ final class TapestriesGeneratorTests: TapestryUnitTestCase {
     
     func test_generate_tapestryConfig() throws {
         // Given
+        packageController.nameStub = { _ in
+            "TapestryDemo"
+        }
         let tapestryConfigPath = fileHandler.currentPath.appending(RelativePath("Tapestries/Sources/TapestryConfig/TapestryConfig.swift"))
         let expectedContents = """
         import PackageDescription
 
         let config = TapestryConfig(release: Release(actions: [.pre(.docsUpdate),
                                                                .pre(.dependenciesCompatibility([.cocoapods, .carthage, .spm(.all)]))],
-                                                     add: ["README.md", "TapestryDemo.podspec"],
+                                                     add: ["README.md",
+                                                           "TapestryDemo.podspec",
+                                                           "CHANGELOG.md"],
                                                      commitMessage: "Version \\(Argument.version)",
                                                      push: false))
         """
