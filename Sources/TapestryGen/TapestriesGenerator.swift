@@ -35,6 +35,8 @@ public final class TapestriesGenerator: TapestriesGenerating {
         
         try generatePackageManifest(path: tapestriesPath)
         try generateTapestryConfig(path: tapestryConfigPath)
+        
+        try updateGitignore(path: path)
     }
     
     // MARK: - Helpers
@@ -77,5 +79,12 @@ public final class TapestriesGenerator: TapestriesGenerating {
                                                      push: false))
         """
         try contents.write(to: path.appending(component: "TapestryConfig.swift").url, atomically: true, encoding: .utf8)
+    }
+    
+    private func updateGitignore(path: AbsolutePath) throws {
+        let gitignorePath = path.appending(component: ".gitignore")
+        var contents = try FileHandler.shared.readTextFile(gitignorePath)
+        contents += "\n# Tapestry\ntapestries/.build\n"
+        try FileHandler.shared.write(contents, path: gitignorePath, atomically: true)
     }
 }

@@ -93,7 +93,7 @@ public final class DependenciesCompatibilityChecker: DependenciesCompatibilityCh
                 }
             case .all:
                 do {
-                    System.shared.run(["swift", "build"])
+                    try System.shared.run(["swift", "build"])
                 } catch {
                     throw DependenciesCompatibilityError.spmBuild
                 }
