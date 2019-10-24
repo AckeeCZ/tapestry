@@ -103,6 +103,10 @@ public final class PackageController: PackageControlling {
             }
         }
         
+        if tool == "tapestry" {
+            try System.shared.run(["swift", "build", "--package-path", tapestriesPath.pathString])
+        }
+        
         // TODO: Candidates (Linux)
         let toolPath = path.appending(component: tool)
         

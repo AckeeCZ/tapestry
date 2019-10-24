@@ -3,6 +3,7 @@ import protocol TuistCore.FatalError
 import class TuistCore.FileHandler
 import enum TuistCore.ErrorType
 import Foundation
+import TapestryCore
 
 protocol ResourceLocating: AnyObject {
     func projectDescription(path: AbsolutePath) throws -> AbsolutePath
