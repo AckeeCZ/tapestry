@@ -11,6 +11,7 @@ public final class MockGitController: GitControlling {
     public var tagExistsStub: ((Version, AbsolutePath?) throws -> Bool)?
     public var addStub: (([AbsolutePath], AbsolutePath?) throws -> ())?
     public var pushStub: ((AbsolutePath?) throws -> ())?
+    public var allTagsStub: ((AbsolutePath?) throws -> [Version])?
     
     public func initGit(path: AbsolutePath) throws {
         try initGitStub?(path)
@@ -42,5 +43,9 @@ public final class MockGitController: GitControlling {
     
     public func push(path: AbsolutePath?) throws {
         try pushStub?(path)
+    }
+    
+    public func allTags(path: AbsolutePath?) throws -> [Version] {
+        try allTagsStub?(path) ?? []
     }
 }

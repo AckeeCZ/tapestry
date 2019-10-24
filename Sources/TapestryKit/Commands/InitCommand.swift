@@ -37,19 +37,16 @@ final class InitCommand: NSObject, Command {
     let pathArgument: OptionArgument<String>
 
     private let exampleGenerator: ExampleGenerating
-    private let gitController: GitControlling
     private let tapestriesGenerator: TapestriesGenerating
 
     required convenience init(parser: ArgumentParser) {
         self.init(parser: parser,
                   exampleGenerator: ExampleGenerator(),
-                  gitController: GitController(),
                   tapestriesGenerator: TapestriesGenerator())
     }
 
     init(parser: ArgumentParser,
          exampleGenerator: ExampleGenerating,
-         gitController: GitControlling,
          tapestriesGenerator: TapestriesGenerating) {
         let subParser = parser.add(subparser: InitCommand.command, overview: InitCommand.overview)
 
@@ -60,7 +57,6 @@ final class InitCommand: NSObject, Command {
                                      completion: .filename)
 
         self.exampleGenerator = exampleGenerator
-        self.gitController = gitController
         self.tapestriesGenerator = tapestriesGenerator
     }
 
@@ -72,7 +68,7 @@ final class InitCommand: NSObject, Command {
 
         let packageType = try PackageController.shared.initPackage(path: path, name: name)
 
-        try gitController.initGit(path: path)
+        try GitController.shared.initGit(path: path)
 
         let authorName = try self.authorName()
         let email = try self.email()
@@ -131,11 +127,11 @@ final class InitCommand: NSObject, Command {
     }
     
     private func authorName() throws -> String {
-        return InputReader.shared.prompt("👋 Author name", defaultValue: try gitController.currentName())
+        return InputReader.shared.prompt("👋 Author name", defaultValue: try GitController.shared.currentName())
     }
     
     private func email() throws -> String {
-        let gitEmail = try gitController.currentEmail()
+        let gitEmail = try GitController.shared.currentEmail()
         return InputReader.shared.prompt("💌 Email", defaultValue: gitEmail)
     }
     

@@ -19,13 +19,16 @@ public final class DocsUpdater: DocsUpdating {
         
         Printer.shared.print("Updating docs 📚")
         
+        let lastVersion = try? GitController.shared.allTags(path: path).sorted(by: >).first
+        
         try updateVersionInPodspec(path: path,
                            name: name,
                            version: version)
         
         try updateVersionInReadme(path: path,
                                   name: name,
-                                  version: version)
+                                  version: version,
+                                  lastVersion: lastVersion as? Version)
         
         try updateVersionInChangelog(path: path,
                                      version: version)
@@ -52,7 +55,8 @@ public final class DocsUpdater: DocsUpdating {
     
     private func updateVersionInReadme(path: AbsolutePath,
                                        name: String,
-                                       version: Version) throws {
+                                       version: Version,
+                                       lastVersion: Version?) throws {
         let readmePath = path.appending(component: "README.md")
         guard FileHandler.shared.exists(readmePath) else {
             Printer.shared.print(warning: "Podspec at \(readmePath.pathString) does not exist, skipping...")
@@ -62,8 +66,8 @@ public final class DocsUpdater: DocsUpdating {
         // Replacing pods version
         content = content
         .replacingOccurrences(
-            of: "pod \"\(name)\"" + #", "~>[ ]?([0-9]|[\.])*""#,
-            with: "pod \"\(name)\", \"~> \(version.description)\"",
+            of: "pod ([\"|'])\(name)([\"|'])" + #", (["|'])~>[ ]?([0-9]|[\.])*(["|'])"#,
+            with: "pod $1\(name)$2, $3~> \(version.description)$5",
             options: .regularExpression
         )
         // Replacing SPM version
@@ -73,6 +77,11 @@ public final class DocsUpdater: DocsUpdating {
             options: .regularExpression
         )
 
+        if let lastVersion = lastVersion {
+            content = content.replacingOccurrences(of: lastVersion.description,
+                                         with: version.description)
+        }
+        
         try content.write(to: readmePath.url, atomically: true, encoding: .utf8)
     }
     

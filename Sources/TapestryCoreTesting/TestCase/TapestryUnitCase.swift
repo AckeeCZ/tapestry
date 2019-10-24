@@ -8,6 +8,7 @@ public class TapestryUnitTestCase: TapestryTestCase {
     public var xcodeController: MockXcodeController!
     public var packageController: MockPackageController!
     public var inputReader: MockInputReader!
+    public var gitController: MockGitController!
 
     public override func setUp() {
         super.setUp()
@@ -31,6 +32,10 @@ public class TapestryUnitTestCase: TapestryTestCase {
         // InputReader
         inputReader = MockInputReader()
         InputReader.shared = inputReader
+        
+        // GitController
+        gitController = MockGitController()
+        GitController.shared = gitController
     }
 
     public override func tearDown() {
@@ -58,6 +63,10 @@ public class TapestryUnitTestCase: TapestryTestCase {
         // InputReader
         inputReader = nil
         InputReader.shared = InputReader()
+        
+        // GitController
+        gitController = nil
+        GitController.shared = GitController()
 
         super.tearDown()
     }

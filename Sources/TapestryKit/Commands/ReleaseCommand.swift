@@ -48,7 +48,6 @@ final class ReleaseCommand: NSObject, Command {
     let pathArgument: OptionArgument<String>
 
     private let configModelLoader: ConfigModelLoading
-    private let gitController: GitControlling
     private let docsUpdater: DocsUpdating
     private let dependenciesCompatibilityChecker: DependenciesCompatibilityChecking
 
@@ -57,14 +56,12 @@ final class ReleaseCommand: NSObject, Command {
         let configModelLoader = ConfigModelLoader(manifestLoader: graphManifestLoader)
         self.init(parser: parser,
                   configModelLoader: configModelLoader,
-                  gitController: GitController(),
                   docsUpdater: DocsUpdater(),
                   dependenciesCompatibilityChecker: DependenciesCompatibilityChecker())
     }
 
     init(parser: ArgumentParser,
          configModelLoader: ConfigModelLoading,
-         gitController: GitControlling,
          docsUpdater: DocsUpdating,
          dependenciesCompatibilityChecker: DependenciesCompatibilityChecking) {
         let subParser = parser.add(subparser: ReleaseCommand.command, overview: ReleaseCommand.overview)
@@ -76,7 +73,6 @@ final class ReleaseCommand: NSObject, Command {
                                      completion: .filename)
 
         self.configModelLoader = configModelLoader
-        self.gitController = gitController
         self.docsUpdater = docsUpdater
         self.dependenciesCompatibilityChecker = dependenciesCompatibilityChecker
     }
@@ -86,7 +82,7 @@ final class ReleaseCommand: NSObject, Command {
         
         let path = try self.path(arguments: arguments)
         
-        guard try !gitController.tagExists(version, path: path) else { throw ReleaseError.tagExists(version) }
+        guard try !GitController.shared.tagExists(version, path: path) else { throw ReleaseError.tagExists(version) }
         
         let config = try configModelLoader.loadTapestryConfig(at: path.appending(RelativePath("Tapestries/Sources/TapestryConfig/TapestryConfig.swift")))
         
@@ -111,18 +107,18 @@ final class ReleaseCommand: NSObject, Command {
     private func updateGit(with config: TapestryConfig, version: Version, path: AbsolutePath) throws {
         let addFiles = config.release.add.map { path.appending(RelativePath($0)) }
         if !addFiles.isEmpty {
-            try gitController.add(files: addFiles, path: path)
-            try gitController.commit(config.release.commitMessage.replacingOccurrences(of: Argument.version.rawValue, with: version.description), path: path)
+            try GitController.shared.add(files: addFiles, path: path)
+            try GitController.shared.commit(config.release.commitMessage.replacingOccurrences(of: Argument.version.rawValue, with: version.description), path: path)
         }
         
         Printer.shared.print("Updating version 🚀")
         
-        try gitController.tagVersion(version,
+        try GitController.shared.tagVersion(version,
                                      path: path)
         
         if config.release.push {
             Printer.shared.print("Pushing...")
-            try gitController.push(path: path)
+            try GitController.shared.push(path: path)
         }
     }
     

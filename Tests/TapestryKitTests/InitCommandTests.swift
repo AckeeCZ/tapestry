@@ -8,18 +8,15 @@ import XCTest
 
 final class InitCommandTests: TapestryUnitTestCase {
     private var subject: InitCommand!
-    private var gitController: MockGitController!
     private var exampleGenerator: MockExampleGenerator!
     private var parser: ArgumentParser!
     
     override func setUp() {
         super.setUp()
-        gitController = MockGitController()
         exampleGenerator = MockExampleGenerator()
         parser = ArgumentParser.test()
         subject = InitCommand(parser: parser,
                               exampleGenerator: exampleGenerator,
-                              gitController: gitController,
                               tapestriesGenerator: MockTapestriesGenerator())
     }
     

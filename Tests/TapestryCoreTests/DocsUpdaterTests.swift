@@ -80,6 +80,35 @@ final class DocsUpdaterTests: TapestryUnitTestCase {
         XCTAssertEqual(try fileHandler.readTextFile(readmePath), expectedContent)
     }
     
+    func test_updateVersionInReadme_with_latest_version() throws {
+        // Given
+        let content = """
+        github "package/TestPackage" ~> 0.10.4
+        """
+        let name = "TestPackage"
+        let path = fileHandler.currentPath.appending(component: name)
+        try fileHandler.createFolder(path)
+        let readmePath = path.appending(component: "README.md")
+        try content.write(to: readmePath.url, atomically: true, encoding: .utf8)
+    
+        packageController.nameStub = { _ in
+            name
+        }
+        
+        gitController.allTagsStub = { _ in
+            [Version(0, 9, 10), Version(0, 10, 4), Version(0, 10, 2)]
+        }
+
+        // When
+        try subject.updateDocs(path: path, version: Version(1, 0, 0))
+
+        // Then
+        let expectedContent = """
+        github "package/TestPackage" ~> 1.0.0
+        """
+        XCTAssertEqual(try fileHandler.readTextFile(readmePath), expectedContent)
+    }
+    
     func test_updateVersionInChangelog() throws {
         // Given
         let content = """

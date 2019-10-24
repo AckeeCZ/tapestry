@@ -8,7 +8,6 @@ import Basic
 
 final class ReleaseCommandTests: TapestryUnitTestCase {
     private var subject: ReleaseCommand!
-    private var gitController: MockGitController!
     private var parser: ArgumentParser!
     private var configModelLoader: MockConfigModelLoader!
     private var docsUpdater: MockDocsUpdater!
@@ -18,13 +17,11 @@ final class ReleaseCommandTests: TapestryUnitTestCase {
         super.setUp()
         
         configModelLoader = MockConfigModelLoader()
-        gitController = MockGitController()
         docsUpdater = MockDocsUpdater()
         dependenciesCompatibilityChecker = MockDependenciesCompatibilityChecker()
         parser = ArgumentParser.test()
         subject = ReleaseCommand(parser: parser,
                                  configModelLoader: configModelLoader,
-                                 gitController: gitController,
                                  docsUpdater: docsUpdater,
                                  dependenciesCompatibilityChecker: dependenciesCompatibilityChecker)
     }

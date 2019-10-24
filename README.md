@@ -160,12 +160,7 @@ Which will be changed to
 ....
 ```
 
-To change your version in `README.md` for different dependency managers, you should have this format:
-```
-github "Repo/YourLibrary" ~> 1.0.0
-pod "YourLibrary", "~> 1.0.0"
-.package(url: "https://github.com/Repo/YourLibrary.git", .upToNextMajor(from: "1.0.0"))
-```
+To change the version in your `README.md`, we use the latest tag in your git history.
 
 You can also try out the individual actions:
 ```bash

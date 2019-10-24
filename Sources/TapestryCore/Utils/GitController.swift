@@ -69,11 +69,15 @@ public protocol GitControlling {
     /// - Parameters:
     ///     - path: Path of the git directory
     func push(path: AbsolutePath?) throws
+    /// - Parameters:
+    ///     - path: Path of the git directory
+    /// - Returns: All tags for directory at `path`
+    func allTags(path: AbsolutePath?) throws -> [Version]
 }
 
 /// Class for interacting with git
 public final class GitController: GitControlling {
-    public init() { }
+    public static var shared: GitControlling = GitController()
     
     public func initGit(path: AbsolutePath) throws {
         try System.shared.run("git", "init", path.pathString)
@@ -118,12 +122,7 @@ public final class GitController: GitControlling {
         return try allTags(path: path).contains(version)
     }
     
-    // MARK: - Helpers
-    
-    /// - Parameters:
-    ///     - path: Path of the git directory
-    /// - Returns: All tags for directory at `path`
-    private func allTags(path: AbsolutePath?) throws -> [Version] {
+    public func allTags(path: AbsolutePath?) throws -> [Version] {
         return try FileHandler.shared.inDirectory(path ?? FileHandler.shared.currentPath) {
             try System.shared.capture("git", "tag", "--list").split(separator: "\n").compactMap { Version(string: String($0)) }
         }
