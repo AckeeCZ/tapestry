@@ -79,4 +79,45 @@ final class DocsUpdaterTests: TapestryUnitTestCase {
         """
         XCTAssertEqual(try fileHandler.readTextFile(readmePath), expectedContent)
     }
+    
+    func test_updateVersionInChangelog() throws {
+        // Given
+        let content = """
+        Some text
+        ## Next
+        
+        ## Added
+        Some pr
+
+        ## 0.19.0
+        Previous version
+        """
+        let name = "TestPackage"
+        let path = fileHandler.currentPath.appending(component: name)
+        try fileHandler.createFolder(path)
+        let changelogPath = path.appending(component: "CHANGELOG.md")
+        try content.write(to: changelogPath.url, atomically: true, encoding: .utf8)
+        
+        packageController.nameStub = { _ in
+            name
+        }
+
+        // When
+        try subject.updateDocs(path: path, version: Version(1, 0, 0))
+
+        // Then
+        let expectedContent = """
+        Some text
+        ## Next
+
+        ## 1.0.0
+
+        ## Added
+        Some pr
+
+        ## 0.19.0
+        Previous version
+        """
+        XCTAssertEqual(try fileHandler.readTextFile(changelogPath), expectedContent)
+    }
 }

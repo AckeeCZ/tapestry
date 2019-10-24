@@ -26,6 +26,9 @@ public final class DocsUpdater: DocsUpdating {
         try updateVersionInReadme(path: path,
                                   name: name,
                                   version: version)
+        
+        try updateVersionInChangelog(path: path,
+                                     version: version)
     }
     
     // MARK: - Helpers
@@ -71,5 +74,25 @@ public final class DocsUpdater: DocsUpdating {
         )
 
         try content.write(to: readmePath.url, atomically: true, encoding: .utf8)
+    }
+    
+    // TODO: Add changelog to generated template
+    private func updateVersionInChangelog(path: AbsolutePath,
+                                          version: Version) throws {
+        let changelogPath = path.appending(component: "CHANGELOG.md")
+        
+        var content = try FileHandler.shared.readTextFile(changelogPath)
+        content = content
+        .replacingOccurrences(
+            of: "## Next",
+            with: """
+            ## Next
+            
+            ## \(version.description)
+            """,
+            options: .regularExpression
+        )
+        
+        try content.write(to: changelogPath.url, atomically: true, encoding: .utf8)
     }
 }
