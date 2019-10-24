@@ -29,7 +29,7 @@ final class DependenciesCompatibilityCheckerTests: TapestryUnitTestCase {
     
     func test_check_succeeds_when_cocoapods() {
         // Given
-        system.succeedCommand(["pod", "lib", "lint"])
+        system.succeedCommand(["pod", "lib", "lint", "--allow-warnings"])
         
         // Then
         XCTAssertNoThrow(try subject.checkCompatibility(with: [.cocoapods], path: fileHandler.currentPath))
@@ -37,7 +37,7 @@ final class DependenciesCompatibilityCheckerTests: TapestryUnitTestCase {
     
     func test_check_fails_when_cocoapods() {
         // Given
-        system.errorCommand(["pod", "lib", "lint"])
+        system.errorCommand(["pod", "lib", "lint", "--allow-warnings"])
         
         // Then
         XCTAssertThrowsError(try subject.checkCompatibility(with: [.cocoapods], path: fileHandler.currentPath))
