@@ -6,7 +6,8 @@ import enum TuistCore.ErrorType
 enum DependenciesCompatibilityError: FatalError {
     case carthage
     case cocoapods
-    case spm
+    case spmBuild
+    case xcodeBuild(String)
     
     var type: ErrorType { .abort }
     
@@ -16,8 +17,12 @@ enum DependenciesCompatibilityError: FatalError {
             return "Carthage compatibility check failed - try running carthage build --no-skip-current to debug"
         case .cocoapods:
             return "Cocoapods compatibility check failed - try running pod lib lint to debug"
-        case .spm:
+        case .spmBuild:
             return "SPM compatibility check failed - try running swift build to debug"
+        case let .xcodeBuild(name):
+            return """
+            Try running "swift package generate-xcodeproj --output spm_compatibility.xcodeproj && xcodebuild -project spm_compatibility.xcodeproj -scheme \(name)-Package -sdk iphonesimulator | rm -r spm_compatibility.xcodeproj"
+            """
         }
     }
 }
@@ -75,21 +80,24 @@ public final class DependenciesCompatibilityChecker: DependenciesCompatibilityCh
     private func checkSPMCompatibility(path: AbsolutePath, platform: ReleaseAction.Platform) throws {
         Printer.shared.print("Checking SPM compatibility...")
         try FileHandler.shared.inDirectory(path) {
-            do {
-                let projectPath = path.appending(component: "spm_compatibility.xcodeproj")
-                defer { try? FileHandler.shared.delete(projectPath) }
-                try PackageController.shared.generateXcodeproj(path: path, output: projectPath)
+            switch platform {
+            case .iOS:
                 let name = try PackageController.shared.name(from: path)
-                let buildPlatform: Platform?
-                switch platform {
-                case .iOS:
-                    buildPlatform = .iOS
-                case .all:
-                    buildPlatform = nil
+                do {
+                    let projectPath = path.appending(component: "spm_compatibility.xcodeproj")
+                    defer { try? FileHandler.shared.delete(projectPath) }
+                    try PackageController.shared.generateXcodeproj(path: path, output: projectPath)
+                    try XcodeController.shared.build(projectPath: projectPath, schemeName: name + "-Package", sdk: .iOS)
+                } catch {
+                    throw DependenciesCompatibilityError.xcodeBuild(name)
                 }
-                try XcodeController.shared.build(projectPath: projectPath, schemeName: name + "-Package", sdk: buildPlatform)
-            } catch {
-                throw DependenciesCompatibilityError.spm
+            case .all:
+                do {
+                    System.shared.run(["swift", "build"])
+                } catch {
+                    throw DependenciesCompatibilityError.spmBuild
+                }
+                
             }
         }
     }
