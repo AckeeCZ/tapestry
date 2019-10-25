@@ -22,6 +22,7 @@ public final class SourceFileGlob: Equatable, ExpressibleByStringLiteral, Codabl
     }
 }
 
+/// List of source files, you define individual sources using `SourceFileGlob`
 public final class SourceFilesList: Equatable, Codable {
     public enum CodingKeys: String, CodingKey {
         case globs

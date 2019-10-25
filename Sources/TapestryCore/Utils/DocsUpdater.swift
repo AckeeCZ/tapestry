@@ -11,6 +11,7 @@ public protocol DocsUpdating {
     func updateDocs(path: AbsolutePath, version: Version) throws
 }
 
+/// Used by `.docsUpdate` `ReleaseAction`
 public final class DocsUpdater: DocsUpdating {
     public init() { }
     
@@ -28,7 +29,7 @@ public final class DocsUpdater: DocsUpdating {
         try updateVersionInReadme(path: path,
                                   name: name,
                                   version: version,
-                                  lastVersion: lastVersion as? Version)
+                                  lastVersion: lastVersion)
         
         try updateVersionInChangelog(path: path,
                                      version: version)
@@ -36,6 +37,11 @@ public final class DocsUpdater: DocsUpdating {
     
     // MARK: - Helpers
     
+    /// Updates version in `.podspec`
+    /// - Parameters:
+    ///     - path: Framework's root path
+    ///     - name: Name of framework
+    ///     - version: Provided version to update
     private func updateVersionInPodspec(path: AbsolutePath,
                                         name: String,
                                         version: Version) throws {
@@ -53,6 +59,12 @@ public final class DocsUpdater: DocsUpdating {
         try content.write(to: podspecPath.url, atomically: true, encoding: .utf8)
     }
     
+    /// Updates version in `README.md`
+    /// - Parameters:
+    ///     - path: Framework's root path
+    ///     - name: Name of framework
+    ///     - version: Provided version to update
+    ///     - lastVersion: Uses last version from git and replaces it with new version
     private func updateVersionInReadme(path: AbsolutePath,
                                        name: String,
                                        version: Version,
@@ -66,12 +78,14 @@ public final class DocsUpdater: DocsUpdating {
         // Replacing pods version
         content = content
         .replacingOccurrences(
+            // Finds eg: pod "Framework", "~> 6.2.4"
             of: "pod ([\"|'])\(name)([\"|'])" + #", (["|'])~>[ ]?([0-9]|[\.])*(["|'])"#,
             with: "pod $1\(name)$2, $3~> \(version.description)$5",
             options: .regularExpression
         )
         // Replacing SPM version
         .replacingOccurrences(
+            // Finds eg: framework.git", .upToNextMajor(from: "0.40.13")),
             of: "\(name)" + #"\.git", \.upToNextMajor\(from:[ ]?"([0-9]|[\.])*""#,
             with: "\(name).git\", .upToNextMajor(from: \"\(version.description)\"",
             options: .regularExpression
@@ -86,6 +100,10 @@ public final class DocsUpdater: DocsUpdating {
     }
     
     // TODO: Add changelog to generated template
+    /// Updates version in `CHANGELOG.md`
+    /// - Parameters:
+    ///     - path: Framework's root path
+    ///     - version: Provided version to update
     private func updateVersionInChangelog(path: AbsolutePath,
                                           version: Version) throws {
         let changelogPath = path.appending(component: "CHANGELOG.md")

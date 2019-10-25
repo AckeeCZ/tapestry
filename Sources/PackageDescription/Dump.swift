@@ -1,6 +1,6 @@
 import Foundation
 
-func dumpIfNeeded<E: Encodable>(_ entity: E) {
+internal func dumpIfNeeded<E: Encodable>(_ entity: E) {
     if CommandLine.argc > 0 {
         if CommandLine.arguments.contains("--dump") {
             let encoder = JSONEncoder()

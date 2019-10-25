@@ -62,7 +62,9 @@ public struct ReleaseAction {
     /// - custom: is run from root of your library
     /// - predefined: Runs one of `PredefinedAction`s that is provided by tapestry
     public enum Action {
+        /// Is run from root of your library
         case custom(tool: String, arguments: [String])
+        /// Runs one of `PredefinedAction`s that is provided by tapestry
         case predefined(PredefinedAction)
     }
     
