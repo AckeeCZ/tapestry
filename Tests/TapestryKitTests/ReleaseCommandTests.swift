@@ -1,86 +1,29 @@
 import XCTest
 import SPMUtility
 import Basic
+@testable import TapestryGen
 @testable import TapestryCore
 @testable import TapestryKit
 @testable import TapestryCoreTesting
 
 final class ReleaseCommandTests: TapestryUnitTestCase {
     private var subject: ReleaseCommand!
-    private var gitController: MockGitController!
     private var parser: ArgumentParser!
+    private var configModelLoader: MockConfigModelLoader!
+    private var docsUpdater: MockDocsUpdater!
+    private var dependenciesCompatibilityChecker: MockDependenciesCompatibilityChecker!
     
     override func setUp() {
         super.setUp()
         
-        gitController = MockGitController()
+        configModelLoader = MockConfigModelLoader()
+        docsUpdater = MockDocsUpdater()
+        dependenciesCompatibilityChecker = MockDependenciesCompatibilityChecker()
         parser = ArgumentParser.test()
         subject = ReleaseCommand(parser: parser,
-                                 gitController: gitController)
-    }
-    
-    func test_updateVersionInPodspec() throws {
-        // Given
-        let content = """
-        s.version = "0.0.1"
-        s.dependency "BigInt", "~> 0.0.1"
-        """
-        let name = "TestPackage"
-        let path = fileHandler.currentPath.appending(component: name)
-        try fileHandler.createFolder(path)
-        let podspecPath = path.appending(component: "\(name).podspec")
-        try content.write(to: podspecPath.url, atomically: true, encoding: .utf8)
-        let version = "1.0.0"
-        let result = try parser.parse(["release", version, "--path", path.pathString])
-        
-        // When
-        try subject.run(with: result)
-        
-        // Then
-        let expectedContent = """
-        s.version = "1.0.0"
-        s.dependency "BigInt", "~> 0.0.1"
-        """
-        XCTAssertEqual(try fileHandler.readTextFile(podspecPath), expectedContent)
-    }
-    
-    func test_updateVersionInReadme() throws {
-        // Given
-        let content = """
-        Just add this to your `Package.swift`:
-        ```swift
-        .package(url: "https://github.com/marek.fort/TestPackage.git", .upToNextMajor(from: "0.0.1")),
-        ```
-
-        ```ruby
-        pod "TestPackage", "~> 0.0.1"
-        pod "Random", "~> 0.0.1"
-        ```
-        """
-        let name = "TestPackage"
-        let path = fileHandler.currentPath.appending(component: name)
-        try fileHandler.createFolder(path)
-        let readmePath = path.appending(component: "README.md")
-        try content.write(to: readmePath.url, atomically: true, encoding: .utf8)
-        let version = "1.0.0"
-        let result = try parser.parse(["release", version, "--path", path.pathString])
-        
-        // When
-        try subject.run(with: result)
-        
-        // Then
-        let expectedContent = """
-        Just add this to your `Package.swift`:
-        ```swift
-        .package(url: "https://github.com/marek.fort/TestPackage.git", .upToNextMajor(from: "1.0.0")),
-        ```
-
-        ```ruby
-        pod "TestPackage", "~> 1.0.0"
-        pod "Random", "~> 0.0.1"
-        ```
-        """
-        XCTAssertEqual(try fileHandler.readTextFile(readmePath), expectedContent)
+                                 configModelLoader: configModelLoader,
+                                 docsUpdater: docsUpdater,
+                                 dependenciesCompatibilityChecker: dependenciesCompatibilityChecker)
     }
     
     func test_version_is_commited() throws {
@@ -161,5 +104,95 @@ final class ReleaseCommandTests: TapestryUnitTestCase {
         
         // Then
         XCTAssertThrowsSpecific(try subject.run(with: result), ReleaseError.tagExists(version))
+    }
+    
+    func test_push_when_false() throws {
+        // Given
+        configModelLoader.loadTapestryConfigStub = { _ in
+            .test(release: .test(push: false))
+        }
+        let result = try parser.parse(["release", "0.0.1"])
+        
+        var pushWasCalled: Bool = false
+        gitController.pushStub = { _ in
+            pushWasCalled = true
+        }
+        
+        // When
+        try subject.run(with: result)
+        
+        // Then
+        XCTAssertFalse(pushWasCalled)
+    }
+    
+    func test_push_when_true() throws {
+        // Given
+        configModelLoader.loadTapestryConfigStub = { _ in
+            .test(release: .test(push: true))
+        }
+        let result = try parser.parse(["release", "0.0.1"])
+        
+        var pushWasCalled: Bool = false
+        gitController.pushStub = { _ in
+            pushWasCalled = true
+        }
+        
+        // When
+        try subject.run(with: result)
+        
+        // Then
+        XCTAssertTrue(pushWasCalled)
+    }
+    
+    func test_run_only_pre_actions_before_commit() throws {
+        // Given
+        configModelLoader.loadTapestryConfigStub = { _ in
+            .test(release: .test(actions: [.init(order: .pre, action: .predefined(.docsUpdate)),
+                                           .init(order: .post, action: .predefined(.dependenciesCompatibility([.spm(.all)])))]))
+        }
+        let result = try parser.parse(["release", "0.0.1"])
+        
+        var commitWasCalled: Bool = false
+        gitController.commitStub = { _, _ in
+            commitWasCalled = true
+        }
+        
+        var commitWasCalledWhenDocsUpdate = false
+        docsUpdater.updateDocsStub = { _, _ in
+            commitWasCalledWhenDocsUpdate = commitWasCalled
+        }
+        
+        var commitWasCalledWhenDependencies = false
+        dependenciesCompatibilityChecker.checkCompatibilityStub = { _, _ in
+            commitWasCalledWhenDependencies = commitWasCalled
+        }
+        
+        // When
+        try subject.run(with: result)
+        
+        // Then
+        XCTAssertFalse(commitWasCalledWhenDocsUpdate)
+        XCTAssertTrue(commitWasCalledWhenDependencies)
+    }
+    
+    func test_adds_files() throws {
+        // Given
+        configModelLoader.loadTapestryConfigStub = { _ in
+            .test(release: .test(add: ["readme", "podspec"]))
+        }
+    
+        var addedFiles: [AbsolutePath] = []
+        gitController.addStub = { files, _ in
+            addedFiles = files
+        }
+    
+        let result = try parser.parse(["release", "0.0.1"])
+        
+        // When
+        try subject.run(with: result)
+        
+        // Then
+        XCTAssertEqual(addedFiles, [fileHandler.currentPath.appending(component: "readme"),
+                                    fileHandler.currentPath.appending(component: "podspec")])
     }
 }

@@ -1,7 +1,6 @@
 import XCTest
 import Basic
 import SPMUtility
-import class TuistCore.System
 @testable import TapestryCore
 @testable import TapestryCoreTesting
 
@@ -65,9 +64,26 @@ final class GitControllerTests: TapestryUnitTestCase {
         // Given
         let path = AbsolutePath("/test")
         let message = "Test commit"
-        system.succeedCommand(["git", "commit", "-am", message])
+        system.succeedCommand(["git", "commit", "-m", message])
         
         // Then
         XCTAssertNoThrow(try subject.commit(message, path: path))
+    }
+    
+    func test_add_succeeds() throws {
+        // Given
+        let path = AbsolutePath("/test")
+        system.succeedCommand(["git", "add", path.pathString])
+        
+        // Then
+        XCTAssertNoThrow(try subject.add(files: [path], path: path))
+    }
+    
+    func test_push_succeeds() {
+        // Given
+        system.succeedCommand(["git", "push"])
+        
+        // Then
+        XCTAssertNoThrow(try subject.push(path: nil))
     }
 }

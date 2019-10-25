@@ -8,6 +8,9 @@ let package = Package(
     products: [
         .library(name: "TapestryGen",
                  targets: ["TapestryGen"]),
+        .library(name: "PackageDescription",
+                 type: .dynamic,
+                 targets: ["PackageDescription"]),
         .executable(
             name: "tapestry",
             targets: ["tapestry"]),
@@ -20,12 +23,13 @@ let package = Package(
         .target(
             name: "tapestry",
             dependencies: [
-                .target(name: "TapestryKit")
+                "TapestryKit",
             ]),
         .target(name: "TapestryKit",
                 dependencies: [
                     "TapestryGen",
                     "TapestryCore",
+                    "PackageDescription",
             ]),
         .target(name: "TapestryCore",
                 dependencies: [
@@ -37,6 +41,9 @@ let package = Package(
             dependencies: [
                 "TapestryCore",
             ]),
+        .target(
+            name: "PackageDescription"
+        ),
         .target(name: "TapestryCoreTesting",
                 dependencies: [
                     "TapestryCore",
@@ -49,6 +56,9 @@ let package = Package(
             dependencies: ["TapestryCore", "TapestryCoreTesting"]),
         .testTarget(
             name: "TapestryGenTests",
-            dependencies: ["TapestryGen", "TapestryCoreTesting"])
+            dependencies: ["TapestryGen", "TapestryCoreTesting"]),
+        .testTarget(
+            name: "PackageDescriptionTests",
+            dependencies: ["PackageDescription", "TapestryCoreTesting"]),
     ]
 )

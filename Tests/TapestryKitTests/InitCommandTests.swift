@@ -8,24 +8,16 @@ import XCTest
 
 final class InitCommandTests: TapestryUnitTestCase {
     private var subject: InitCommand!
-    private var packageController: MockPackageController!
-    private var gitController: MockGitController!
-    private var inputReader: MockInputReader!
     private var exampleGenerator: MockExampleGenerator!
     private var parser: ArgumentParser!
     
     override func setUp() {
         super.setUp()
-        packageController = MockPackageController()
-        gitController = MockGitController()
-        inputReader = MockInputReader()
         exampleGenerator = MockExampleGenerator()
         parser = ArgumentParser.test()
         subject = InitCommand(parser: parser,
                               exampleGenerator: exampleGenerator,
-                              gitController: gitController,
-                              packageController: packageController,
-                              inputReader: inputReader)
+                              tapestriesGenerator: MockTapestriesGenerator())
     }
     
     func test_run_when_the_directory_is_not_empty() throws {
@@ -49,6 +41,10 @@ final class InitCommandTests: TapestryUnitTestCase {
         packageController.initPackageStub = { _, packageName in
             initializedPackageName = packageName
             return .library
+        }
+        
+        packageController.nameStub = { _ in
+            name
         }
         
         // When
@@ -87,7 +83,11 @@ final class InitCommandTests: TapestryUnitTestCase {
         inputReader.promptCommand("📝 Bundle ID", output: expectedBundleId)
         
         packageController.initPackageStub = { _, _ in
-            return .library
+            .library
+        }
+        
+        packageController.nameStub = { _ in
+            name
         }
         
         exampleGenerator.generateProjectStub = { path, name, bundleId in
@@ -163,6 +163,10 @@ final class InitCommandTests: TapestryUnitTestCase {
         let expectedUsername = "testname"
         inputReader.promptCommand("🍷 Username", output: expectedUsername)
         
+        packageController.nameStub = { _ in
+            expectedName
+        }
+        
         // When
         try subject.run(with: result)
         
@@ -178,9 +182,13 @@ final class InitCommandTests: TapestryUnitTestCase {
         let path = fileHandler.currentPath.appending(component: expectedName)
         try fileHandler.createFolder(path)
         packageController.initPackageStub = { _, _ in
-            return .library
+            .library
         }
         let result = try parser.parse(["init", "--path", path.pathString])
+        
+        packageController.nameStub = { _ in
+            expectedName
+        }
         
         // When
         try subject.run(with: result)
@@ -197,9 +205,13 @@ final class InitCommandTests: TapestryUnitTestCase {
         let path = fileHandler.currentPath.appending(component: expectedName)
         try fileHandler.createFolder(path)
         packageController.initPackageStub = { _, _ in
-            return .executable
+            .executable
         }
         let result = try parser.parse(["init", "--path", path.pathString])
+        
+        packageController.nameStub = { _ in
+            expectedName
+        }
         
         // When
         try subject.run(with: result)
@@ -210,11 +222,14 @@ final class InitCommandTests: TapestryUnitTestCase {
         XCTAssertFalse(travisContent.contains(expectedName + ExampleGenerator.exampleAppendix))
     }
     
-    func test_package_xcodeProj_is_generated() throws {
+    func test_package_xcodeProj_is_generated_when_library() throws {
         // Given
         var path: AbsolutePath?
-        packageController.generateXcodeprojStub = {
-            path = $0
+        packageController.generateXcodeprojStub = { projPath, _ in
+            path = projPath
+        }
+        packageController.initPackageStub = { _, _ in
+            .library
         }
         let result = try parser.parse(["init"])
         
@@ -223,5 +238,23 @@ final class InitCommandTests: TapestryUnitTestCase {
         
         // Then
         XCTAssertEqual(fileHandler.currentPath, path)
+    }
+    
+    func test_package_xcodeProj_is_not_generated_when_executable() throws {
+        // Given
+        var path: AbsolutePath?
+        packageController.generateXcodeprojStub = { projPath, _ in
+            path = projPath
+        }
+        packageController.initPackageStub = { _, _ in
+            .executable
+        }
+        let result = try parser.parse(["init"])
+        
+        // When
+        try subject.run(with: result)
+        
+        // Then
+        XCTAssertNil(path)
     }
 }

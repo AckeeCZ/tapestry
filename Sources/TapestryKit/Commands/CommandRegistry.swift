@@ -7,8 +7,17 @@
 
 import SPMUtility
 import Foundation
-import TuistCore
+import protocol TuistCore.Command
+import protocol TuistCore.RawCommand
+import protocol TuistCore.HiddenCommand
+import protocol TuistCore.ErrorHandling
+import protocol TuistCore.FatalError
+import struct TuistCore.UnhandledError
+import class TuistCore.ErrorHandler
+import class TuistCore.Printer
 import Basic
+import TapestryGen
+import TapestryCore
 
 public final class CommandRegistry {
     // MARK: - Attributes
@@ -19,30 +28,43 @@ public final class CommandRegistry {
     var hiddenCommands: [String: HiddenCommand] = [:]
     private let errorHandler: ErrorHandling
     private let processArguments: () -> [String]
+    private let processAllArguments: () -> [String]
 
     // MARK: - Init
 
     public convenience init() {
         self.init(errorHandler: ErrorHandler(),
-                  processArguments: CommandRegistry.processArguments)
+                  processArguments: CommandRegistry.processArguments,
+                  processAllArguments: CommandRegistry.processAllArguments)
         register(command: InitCommand.self)
         register(command: ReleaseCommand.self)
+        register(command: EditCommand.self)
+        register(command: UpCommand.self)
+        register(command: RunCommand.self)
+        register(command: ActionCommand.self)
+        register(command: ActionsCommand.self)
     }
 
     init(errorHandler: ErrorHandling,
-         processArguments: @escaping () -> [String]) {
+         processArguments: @escaping () -> [String],
+         processAllArguments: @escaping () -> [String]) {
         self.errorHandler = errorHandler
         parser = ArgumentParser(commandName: "tapestry",
                                 usage: "<command> <options>",
                                 overview: "Generate and maintain your package projects.")
         self.processArguments = processArguments
+        self.processAllArguments = processAllArguments
     }
 
     public static func processArguments() -> [String] {
-        return Array(ProcessInfo.processInfo.arguments)
+        return Array(ProcessInfo.processInfo.arguments).filter { $0 != "--current" }
     }
 
     // MARK: - Internal
+    
+    static func processAllArguments() -> [String] {
+        return Array(ProcessInfo.processInfo.arguments)
+    }
 
     func register(command: Command.Type) {
         commands.append(command.init(parser: parser))
@@ -61,8 +83,28 @@ public final class CommandRegistry {
 
     public func run() {
         do {
+            // Run local version
+            let tapestriesPath = FileHandler.shared.currentPath.appending(component: "Tapestries")
+            let processedArguments = processAllArguments()
+            if !processArguments().contains(EditCommand.command),
+                !processArguments().contains(UpCommand.command),
+                !processedArguments.contains("--current"),
+                FileHandler.shared.exists(tapestriesPath) {
+                do {
+                    try PackageController.shared.run("tapestry", arguments: ["--current"] + processedArguments.dropFirst(), path: FileHandler.shared.currentPath)
+                } catch let error as PackageControllerError {
+                    switch error {
+                    case .buildFailed:
+                        throw PackageControllerError.buildFailed("tapestry")
+                    default:
+                        return
+                    }
+                } catch {
+                    
+                }
+            }
             // Hidden command
-            if let hiddenCommand = hiddenCommand() {
+            else if let hiddenCommand = hiddenCommand() {
                 try hiddenCommand.run(arguments: argumentsDroppingCommand())
 
                 // Raw command

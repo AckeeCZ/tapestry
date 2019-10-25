@@ -8,7 +8,6 @@ import SPMUtility
 import Basic
 
 enum InitCommandError: FatalError, Equatable {
-    case ungettableProjectName(AbsolutePath)
     case nonEmptyDirectory(AbsolutePath)
 
     var type: ErrorType {
@@ -17,21 +16,15 @@ enum InitCommandError: FatalError, Equatable {
 
     var description: String {
         switch self {
-        case let .ungettableProjectName(path):
-            return "Couldn't infer the project name from path \(path.pathString)."
         case let .nonEmptyDirectory(path):
-            return "Can't initialize a project in the non-empty directory at path \(path.pathString)."
+            return "Can't initialize a project in the non-empty directory at path \(path.pathString)"
         }
     }
 
     static func == (lhs: InitCommandError, rhs: InitCommandError) -> Bool {
         switch (lhs, rhs) {
-        case let (.ungettableProjectName(lhsPath), .ungettableProjectName(rhsPath)):
-            return lhsPath == rhsPath
         case let (.nonEmptyDirectory(lhsPath), .nonEmptyDirectory(rhsPath)):
             return lhsPath == rhsPath
-        default:
-            return false
         }
     }
 }
@@ -44,23 +37,17 @@ final class InitCommand: NSObject, Command {
     let pathArgument: OptionArgument<String>
 
     private let exampleGenerator: ExampleGenerating
-    private let gitController: GitControlling
-    private let packageController: PackageControlling
-    private let inputReader: InputReading
+    private let tapestriesGenerator: TapestriesGenerating
 
     required convenience init(parser: ArgumentParser) {
         self.init(parser: parser,
                   exampleGenerator: ExampleGenerator(),
-                  gitController: GitController(),
-                  packageController: PackageController(),
-                  inputReader: InputReader())
+                  tapestriesGenerator: TapestriesGenerator())
     }
 
     init(parser: ArgumentParser,
          exampleGenerator: ExampleGenerating,
-         gitController: GitControlling,
-         packageController: PackageControlling,
-         inputReader: InputReading) {
+         tapestriesGenerator: TapestriesGenerating) {
         let subParser = parser.add(subparser: InitCommand.command, overview: InitCommand.overview)
 
         pathArgument = subParser.add(option: "--path",
@@ -70,26 +57,24 @@ final class InitCommand: NSObject, Command {
                                      completion: .filename)
 
         self.exampleGenerator = exampleGenerator
-        self.gitController = gitController
-        self.packageController = packageController
-        self.inputReader = inputReader
+        self.tapestriesGenerator = tapestriesGenerator
     }
 
     func run(with arguments: ArgumentParser.Result) throws {
         let path = try self.path(arguments: arguments)
-        let name = try self.name(path: path)
+        let name = try PackageController.shared.name(from: path)
 
         try verifyDirectoryIsEmpty(path: path)
-        
-        let packageType = try packageController.initPackage(path: path, name: name)
-        
-        try gitController.initGit(path: path)
-        
+
+        let packageType = try PackageController.shared.initPackage(path: path, name: name)
+
+        try GitController.shared.initGit(path: path)
+
         let authorName = try self.authorName()
         let email = try self.email()
         let username = try self.username(email: email)
         let bundleId = try self.bundleId(username: username, projectName: name)
-        
+
         switch packageType {
         case .library:
             Printer.shared.print("Creating library 📚")
@@ -99,7 +84,7 @@ final class InitCommand: NSObject, Command {
         case .executable:
             Printer.shared.print("Creating executable 🏃🏾‍♂️")
         }
-        
+
         try generateLicense(authorName: authorName,
                             email: email,
                             path: path)
@@ -107,18 +92,25 @@ final class InitCommand: NSObject, Command {
         try generateReadme(path: path,
                            username: username,
                            name: name)
-        
+
         try generateTravis(path: path,
                            packageType: packageType,
                            name: name)
+        
         try generatePodspec(path: path,
                             name: name,
                             username: username,
                             authorName: authorName,
                             email: email)
         
-        try packageController.generateXcodeproj(path: path)
-
+        try tapestriesGenerator.generateTapestries(at: path)
+        
+        switch packageType {
+        case .executable:
+            break
+        case .library:
+            try PackageController.shared.generateXcodeproj(path: path)
+        }
         Printer.shared.print(success: "Package generated ✅")
     }
 
@@ -133,34 +125,23 @@ final class InitCommand: NSObject, Command {
             throw InitCommandError.nonEmptyDirectory(path)
         }
     }
-
-    /// Obtain package name
-    /// - Parameters:
-    ///     - path: Name is derived from this path (last component)
-    private func name(path: AbsolutePath) throws -> String {
-        if let name = path.components.last {
-            return name
-        } else {
-            throw InitCommandError.ungettableProjectName(AbsolutePath.current)
-        }
-    }
     
     private func authorName() throws -> String {
-        return inputReader.prompt("👋 Author name", defaultValue: try gitController.currentName())
+        return InputReader.shared.prompt("👋 Author name", defaultValue: try GitController.shared.currentName())
     }
     
     private func email() throws -> String {
-        let gitEmail = try gitController.currentEmail()
-        return inputReader.prompt("💌 Email", defaultValue: gitEmail)
+        let gitEmail = try GitController.shared.currentEmail()
+        return InputReader.shared.prompt("💌 Email", defaultValue: gitEmail)
     }
     
     private func username(email: String) throws -> String {
         let defaultUsername = email.components(separatedBy: "@").first
-        return inputReader.prompt("🍷 Username", defaultValue: defaultUsername)
+        return InputReader.shared.prompt("🍷 Username", defaultValue: defaultUsername)
     }
     
     private func bundleId(username: String, projectName: String) throws -> String {
-        return inputReader.prompt("📝 Bundle ID", defaultValue: username + "." + projectName)
+        return InputReader.shared.prompt("📝 Bundle ID", defaultValue: username + "." + projectName)
     }
 
     /// Obtain package path

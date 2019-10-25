@@ -28,7 +28,6 @@ public final class ExampleGenerator: ExampleGenerating {
     }
 
     // MARK: - Public methods
-
     public func generateProject(path: AbsolutePath, name: String, bundleId: String) throws {
         let examplePath = path.appending(RelativePath(ExampleGenerator.exampleAppendix))
         try FileHandler.shared.createFolder(examplePath)
@@ -40,7 +39,6 @@ public final class ExampleGenerator: ExampleGenerating {
     }
 
     // MARK: - Helpers
-
     /// Create sources folder with dummy content
     private func createExampleSources(path: AbsolutePath, name: String) throws {
         let sourcesPath = path.appending(RelativePath("Sources"))
@@ -56,5 +54,5 @@ public final class ExampleGenerator: ExampleGenerating {
             }
             """
             try content.write(to: path.appending(component: "\(name).swift").url, atomically: true, encoding: .utf8)
-        }
+    }
 }

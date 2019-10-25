@@ -60,7 +60,7 @@
         "repositoryURL": "https://github.com/apple/swift-llbuild.git",
         "state": {
           "branch": "master",
-          "revision": "d45841450f82fca106d6376bc95da031dfb67db1",
+          "revision": "8bf2c3db460dbe2202b949868102ea716bcaba79",
           "version": null
         }
       },
@@ -74,11 +74,20 @@
         }
       },
       {
+        "package": "SwiftFormat",
+        "repositoryURL": "https://github.com/nicklockwood/SwiftFormat",
+        "state": {
+          "branch": null,
+          "revision": "1f0d26082bee42490f286bee98133ae710be0032",
+          "version": "0.40.13"
+        }
+      },
+      {
         "package": "tuist",
         "repositoryURL": "https://github.com/tuist/tuist.git",
         "state": {
           "branch": "master",
-          "revision": "4c0826160ec3964bbd1f97a871777b6bec164927",
+          "revision": "e0e99b60b98489a27764846c86167ba64a0118f0",
           "version": null
         }
       },
