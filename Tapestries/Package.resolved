@@ -74,15 +74,6 @@
         }
       },
       {
-        "package": "SwiftFormat",
-        "repositoryURL": "https://github.com/nicklockwood/SwiftFormat",
-        "state": {
-          "branch": null,
-          "revision": "1f0d26082bee42490f286bee98133ae710be0032",
-          "version": "0.40.13"
-        }
-      },
-      {
         "package": "tuist",
         "repositoryURL": "https://github.com/tuist/tuist.git",
         "state": {
