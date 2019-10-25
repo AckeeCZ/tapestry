@@ -91,7 +91,7 @@ public final class TapestriesGenerator: TapestriesGenerating {
             return
         }
         var contents = try FileHandler.shared.readTextFile(gitignorePath)
-        contents += "\n# Tapestry\ntapestries/.build\n"
+        contents += "\n# Tapestry\nTapestries/.build\nTapestries/.swiftpm"
         try FileHandler.shared.write(contents, path: gitignorePath, atomically: true)
     }
 }
