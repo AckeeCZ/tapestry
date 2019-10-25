@@ -26,7 +26,7 @@ $ tapestry
 Add this to your `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/AckeeCZ/tapestry.git", .upToNextMajor(from: "0.0.1")),
+.package(url: "https://github.com/AckeeCZ/tapestry.git", .upToNextMajor(from: "0.0.2")),
 ```
 
 ### Using Swift directly
@@ -114,7 +114,7 @@ The main component of the release process.
 | commitMessage |  Commit message - use `Argument.version` in your string which will translate to the version you are releasing   |  String |  No
 | push      | This option determines if the changes are committed at the end | Bool | No | 
 
-Running `tapestry release 0.0.1` also automatically tags the latest commit.
+Running `tapestry release 0.0.2` also automatically tags the latest commit.
 
 ## ReleaseAction
 
