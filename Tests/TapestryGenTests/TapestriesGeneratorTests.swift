@@ -46,7 +46,7 @@ final class TapestriesGeneratorTests: TapestryUnitTestCase {
             ],
             dependencies: [
                 // Tapestry
-                .package(url: "\(Constants.gitRepositoryURL)", .upToNextMajor(from: "\(Constants.version)")),
+                .package(url: "\(Constants.gitRepositoryURL)", .branch("master")),
             ],
             targets: [
                 .target(name: "TapestryConfig",
