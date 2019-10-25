@@ -69,6 +69,10 @@ public protocol GitControlling {
     /// - Parameters:
     ///     - path: Path of the git directory
     func push(path: AbsolutePath?) throws
+    /// Push tags to the remote repository
+        /// - Parameters:
+    ///     - path: Path of the git directory
+    func pushTags(path: AbsolutePath?) throws
     /// - Parameters:
     ///     - path: Path of the git directory
     /// - Returns: All tags for directory at `path`
@@ -115,6 +119,12 @@ public final class GitController: GitControlling {
     public func push(path: AbsolutePath?) throws {
         try FileHandler.shared.inDirectory(path ?? FileHandler.shared.currentPath) {
             try System.shared.run("git", "push")
+        }
+    }
+    
+    public func pushTags(path: AbsolutePath?) throws {
+        try FileHandler.shared.inDirectory(path ?? FileHandler.shared.currentPath) {
+            try System.shared.run("git", "push", "--tags")
         }
     }
     

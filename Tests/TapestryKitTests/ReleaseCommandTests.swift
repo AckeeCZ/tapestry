@@ -118,11 +118,17 @@ final class ReleaseCommandTests: TapestryUnitTestCase {
             pushWasCalled = true
         }
         
+        var pushTagsWasCalled: Bool = false
+        gitController.pushTagsStub = { _ in
+            pushTagsWasCalled = true
+        }
+        
         // When
         try subject.run(with: result)
         
         // Then
         XCTAssertFalse(pushWasCalled)
+        XCTAssertFalse(pushTagsWasCalled)
     }
     
     func test_push_when_true() throws {
@@ -137,11 +143,17 @@ final class ReleaseCommandTests: TapestryUnitTestCase {
             pushWasCalled = true
         }
         
+        var pushTagsWasCalled: Bool = false
+        gitController.pushTagsStub = { _ in
+            pushTagsWasCalled = true
+        }
+        
         // When
         try subject.run(with: result)
         
         // Then
         XCTAssertTrue(pushWasCalled)
+        XCTAssertTrue(pushTagsWasCalled)
     }
     
     func test_run_only_pre_actions_before_commit() throws {
