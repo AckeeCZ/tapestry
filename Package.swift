@@ -16,7 +16,7 @@ let package = Package(
             targets: ["tapestry"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/tuist/tuist.git", .revision("e0e99b60b98489a27764846c86167ba64a0118f0")),
+        .package(url: "https://github.com/tuist/tuist.git", .branch("master")),
         .package(url: "https://github.com/fortmarek/acho", .branch("spm_bump")),
     ],
     targets: [

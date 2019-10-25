@@ -6,7 +6,7 @@
         "repositoryURL": "https://github.com/fortmarek/acho",
         "state": {
           "branch": "spm_bump",
-          "revision": "5212ca2bb419f1aeafe27311642f4c850b8b8f8c",
+          "revision": "a5d68cc0da728ccee157a0861877e474d92cd5a8",
           "version": null
         }
       },
@@ -23,7 +23,7 @@
         "package": "ColorizeSwift",
         "repositoryURL": "https://github.com/mtynior/ColorizeSwift.git",
         "state": {
-          "branch": null,
+          "branch": "master",
           "revision": "7492d039d594daccc39cacea343eed6cc9d1ed5a",
           "version": null
         }
@@ -60,7 +60,7 @@
         "repositoryURL": "https://github.com/apple/swift-llbuild.git",
         "state": {
           "branch": "master",
-          "revision": "d45841450f82fca106d6376bc95da031dfb67db1",
+          "revision": "40bd204842fa23408f2c1cdbdef0750531a30fdd",
           "version": null
         }
       },
@@ -77,7 +77,7 @@
         "package": "tuist",
         "repositoryURL": "https://github.com/tuist/tuist.git",
         "state": {
-          "branch": null,
+          "branch": "master",
           "revision": "e0e99b60b98489a27764846c86167ba64a0118f0",
           "version": null
         }

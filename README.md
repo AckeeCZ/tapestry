@@ -26,7 +26,7 @@ $ tapestry
 Add this to your `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/AckeeCZ/tapestry.git", .upToNextMajor(from: "0.0.2")),
+.package(url: "https://github.com/AckeeCZ/tapestry.git", .branch("master")),
 ```
 
 ### Using Swift directly
