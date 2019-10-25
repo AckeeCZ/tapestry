@@ -5,7 +5,7 @@
 
 Tapestry helps you with **creating** and **managing** your Swift frameworks 💫
 
-Do you want to easily create a Swift framework that supports [carthage][Carthage], [cocoapods][Cocoapods] and [spm][Swift Package Manager]?
+Do you want to easily create a Swift framework that supports [Carthage][carthage], [Cocoapods][cocoapods] and [SPM][spm]?
 
 Or define your release steps in a type-safe way?
 
@@ -21,7 +21,7 @@ $ brew install tapestry
 $ tapestry
 ```
 
-### Using [spm][SPM]
+### Using [SPM][spm]
 
 Add this to your `Package.swift`:
 
@@ -49,7 +49,7 @@ tapestry init --path TapestryProject
 
 You can omit `--path` argument and it will generate your framework in the current directory.
 
-It uses [tuist](https://github.com/tuist/tuist) and [SPM](https://github.com/apple/swift-package-manager) tools, so it's very easy to adjust it to your needs (no complicated template structure, all code is generated from the **ground up**!)
+It uses [tuist][tuist] and [SPM][spm] tools, so it's very easy to adjust it to your needs (no complicated template structure, all code is generated from the **ground up**!)
 
 You can change the generated files in `InitCommand` and your example project in `ExampleModelLoader`. In the future, I'd like to make this customization even easier, so watch this space 👀
 
@@ -174,13 +174,13 @@ Let's you say what dependency managers you want to check compatibility for.
 
 | Case        | Description           | 
 | ------------- |:-------------:|
-| `cocoapods`      | Runs compatibility check for [cocoapods][Cocoapods]
-| `carthage`     | Runs compatibility check for [carthage][Carthage]
-| `spm(Platform)` |  Runs compatibility check for [spm][SPM] - define platform if you are using platform-specific libraries (eg `UIKit`)
+| `cocoapods`      | Runs compatibility check for [Cocoapods][cocoapods]
+| `carthage`     | Runs compatibility check for [Carthage][carthage]
+| `spm(Platform)` |  Runs compatibility check for [SPM][spm] - define platform if you are using platform-specific libraries (eg `UIKit`)
 
 ### Run developer dependencies
 
-If you want to use developer dependencies using [spm][SPM], but don't want the users to download them since they are not essential to the project, you can add them to `tapestries/Package.swift`.
+If you want to use developer dependencies using [SPM][spm], but don't want the users to download them since they are not essential to the project, you can add them to `tapestries/Package.swift`.
 
 If you then want to run it, just type:
 ```bash
