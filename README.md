@@ -9,7 +9,7 @@ Do you want to easily create a Swift framework that supports [carthage][Carthage
 
 Or define your release steps in a type-safe way?
 
-This is the place to be!
+Well, look no further, `tapestry` shall help you with exactly that!
 
 ## Installation
 
@@ -49,7 +49,7 @@ tapestry init --path TapestryProject
 
 You can omit `--path` argument and it will generate your framework in the current directory.
 
-It uses [tuist][tuist] and [spm][SPM] tools, so it's very easy to adjust it to your needs (no complicated template structure, all code is generated from **ground up**!)
+It uses [tuist](https://github.com/tuist/tuist) and [SPM](https://github.com/apple/swift-package-manager) tools, so it's very easy to adjust it to your needs (no complicated template structure, all code is generated from the **ground up**!)
 
 You can change the generated files in `InitCommand` and your example project in `ExampleModelLoader`. In the future, I'd like to make this customization even easier, so watch this space 👀
 
