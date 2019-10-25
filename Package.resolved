@@ -77,8 +77,8 @@
         "package": "tuist",
         "repositoryURL": "https://github.com/tuist/tuist.git",
         "state": {
-          "branch": "master",
-          "revision": "4c0826160ec3964bbd1f97a871777b6bec164927",
+          "branch": null,
+          "revision": "e0e99b60b98489a27764846c86167ba64a0118f0",
           "version": null
         }
       },
