@@ -193,7 +193,7 @@ And it will run the tool you have previously defined - which means all the proje
 I'd like to thank [tuist][tuist] for inspiration and help in this project. This project was also inspired by [rocket](https://github.com/shibapm/Rocket)
 
 
-cocoapods: https://github.com/CocoaPods/CocoaPods
-carthage: https://github.com/Carthage/Carthage
-spm: https://github.com/apple/swift-package-manager
-tuist: https://github.com/tuist/tuist
+[cocoapods]: https://github.com/CocoaPods/CocoaPods
+[carthage]: https://github.com/Carthage/Carthage
+[spm]: https://github.com/apple/swift-package-manager
+[tuist]: https://github.com/tuist/tuist
