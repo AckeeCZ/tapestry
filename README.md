@@ -5,7 +5,7 @@
 
 Tapestry helps you with **creating** and **managing** your Swift frameworks 💫
 
-Do you want to easily create a Swift framework that supports Carthage, Cocoapods and Swift Package Manager?
+Do you want to easily create a Swift framework that supports [carthage][Carthage], [cocoapods][Cocoapods] and [spm][Swift Package Manager]?
 
 Or define your release steps in a type-safe way?
 
@@ -21,7 +21,7 @@ $ brew install tapestry
 $ tapestry
 ```
 
-### Using [SPM](https://github.com/apple/swift-package-manager)
+### Using [spm][SPM]
 
 Add this to your `Package.swift`:
 
@@ -49,7 +49,7 @@ tapestry init --path TapestryProject
 
 You can omit `--path` argument and it will generate your framework in the current directory.
 
-It uses [tuist](https://github.com/tuist/tuist) and [SPM](https://github.com/tuist/tuist) tools, so it's very easy to adjust it to your needs (no complicated template structure, all code is generated from **ground up**!)
+It uses [tuist][tuist] and [spm][SPM] tools, so it's very easy to adjust it to your needs (no complicated template structure, all code is generated from **ground up**!)
 
 You can change the generated files in `InitCommand` and your example project in `ExampleModelLoader`. In the future, I'd like to make this customization even easier, so watch this space 👀
 
@@ -68,7 +68,7 @@ You can check out an example project that was generated with `tapestry` [here](h
 
 <img alt="Screenshot" src="Resources/release.gif" width="700">
 
-## Setup relase steps
+## Setup release steps
 
 To get you started with tapestry (if you did not generate your framework with it!), you can run 
 ```bash
@@ -101,7 +101,7 @@ Let's see how you can edit this by yourself to get the result you want.
 
 ## TapestryConfig
 
-This currently only has one argument `relase`, more will be added here
+This currently only has one argument `release`, more will be added here
 
 ## Release
 
@@ -174,13 +174,13 @@ Let's you say what dependency managers you want to check compatibility for.
 
 | Case        | Description           | 
 | ------------- |:-------------:|
-| `cocoapods`      | Runs compatibility check for [Cocoapods](https://github.com/CocoaPods/CocoaPods)
-| `carthage`     | Runs compatibility check for [Carthage](Runs compatibility check for [Cocoapods](https://github.com/CocoaPods/CocoaPods))
-| `spm(Platform)` |  Runs compatibility check for [SPM](https://github.com/apple/swift-package-manager) - define platform if you are using platform-specific libraries (eg `UIKit`)
+| `cocoapods`      | Runs compatibility check for [cocoapods][Cocoapods]
+| `carthage`     | Runs compatibility check for [carthage][Carthage]
+| `spm(Platform)` |  Runs compatibility check for [spm][SPM] - define platform if you are using platform-specific libraries (eg `UIKit`)
 
 ### Run developer dependencies
 
-If you want to use developer dependencies using [SPM](https://github.com/apple/swift-package-manager), but don't want the users to download them since they are not essential to the project, you can add them to `tapestries/Package.swift`.
+If you want to use developer dependencies using [spm][SPM], but don't want the users to download them since they are not essential to the project, you can add them to `tapestries/Package.swift`.
 
 If you then want to run it, just type:
 ```bash
@@ -190,4 +190,10 @@ And it will run the tool you have previously defined - which means all the proje
 
 ### Inspiration and thanks
 
-I'd like to thank [tuist](https://github.com/tuist/tuist) for inspiration and help in this project. This project was also inspired by [rocket](https://github.com/shibapm/Rocket)
+I'd like to thank [tuist][tuist] for inspiration and help in this project. This project was also inspired by [rocket](https://github.com/shibapm/Rocket)
+
+
+cocoapods: https://github.com/CocoaPods/CocoaPods
+carthage: https://github.com/Carthage/Carthage
+spm: https://github.com/apple/swift-package-manager
+tuist: https://github.com/tuist/tuist
