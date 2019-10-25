@@ -90,9 +90,7 @@ final class ReleaseCommand: NSObject, Command {
             .filter { $0.isPre }
             .map { updateArguments(for: $0, version: version) }
         try preActions.forEach { try runReleaseAction($0, path: path, version: version) }
-        
         try updateGit(with: config, version: version, path: path)
-        
         let postActions: [ReleaseAction.Action] = config.release.actions
             .filter { $0.isPost }
             .map { updateArguments(for: $0, version: version) }
@@ -114,7 +112,7 @@ final class ReleaseCommand: NSObject, Command {
         Printer.shared.print("Updating version 🚀")
         
         try GitController.shared.tagVersion(version,
-                                     path: path)
+                                            path: path)
         
         if config.release.push {
             Printer.shared.print("Pushing...")

@@ -110,8 +110,8 @@ public final class GitController: GitControlling {
     
     public func add(files: [AbsolutePath], path: AbsolutePath?) throws {
         try FileHandler.shared.inDirectory(path ?? FileHandler.shared.currentPath) {
-            try files.forEach {
-                try System.shared.run("git", "add", $0.pathString)
+            files.forEach {
+                try? System.shared.run("git", "add", $0.pathString)
             }
         }
     }
