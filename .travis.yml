@@ -6,8 +6,8 @@ env:
 script:
 - set -o pipefail && swift test --generate-linuxmain -Xswiftc -target -Xswiftc x86_64-apple-macosx10.12 && swift test -Xswiftc -target -Xswiftc x86_64-apple-macosx10.12 
 before_deploy:
-- swift build --configuration release
-- export BINARY_PATH=`swift build --show-bin-path --configuration release`/$FRAMEWORK_NAME
+- swift build --configuration release --product tapestry
+- export BINARY_PATH=`swift build --show-bin-path --configuration release --product tapestry`/$FRAMEWORK_NAME
 - mv "$BINARY_PATH" .
 - zip -r $FRAMEWORK_NAME-$TRAVIS_TAG.zip LICENSE $FRAMEWORK_NAME
 deploy:
