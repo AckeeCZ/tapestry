@@ -65,6 +65,7 @@ public final class TapestriesGenerator: TapestriesGenerating {
                 ])
             ]
         )
+        
         """
         try contents.write(to: path.appending(component: "Package.swift").url, atomically: true, encoding: .utf8)
     }
@@ -80,6 +81,7 @@ public final class TapestriesGenerator: TapestriesGenerating {
                                                            "CHANGELOG.md"],
                                                      commitMessage: "Version \\(Argument.version)",
                                                      push: false))
+        
         """
         try contents.write(to: path.appending(component: "TapestryConfig.swift").url, atomically: true, encoding: .utf8)
     }

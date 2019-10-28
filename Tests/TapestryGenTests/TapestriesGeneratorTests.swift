@@ -55,6 +55,7 @@ final class TapestriesGeneratorTests: TapestryUnitTestCase {
                 ])
             ]
         )
+        
         """
         
         // When
@@ -80,6 +81,7 @@ final class TapestriesGeneratorTests: TapestryUnitTestCase {
                                                            "CHANGELOG.md"],
                                                      commitMessage: "Version \\(Argument.version)",
                                                      push: false))
+
         """
         
         // When
