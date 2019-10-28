@@ -13,6 +13,8 @@ public final class MockGitController: GitControlling {
     public var pushStub: ((AbsolutePath?) throws -> ())?
     public var pushTagsStub: ((AbsolutePath?) throws -> ())?
     public var allTagsStub: ((AbsolutePath?) throws -> [Version])?
+    public var isGitRepositoryStub: ((AbsolutePath?) throws -> Bool)?
+    public var gitDirectoryStub: ((AbsolutePath?) throws -> AbsolutePath)?
     
     public func initGit(path: AbsolutePath) throws {
         try initGitStub?(path)
@@ -52,5 +54,13 @@ public final class MockGitController: GitControlling {
     
     public func allTags(path: AbsolutePath?) throws -> [Version] {
         try allTagsStub?(path) ?? []
+    }
+    
+    public func isGitRepository(path: AbsolutePath) throws -> Bool {
+        try isGitRepositoryStub?(path) ?? false
+    }
+    
+    public func gitDirectory(path: AbsolutePath?) throws -> AbsolutePath {
+        try gitDirectoryStub?(path) ?? FileHandler.shared.currentPath
     }
 }

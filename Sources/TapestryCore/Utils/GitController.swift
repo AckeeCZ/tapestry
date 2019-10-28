@@ -13,6 +13,7 @@ import enum TuistCore.ErrorType
 
 enum GitError: FatalError, Equatable {
     case tagExists(Version)
+    case gitDirectoryNotFound(AbsolutePath)
     
     var type: ErrorType { .abort }
     
@@ -20,6 +21,8 @@ enum GitError: FatalError, Equatable {
         switch self {
         case let .tagExists(version):
             return "Version tag \(version) already exists."
+        case let .gitDirectoryNotFound(path):
+            return "No git directory found at \(path.pathString)"
         }
     }
     
@@ -27,6 +30,10 @@ enum GitError: FatalError, Equatable {
         switch (lhs, rhs) {
         case let (.tagExists(lhsVersion), .tagExists(rhsVersion)):
             return lhsVersion == rhsVersion
+        case let (.gitDirectoryNotFound(lhsPath), .gitDirectoryNotFound(rhsPath)):
+            return lhsPath == rhsPath
+        default:
+            return false
         }
     }
 }
@@ -77,6 +84,8 @@ public protocol GitControlling {
     ///     - path: Path of the git directory
     /// - Returns: All tags for directory at `path`
     func allTags(path: AbsolutePath?) throws -> [Version]
+    func isGitRepository(path: AbsolutePath) throws -> Bool
+    func gitDirectory(path: AbsolutePath?) throws -> AbsolutePath
 }
 
 /// Class for interacting with git
@@ -135,6 +144,33 @@ public final class GitController: GitControlling {
     public func allTags(path: AbsolutePath?) throws -> [Version] {
         return try FileHandler.shared.inDirectory(path ?? FileHandler.shared.currentPath) {
             try System.shared.capture("git", "tag", "--list").split(separator: "\n").compactMap { Version(string: String($0)) }
+        }
+    }
+    
+    public func isGitRepository(path: AbsolutePath) throws -> Bool {
+        try FileHandler.shared.inDirectory(path) {
+            do {
+                try System.shared.run("git", "remote")
+                return true
+            } catch {
+                return false
+            }
+        }
+    }
+    
+    public func gitDirectory(path: AbsolutePath?) throws -> AbsolutePath {
+        let runPath: AbsolutePath = path ?? FileHandler.shared.currentPath
+        return try FileHandler.shared.inDirectory(runPath) {
+            do {
+                let gitDirectoryPath = try System.shared.capture("git", "rev-parse", "--git-dir")
+                if gitDirectoryPath == ".git" {
+                    return runPath.appending(component: ".git")
+                } else {
+                    return AbsolutePath(gitDirectoryPath)
+                }
+            } catch {
+                throw GitError.gitDirectoryNotFound(path ?? FileHandler.shared.currentPath)
+            }
         }
     }
 }

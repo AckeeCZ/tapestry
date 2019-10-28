@@ -86,4 +86,40 @@ final class GitControllerTests: TapestryUnitTestCase {
         // Then
         XCTAssertNoThrow(try subject.push(path: nil))
     }
+    
+    func test_isGitRepository_true() throws {
+        // Given
+        system.succeedCommand("git", "remote")
+        
+        // Then
+        XCTAssertTrue(try subject.isGitRepository(path: fileHandler.currentPath))
+    }
+    
+    func test_isGitRepository_false() throws {
+        // Given
+        system.errorCommand("git", "remote")
+        
+        // Then
+        XCTAssertFalse(try subject.isGitRepository(path: fileHandler.currentPath))
+    }
+    
+    func test_gitDirectory_when_in_parent() throws {
+        // Given
+        let childPath = fileHandler.currentPath.appending(component: "child_test")
+        try fileHandler.createFolder(childPath)
+        let gitPath = fileHandler.currentPath.appending(component: ".git")
+        system.succeedCommand(["git", "rev-parse", "--git-dir"], output: gitPath.pathString)
+        
+        // Then
+        XCTAssertEqual(try subject.gitDirectory(path: childPath), gitPath)
+    }
+    
+    func test_gitDirectory_when_in_current() throws {
+        // Given
+        let gitPath = fileHandler.currentPath.appending(component: ".git")
+        system.succeedCommand(["git", "rev-parse", "--git-dir"], output: ".git")
+        
+        // Then
+        XCTAssertEqual(try subject.gitDirectory(path: fileHandler.currentPath), gitPath)
+    }
 }
