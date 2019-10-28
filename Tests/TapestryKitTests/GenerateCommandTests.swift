@@ -4,8 +4,8 @@ import SPMUtility
 @testable import TapestryCoreTesting
 @testable import TapestryKit
 
-final class UpCommandTests: TapestryUnitTestCase {
-    private var subject: UpCommand!
+final class GeneateCommandTests: TapestryUnitTestCase {
+    private var subject: GenerateCommand!
     private var parser: ArgumentParser!
     private var tapestriesGenerator: MockTapestriesGenerator!
     
@@ -13,7 +13,7 @@ final class UpCommandTests: TapestryUnitTestCase {
         super.setUp()
         parser = ArgumentParser.test()
         tapestriesGenerator = MockTapestriesGenerator()
-        subject = UpCommand(parser: parser,
+        subject = GenerateCommand(parser: parser,
                             tapestriesGenerator: tapestriesGenerator)
     }
     
@@ -24,7 +24,7 @@ final class UpCommandTests: TapestryUnitTestCase {
             generatedPath = $0
         }
         
-        let result = try parser.parse(["up"])
+        let result = try parser.parse(["generate"])
         
         // When
         try subject.run(with: result)

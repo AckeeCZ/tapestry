@@ -6,9 +6,9 @@ import SPMUtility
 import TapestryCore
 
 /// This command initializes Swift package with example in current empty directory
-final class UpCommand: NSObject, Command {
-    static var command: String = "up"
-    static var overview: String = "Sets up tapestry in given directory"
+final class GenerateCommand: NSObject, Command {
+    static var command: String = "generate"
+    static var overview: String = "Generates tapestry in given directory"
 
     let pathArgument: OptionArgument<String>
     private let tapestriesGenerator: TapestriesGenerating
@@ -20,7 +20,7 @@ final class UpCommand: NSObject, Command {
     
     init(parser: ArgumentParser,
          tapestriesGenerator: TapestriesGenerating) {
-        let subParser = parser.add(subparser: UpCommand.command, overview: UpCommand.overview)
+        let subParser = parser.add(subparser: GenerateCommand.command, overview: GenerateCommand.overview)
         
         pathArgument = subParser.add(option: "--path",
                                      shortName: "-p",

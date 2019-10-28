@@ -39,7 +39,7 @@ public final class CommandRegistry {
         register(command: InitCommand.self)
         register(command: ReleaseCommand.self)
         register(command: EditCommand.self)
-        register(command: UpCommand.self)
+        register(command: GenerateCommand.self)
         register(command: RunCommand.self)
         register(command: ActionCommand.self)
         register(command: ActionsCommand.self)
@@ -87,7 +87,7 @@ public final class CommandRegistry {
             let tapestriesPath = FileHandler.shared.currentPath.appending(component: "Tapestries")
             let processedArguments = processAllArguments()
             if !processArguments().contains(EditCommand.command),
-                !processArguments().contains(UpCommand.command),
+                !processArguments().contains(GenerateCommand.command),
                 !processedArguments.contains("--current"),
                 FileHandler.shared.exists(tapestriesPath) {
                 do {
