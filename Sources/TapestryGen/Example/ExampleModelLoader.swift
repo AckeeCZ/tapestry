@@ -21,7 +21,21 @@ public final class ExampleModelLoader: GeneratorModelLoading {
     /// Loads project for example
     public func loadProject(at path: AbsolutePath) throws -> Project {
         let sources = try TuistGenerator.Target.sources(projectPath: path, sources: [(glob: "Sources/**", compilerFlags: nil)])
-        return Project(path: path, name: name, settings: .default, filesGroup: .group(name: name), targets: [Target(name: name, platform: .iOS, product: .app, productName: nil, bundleId: bundleId, sources: sources, filesGroup: .group(name: name), dependencies: [.package(.local(path: RelativePath("../../\(packageName)"), productName: packageName))])], schemes: [])
+        return Project(path: path,
+                       name: name,
+                       settings: .default,
+                       filesGroup: .group(name: name),
+                       targets: [
+                        Target(name:
+                            name,
+                               platform: .iOS,
+                               product: .app,
+                               productName: nil,
+                               bundleId: bundleId,
+                               sources: sources,
+                               filesGroup: .group(name: name),
+                               dependencies: [.package(product: packageName)])],
+                       packages: [.local(path: RelativePath("../../\(packageName)"))], schemes: [])
     }
 
     /// We do not use workspace
