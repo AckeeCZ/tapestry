@@ -64,4 +64,22 @@ final class PackageControllerTests: TapestryUnitTestCase {
         // Then
         XCTAssertEqual(try subject.name(from: fileHandler.currentPath.appending(component: name)), name)
     }
+    
+    func test_update_succeeds() throws {
+        // Given
+        let path = AbsolutePath("/test")
+        system.succeedCommand("swift", "package", "--package-path", path.pathString, "update")
+        
+        // Then
+        XCTAssertNoThrow(try subject.update(path: path))
+    }
+    
+    func test_update_fails() throws {
+        // Given
+        let path = AbsolutePath("/test")
+        system.errorCommand("swift", "package", "--package-path", path.pathString, "update")
+        
+        // Then
+        XCTAssertThrowsError(try subject.update(path: path))
+    }
 }
