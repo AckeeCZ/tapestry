@@ -188,6 +188,10 @@ tapestry run name-of-tool its-arguments
 ```
 And it will run the tool you have previously defined - which means all the project's contributors can use the same version of your tooling!
 
+### Update developer dependencies
+
+To updat dependencies defined in `tapestries/Package.swift`, you can simply run `tapestry update`.
+
 ### Inspiration and thanks
 
 I'd like to thank [tuist][tuist] for inspiration and help in this project. This project was also inspired by [rocket](https://github.com/shibapm/Rocket)
