@@ -180,13 +180,17 @@ Let's you say what dependency managers you want to check compatibility for.
 
 ### Run developer dependencies
 
-If you want to use developer dependencies using [SPM][spm], but don't want the users to download them since they are not essential to the project, you can add them to `tapestries/Package.swift`.
+If you want to use developer dependencies using [SPM][spm], but don't want the users to download them since they are not essential to the project, you can add them to `Tapestries/Package.swift`.
 
 If you then want to run it, just type:
 ```bash
 tapestry run name-of-tool its-arguments
 ```
 And it will run the tool you have previously defined - which means all the project's contributors can use the same version of your tooling!
+
+### Update local tapestry developer dependencies
+
+To update local tapestry version and dependencies defined in `Tapestries/Package.swift`, you can simply run `tapestry update`.
 
 ### Inspiration and thanks
 

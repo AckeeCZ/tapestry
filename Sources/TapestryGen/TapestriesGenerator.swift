@@ -29,7 +29,7 @@ public final class TapestriesGenerator: TapestriesGenerating {
     
     public func generateTapestries(at path: AbsolutePath) throws {
         let name = try PackageController.shared.name(from: path)
-        let tapestriesPath = path.appending(component: "Tapestries")
+        let tapestriesPath = path.appending(component: Constants.tapestriesName)
         guard !FileHandler.shared.exists(tapestriesPath) else { throw TapestriesGeneratorError.tapestriesFolderExists(tapestriesPath) }
         let tapestryConfigPath = tapestriesPath.appending(RelativePath("Sources/TapestryConfig"))
         try FileHandler.shared.createFolder(tapestryConfigPath)
@@ -50,7 +50,7 @@ public final class TapestriesGenerator: TapestriesGenerating {
         import PackageDescription
 
         let package = Package(
-            name: "Tapestries",
+            name: Constants.tapestriesName,
             products: [
             .library(name: "TapestryConfig", targets: ["TapestryConfig"])
             ],

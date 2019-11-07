@@ -14,7 +14,7 @@ final class TapestriesGeneratorTests: TapestryUnitTestCase {
     
     func test_generate_fails_when_directory_not_empty() throws {
         // Given
-        let tapestriesPath = fileHandler.currentPath.appending(component: "Tapestries")
+        let tapestriesPath = fileHandler.currentPath.appending(component: Constants.tapestriesName)
         try fileHandler.createFolder(tapestriesPath)
         
         // Then
@@ -26,7 +26,7 @@ final class TapestriesGeneratorTests: TapestryUnitTestCase {
         try subject.generateTapestries(at: fileHandler.currentPath)
         
         // Then
-        XCTAssertTrue(fileHandler.isFolder(fileHandler.currentPath.appending(component: "Tapestries")))
+        XCTAssertTrue(fileHandler.isFolder(fileHandler.currentPath.appending(component: Constants.tapestriesName)))
     }
     
     func test_generate_packageManifest() throws {
@@ -40,7 +40,7 @@ final class TapestriesGeneratorTests: TapestryUnitTestCase {
         import PackageDescription
 
         let package = Package(
-            name: "Tapestries",
+            name: Constants.tapestriesName,
             products: [
             .library(name: "TapestryConfig", targets: ["TapestryConfig"])
             ],

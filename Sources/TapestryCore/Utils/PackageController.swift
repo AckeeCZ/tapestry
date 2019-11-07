@@ -63,6 +63,10 @@ public protocol PackageControlling {
     /// - Parameters:
     ///     - path: Name is derived from this path (last component)
     func name(from path: AbsolutePath) throws -> String
+    /// Updates packages
+    /// - Parameters:
+    ///     - path: Name is derived from this path (last component)
+    func update(path: AbsolutePath) throws
 }
 
 extension PackageControlling {
@@ -75,6 +79,10 @@ extension PackageControlling {
 public final class PackageController: PackageControlling {
     /// Shared instance
     public static var shared: PackageControlling = PackageController()
+    
+    public func update(path: AbsolutePath) throws {
+        try System.shared.runAndPrint(["swift", "package", "--package-path", path.pathString, "update"])
+    }
     
     public func initPackage(path: AbsolutePath, name: String) throws -> PackageType {
         let supportedPackageType: PackageType = try InputReader.shared.readEnumInput(question: "Choose package type:")
@@ -93,7 +101,7 @@ public final class PackageController: PackageControlling {
     }
     
     public func run(_ tool: String, arguments: [String], path: AbsolutePath) throws {
-        let tapestriesPath = path.appending(component: "Tapestries")
+        let tapestriesPath = path.appending(component: Constants.tapestriesName)
         
         try FileHandler.shared.inDirectory(tapestriesPath) {
             do {

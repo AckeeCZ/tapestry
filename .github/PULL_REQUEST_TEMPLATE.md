@@ -1,4 +1,4 @@
-Resolves https://github.com/tuist/tuist/issues/YYY
+Resolves https://github.com/AckeeCZ/tapestry/issues/YYY
 
 ### Short description 📝
 
