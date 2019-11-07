@@ -1,9 +1,31 @@
 import Basic
 import protocol TuistCore.Command
+import protocol TuistCore.FatalError
+import enum TuistCore.ErrorType
 import Foundation
 import TapestryGen
 import SPMUtility
 import TapestryCore
+
+enum UpdateError: FatalError, Equatable {
+    case tapestriesFolderMissing(AbsolutePath)
+    
+    var description: String {
+        switch self {
+        case let .tapestriesFolderMissing(path):
+            return "Could not find Tapestries folder at \(path.pathString). You should configure it with \"tapestry up\""
+        }
+    }
+    
+    var type: ErrorType { .abort }
+    
+    public static func == (lhs: UpdateError, rhs: UpdateError) -> Bool {
+        switch (lhs, rhs) {
+            case let (.tapestriesFolderMissing(lhsPath), .tapestriesFolderMissing(rhsPath)):
+                return lhsPath == rhsPath
+        }
+    }
+}
 
 /// This command initializes Swift package with example in current empty directory
 final class UpdateCommand: NSObject, Command {
@@ -23,7 +45,9 @@ final class UpdateCommand: NSObject, Command {
     }
     
     func run(with arguments: ArgumentParser.Result) throws {
-        let path = try self.path(arguments: arguments)
+        let path = try self.path(arguments: arguments).appending(component: Constants.tapestriesName)
+        
+        guard FileHandler.shared.exists(path) else { throw UpdateError.tapestriesFolderMissing(path) }
         
         try PackageController.shared.update(path: path)
     }

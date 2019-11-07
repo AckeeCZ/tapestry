@@ -85,7 +85,7 @@ public final class CommandRegistry {
     public func run() {
         do {
             // Run local version
-            let tapestriesPath = FileHandler.shared.currentPath.appending(component: "Tapestries")
+            let tapestriesPath = FileHandler.shared.currentPath.appending(component: Constants.tapestriesName)
             let processedArguments = processAllArguments()
             if !processArguments().contains(EditCommand.command),
                 !processArguments().contains(UpCommand.command),

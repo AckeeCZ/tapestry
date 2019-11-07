@@ -29,7 +29,7 @@ final class EditCommand: NSObject, Command {
             
         To edit `TapestryConfig` navigate to `TapestryConfig.swift`
         """)
-        try XcodeController.shared.open(at: path.appending(component: "Tapestries"))
+        try XcodeController.shared.open(at: path.appending(component: Constants.tapestriesName))
     }
     
     /// Obtain package path

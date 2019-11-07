@@ -101,7 +101,7 @@ public final class PackageController: PackageControlling {
     }
     
     public func run(_ tool: String, arguments: [String], path: AbsolutePath) throws {
-        let tapestriesPath = path.appending(component: "Tapestries")
+        let tapestriesPath = path.appending(component: Constants.tapestriesName)
         
         try FileHandler.shared.inDirectory(tapestriesPath) {
             do {

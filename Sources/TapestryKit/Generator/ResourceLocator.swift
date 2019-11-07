@@ -51,7 +51,7 @@ final class ResourceLocator: ResourceLocating {
     private func frameworkPath(_ name: String, path: AbsolutePath) throws -> AbsolutePath {
         let pathComponents = path.pathString.components(separatedBy: "/")
         guard
-            let tapestriesIndex = path.pathString.components(separatedBy: "/").firstIndex(where: { $0 == "Tapestries" })
+            let tapestriesIndex = path.pathString.components(separatedBy: "/").firstIndex(where: { $0 == Constants.tapestriesName })
         else {
             throw ResourceLocatingError.notFound(name)
         }

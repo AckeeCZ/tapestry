@@ -1,6 +1,7 @@
 import XCTest
 import Basic
 import SPMUtility
+import TapestryCore
 @testable import TapestryCoreTesting
 @testable import TapestryKit
 
@@ -27,6 +28,6 @@ final class EditCommandTests: TapestryUnitTestCase {
         try subject.run(with: result)
         
         // Then
-        XCTAssertEqual(fileHandler.currentPath.appending(component: "Tapestries"), openedPath)
+        XCTAssertEqual(fileHandler.currentPath.appending(component: Constants.tapestriesName), openedPath)
     }
 }
