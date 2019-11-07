@@ -27,7 +27,7 @@ enum UpdateError: FatalError, Equatable {
     }
 }
 
-/// This command initializes Swift package with example in current empty directory
+/// This command updates local tapestry and develoepr dependencies
 final class UpdateCommand: NSObject, Command {
     static var command: String = "update"
     static var overview: String = "Updates local tapestry and dependencies in \"Tapestries/Package.swift\""
