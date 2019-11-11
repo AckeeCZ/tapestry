@@ -1,7 +1,7 @@
 import Basic
 import TapestryCore
-import protocol TuistCore.FatalError
-import enum TuistCore.ErrorType
+import protocol TuistSupport.FatalError
+import enum TuistSupport.ErrorType
 
 enum DependenciesCompatibilityError: FatalError {
     case carthage

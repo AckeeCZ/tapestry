@@ -2,7 +2,7 @@ import TapestryGen
 import PackageDescription
 import TapestryCore
 import Basic
-import class TuistCore.Glob
+import class TuistSupport.Glob
 
 /// Entity responsible for package configuration
 public protocol ConfigModelLoading {

@@ -1,6 +1,6 @@
 import Basic
 import SPMUtility
-import class TuistCore.FileHandler
+import class TuistSupport.FileHandler
 
 /// Used by `.docsUpdate` `ReleaseAction`
 public protocol DocsUpdating {

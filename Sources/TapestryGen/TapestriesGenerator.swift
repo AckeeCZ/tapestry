@@ -1,7 +1,7 @@
 import Basic
-import class TuistCore.FileHandler
-import protocol TuistCore.FatalError
-import enum TuistCore.ErrorType
+import class TuistSupport.FileHandler
+import protocol TuistSupport.FatalError
+import enum TuistSupport.ErrorType
 import TapestryCore
 
 enum TapestriesGeneratorError: FatalError, Equatable {

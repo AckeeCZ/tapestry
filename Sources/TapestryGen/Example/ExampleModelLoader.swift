@@ -35,7 +35,7 @@ public final class ExampleModelLoader: GeneratorModelLoading {
                                sources: sources,
                                filesGroup: .group(name: name),
                                dependencies: [.package(product: packageName)])],
-                       packages: [.local(path: RelativePath("../../\(packageName)"))], schemes: [])
+                       packages: [.local(path: path.appending(RelativePath("../../\(packageName)")))], schemes: [])
     }
 
     /// We do not use workspace

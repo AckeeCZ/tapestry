@@ -1,7 +1,7 @@
 import Basic
 import Foundation
-import protocol TuistCore.FatalError
-import enum TuistCore.ErrorType
+import protocol TuistSupport.FatalError
+import enum TuistSupport.ErrorType
 
 enum FileHandlerError: FatalError {
     case invalidTextEncoding(AbsolutePath)

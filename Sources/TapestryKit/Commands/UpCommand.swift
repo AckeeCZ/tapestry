@@ -1,5 +1,5 @@
 import Basic
-import protocol TuistCore.Command
+import protocol TuistSupport.Command
 import Foundation
 import TapestryGen
 import SPMUtility

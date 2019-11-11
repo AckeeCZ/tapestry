@@ -1,6 +1,6 @@
 import Basic
 import Foundation
-import class TuistCore.Environment
+import class TuistSupport.Environment
 
 public protocol Printing: AnyObject {
     func print(_ text: String)

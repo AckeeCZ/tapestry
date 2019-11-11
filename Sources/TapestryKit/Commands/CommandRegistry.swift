@@ -7,14 +7,14 @@
 
 import SPMUtility
 import Foundation
-import protocol TuistCore.Command
-import protocol TuistCore.RawCommand
-import protocol TuistCore.HiddenCommand
-import protocol TuistCore.ErrorHandling
-import protocol TuistCore.FatalError
-import struct TuistCore.UnhandledError
-import class TuistCore.ErrorHandler
-import class TuistCore.Printer
+import protocol TuistSupport.Command
+import protocol TuistSupport.RawCommand
+import protocol TuistSupport.HiddenCommand
+import protocol TuistSupport.ErrorHandling
+import protocol TuistSupport.FatalError
+import struct TuistSupport.UnhandledError
+import class TuistSupport.ErrorHandler
+import class TuistSupport.Printer
 import Basic
 import TapestryGen
 import TapestryCore
@@ -89,6 +89,7 @@ public final class CommandRegistry {
             let processedArguments = processAllArguments()
             if !processArguments().contains(EditCommand.command),
                 !processArguments().contains(UpCommand.command),
+                !processArguments().contains(UpdateCommand.command),
                 !processedArguments.contains("--current"),
                 FileHandler.shared.exists(tapestriesPath) {
                 do {

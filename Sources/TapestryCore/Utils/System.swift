@@ -1,7 +1,7 @@
 import Basic
 import Foundation
-import protocol TuistCore.FatalError
-import enum TuistCore.ErrorType
+import protocol TuistSupport.FatalError
+import enum TuistSupport.ErrorType
 
 public protocol Systeming {
     /// System environment.

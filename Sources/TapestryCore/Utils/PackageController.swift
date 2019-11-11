@@ -1,8 +1,7 @@
 import Basic
-import class TuistCore.Constants
-import protocol TuistCore.FatalError
-import enum TuistCore.ErrorType
-import class TuistCore.Constants
+import protocol TuistSupport.FatalError
+import enum TuistSupport.ErrorType
+import struct TuistSupport.Constants
 import Foundation
 import SPMUtility
 
@@ -125,7 +124,7 @@ public final class PackageController: PackageControlling {
         
         try FileHandler.shared.inDirectory(path) {
             var environment = ProcessInfo.processInfo.environment
-            environment[TuistCore.Constants.EnvironmentVariables.colouredOutput] = "true"
+            environment[TuistSupport.Constants.EnvironmentVariables.colouredOutput] = "true"
             try System.shared.runAndPrint([toolPath.pathString] + arguments,
                                    verbose: false,
                                    environment: environment)

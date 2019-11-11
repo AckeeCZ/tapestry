@@ -1,7 +1,7 @@
 import SPMUtility
 import Basic
-import class TuistCore.Printer
-import protocol TuistCore.Command
+import class TuistSupport.Printer
+import protocol TuistSupport.Command
 import Foundation
 
 /// List all available actions
