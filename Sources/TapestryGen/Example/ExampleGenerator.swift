@@ -44,6 +44,7 @@ public final class ExampleGenerator: ExampleGenerating {
         let sourcesPath = path.appending(RelativePath("Sources"))
         try FileHandler.shared.createFolder(sourcesPath)
         try generateExampleSourceFile(path: sourcesPath, name: name)
+        try generateAppDelegate(path: sourcesPath)
     }
 
     /// Create dummy source file
@@ -52,7 +53,36 @@ public final class ExampleGenerator: ExampleGenerating {
             struct \(name) {
                 var text = "Hello, World!"
             }
+            
             """
             try content.write(to: path.appending(component: "\(name).swift").url, atomically: true, encoding: .utf8)
+    }
+    
+    // TODO: Add test
+    private func generateAppDelegate(path: AbsolutePath) throws {
+        let content = """
+        import UIKit
+
+        @UIApplicationMain
+        class AppDelegate: UIResponder, UIApplicationDelegate {
+
+            var window: UIWindow?
+
+            func application(
+                _ application: UIApplication,
+                didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
+            ) -> Bool {
+                window = UIWindow(frame: UIScreen.main.bounds)
+                let viewController = UIViewController()
+                viewController.view.backgroundColor = .white
+                window?.rootViewController = viewController
+                window?.makeKeyAndVisible()
+                return true
+            }
+
+        }
+
+        """
+        try content.write(to: path.appending(component: "AppDelegate.swift").url, atomically: true, encoding: .utf8)
     }
 }
