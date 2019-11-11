@@ -1,6 +1,8 @@
 
 ## Next
 
+## 0.0.4
+
 ### Added
 
 - Update command to update developer dependencies https://github.com/AckeeCZ/tapestry/pull/9 by @fortmarek
