@@ -11,6 +11,17 @@ Or define your release steps in a type-safe way?
 
 Well, look no further, `tapestry` shall help you with exactly that!
 
+## Projects Using Tapestry
+
+| Project  | Repository                                                                             |
+| -------- | -------------------------------------------------------------------------------------- |
+| XcodeProj| [tuist/XcodeProj](https://github.com/tuist/xcodeproj)                               |
+| ACKategories | [AckeeCZ/ACKategories](https://github.com/AckeeCZ/ACKategories) |
+
+If you are also leveraging Tapestry in your project, feel free to open a PR to include it in the list above.
+
+These repositories can also serve as a great example configuration for your own projects.
+
 ## Installation
 
 ### Using [Homebrew](https://brew.sh)
