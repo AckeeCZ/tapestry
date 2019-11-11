@@ -40,7 +40,7 @@ final class TapestriesGeneratorTests: TapestryUnitTestCase {
         import PackageDescription
 
         let package = Package(
-            name: \(Constants.tapestriesName),
+            name: "\(Constants.tapestriesName)",
             products: [
             .library(name: "TapestryConfig", targets: ["TapestryConfig"])
             ],
