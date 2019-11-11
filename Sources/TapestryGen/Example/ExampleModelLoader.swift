@@ -20,7 +20,7 @@ public final class ExampleModelLoader: GeneratorModelLoading {
 
     /// Loads project for example
     public func loadProject(at path: AbsolutePath) throws -> Project {
-        let sources = try TuistGenerator.Target.sources(projectPath: path, sources: [(glob: "Sources/**", compilerFlags: nil)])
+        let sources = try TuistGenerator.Target.sources(projectPath: path, sources: [(glob: path.pathString + "/Sources/**", compilerFlags: nil)])
         return Project(path: path,
                        name: name,
                        settings: .default,
