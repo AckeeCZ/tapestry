@@ -4,17 +4,16 @@ import TuistGenerator
 
 /// Loads project for example
 public final class ConfigEditorModelLoader: GeneratorModelLoading {
-
+    private let rootPath: AbsolutePath
+    
     /// - Parameters:
-    ///     - packageName: Name for package to embed in example
-    ///     - name: Name of example
-    ///     - bundleId: BundleId for example's `.xcodeproj`
-    public init() {
+    public init(rootPath: AbsolutePath) {
+        self.rootPath = rootPath
     }
 
     /// Loads project for example
     public func loadProject(at path: AbsolutePath) throws -> Project {
-        let sources = try TuistGenerator.Target.sources(projectPath: path, sources: [(glob: path.pathString + "/TapestryConfig.swift", compilerFlags: nil)])
+        let sources = try TuistGenerator.Target.sources(projectPath: path, sources: [(glob: rootPath.pathString + "/TapestryConfig.swift", compilerFlags: nil)])
         return Project(path: path,
                        name: "Tapestry",
                        settings: .default,

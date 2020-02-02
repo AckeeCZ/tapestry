@@ -6,19 +6,22 @@ import TapestryCore
 
 public protocol ConfigEditorGenerating {
     /// Generates configEditor project at given path
-    func generateProject(path: AbsolutePath) throws -> AbsolutePath
+    func generateProject(path: AbsolutePath, rootPath: AbsolutePath) throws -> AbsolutePath
 }
 
 public final class ConfigEditorGenerator: ConfigEditorGenerating {
-    private let generator: Generating
+    private let generatorInit: GeneratorInit
+    
+    public typealias GeneratorInit = ((_ rootPath: AbsolutePath) -> Generating)
 
     /// - Parameters:
-    public init(generator: Generating = Generator(modelLoader: ConfigEditorModelLoader())) {
-        self.generator = generator
+    public init(generatorInit: @escaping GeneratorInit = { rootPath in Generator(modelLoader: ConfigEditorModelLoader(rootPath: rootPath)) }) {
+        self.generatorInit = generatorInit
     }
 
     // MARK: - Public methods
-    public func generateProject(path: AbsolutePath) throws -> AbsolutePath {
-        try generator.generateProject(at: path)
+    public func generateProject(path: AbsolutePath, rootPath: AbsolutePath) throws -> AbsolutePath {
+        let generator = generatorInit(rootPath)
+        return try generator.generateProject(at: path)
     }
 }

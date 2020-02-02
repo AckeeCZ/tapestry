@@ -68,6 +68,6 @@ final class ProjectEditor: ProjectEditing {
 //            throw ProjectEditorError.noEditableFiles(at)
 //        }
         
-        return try configEditorGenerator.generateProject(path: xcodeprojPath)
+        return try configEditorGenerator.generateProject(path: xcodeprojPath, rootPath: at)
     }
 }
