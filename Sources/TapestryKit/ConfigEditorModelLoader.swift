@@ -16,7 +16,7 @@ public final class ConfigEditorModelLoader: GeneratorModelLoading {
     public func loadProject(at path: AbsolutePath) throws -> Project {
         let sources = try TuistGenerator.Target.sources(projectPath: path, sources: [(glob: path.pathString + "/TapestryConfig.swift", compilerFlags: nil)])
         return Project(path: path,
-                       name: "TapestryConfig",
+                       name: "Tapestry",
                        settings: .default,
                        filesGroup: .group(name: "TapestryConfig"),
                        targets: [

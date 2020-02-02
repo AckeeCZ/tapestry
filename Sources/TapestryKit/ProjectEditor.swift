@@ -52,7 +52,7 @@ final class ProjectEditor: ProjectEditing {
     }
 
     func edit(at: AbsolutePath, in dstDirectory: AbsolutePath) throws -> AbsolutePath {
-        let xcodeprojPath = dstDirectory.appending(component: "Manifests.xcodeproj")
+        let xcodeprojPath = dstDirectory.appending(component: "Tapestry.xcodeproj")
 
 //        let projectDesciptionPath = try resourceLocator.projectDescription()
         let projectDescriptionPath = at.appending(component: "TapestryConfig.swift")
@@ -68,8 +68,6 @@ final class ProjectEditor: ProjectEditing {
 //            throw ProjectEditorError.noEditableFiles(at)
 //        }
         
-        try configEditorGenerator.generateProject(path: at)
-        
-        return at
+        return try configEditorGenerator.generateProject(path: xcodeprojPath)
     }
 }
