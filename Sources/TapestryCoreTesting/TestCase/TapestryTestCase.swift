@@ -2,7 +2,7 @@ import Basic
 import Foundation
 import XCTest
 
-@testable import TapestryCore
+import TapestryCore
 
 public class TapestryTestCase: XCTestCase {
     fileprivate var temporaryDirectory: TemporaryDirectory!

@@ -83,6 +83,8 @@ public protocol GitControlling {
 public final class GitController: GitControlling {
     public static var shared: GitControlling = GitController()
     
+    public init() {}
+    
     public func initGit(path: AbsolutePath) throws {
         try System.shared.run("git", "init", path.pathString)
     }

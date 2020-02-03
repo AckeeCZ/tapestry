@@ -20,6 +20,8 @@ public class Printer: Printing {
 
     // MARK: - Public
 
+    public init() {}
+    
     public func print(_ text: String) {
         printStandardOutputLine(text)
     }

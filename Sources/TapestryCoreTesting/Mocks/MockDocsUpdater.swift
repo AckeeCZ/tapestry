@@ -1,6 +1,6 @@
 import Basic
 import SPMUtility
-@testable import TapestryCore
+import TapestryCore
 
 final class MockDocsUpdater: DocsUpdating {
     var updateDocsStub: ((AbsolutePath, Version) throws -> ())?

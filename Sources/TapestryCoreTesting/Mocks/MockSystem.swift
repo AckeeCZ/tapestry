@@ -1,7 +1,7 @@
 import Basic
 import Foundation
 import XCTest
-@testable import TapestryCore
+import TapestryCore
 
 public final class MockSystem: Systeming {
     public var env: [String: String] = ProcessInfo.processInfo.environment

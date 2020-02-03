@@ -79,6 +79,8 @@ public final class PackageController: PackageControlling {
     /// Shared instance
     public static var shared: PackageControlling = PackageController()
     
+    public init() {}
+    
     public func update(path: AbsolutePath) throws {
         try System.shared.runAndPrint(["swift", "package", "--package-path", path.pathString, "update"])
     }
