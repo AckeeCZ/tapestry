@@ -1,7 +1,7 @@
 import Basic
 import Foundation
 import TuistGenerator
-//import TuistLoader
+import TapestryGen
 import TuistSupport
 
 enum ProjectEditorError: FatalError, Equatable {
@@ -34,6 +34,8 @@ protocol ProjectEditing: AnyObject {
 final class ProjectEditor: ProjectEditing {
     /// Project generator.
     private let configEditorGenerator: ConfigEditorGenerating
+    
+    private let resourceLocator: ResourceLocating
 
 //    /// Project editor mapper.
 //    let projectEditorMapper: ProjectEditorMapping
@@ -47,14 +49,16 @@ final class ProjectEditor: ProjectEditing {
 //    /// Utility to locate the helpers directory.
 //    let helpersDirectoryLocator: HelpersDirectoryLocating
 
-    init(configEditorGenerator: ConfigEditorGenerating = ConfigEditorGenerator()) {
+    init(configEditorGenerator: ConfigEditorGenerating = ConfigEditorGenerator(),
+         resourceLocator: ResourceLocating = ResourceLocator()) {
         self.configEditorGenerator = configEditorGenerator
+        self.resourceLocator = resourceLocator
     }
 
     func edit(at: AbsolutePath, in dstDirectory: AbsolutePath) throws -> AbsolutePath {
         let xcodeprojPath = dstDirectory.appending(component: "Tapestry.xcodeproj")
 
-//        let projectDesciptionPath = try resourceLocator.projectDescription()
+        let projectDesciptionPath = try resourceLocator.projectDescription()
         let projectDescriptionPath = at.appending(component: "TapestryConfig.swift")
 //        let manifests = manifestFilesLocator.locate(at: at)
 //        var helpers: [AbsolutePath] = []
@@ -68,6 +72,6 @@ final class ProjectEditor: ProjectEditing {
 //            throw ProjectEditorError.noEditableFiles(at)
 //        }
         
-        return try configEditorGenerator.generateProject(path: xcodeprojPath, rootPath: at)
+        return try configEditorGenerator.generateProject(path: xcodeprojPath, rootPath: at, projectDescriptionPath: projectDesciptionPath)
     }
 }
