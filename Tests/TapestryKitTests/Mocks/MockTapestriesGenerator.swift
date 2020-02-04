@@ -1,10 +1,10 @@
 import TapestryGen
 import Basic
 
-final class MockTapestriesGenerator: TapestriesGenerating {
-    var generateTapestriesStub: ((AbsolutePath) throws -> ())?
+final class MockTapestriesGenerator: TapestryConfigGenerating {
+    var generateTapestryConfigStub: ((AbsolutePath) throws -> ())?
     
-    func generateTapestries(at path: AbsolutePath) throws {
-        try generateTapestriesStub?(path)
+    func generateTapestryConfig(at path: AbsolutePath) throws {
+        try generateTapestryConfigStub?(path)
     }
 }

@@ -20,7 +20,7 @@ final class UpCommandTests: TapestryUnitTestCase {
     func test_opens_project_succeeds() throws {
         // Given
         var generatedPath: AbsolutePath?
-        tapestriesGenerator.generateTapestriesStub = {
+        tapestriesGenerator.generateTapestryConfigStub = {
             generatedPath = $0
         }
         
