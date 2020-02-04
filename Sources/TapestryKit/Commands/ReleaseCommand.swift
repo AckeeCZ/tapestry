@@ -84,7 +84,7 @@ final class ReleaseCommand: NSObject, Command {
         
         guard try !GitController.shared.tagExists(version, path: path) else { throw ReleaseError.tagExists(version) }
         
-        let config = try configModelLoader.loadTapestryConfig(at: path.appending(RelativePath("Tapestries/Sources/TapestryConfig/TapestryConfig.swift")))
+        let config = try configModelLoader.loadTapestryConfig(at: path.appending(RelativePath("TapestryConfig.swift")))
         
         let preActions: [ReleaseAction.Action] = config.release.actions
             .filter { $0.isPre }
