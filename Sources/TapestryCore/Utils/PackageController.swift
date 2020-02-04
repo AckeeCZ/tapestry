@@ -7,7 +7,6 @@ import SPMUtility
 
 public enum PackageControllerError: FatalError, Equatable {
     case ungettableProjectName(AbsolutePath)
-    case buildFailed(String)
     
     public var type: ErrorType { .abort }
     
@@ -15,8 +14,6 @@ public enum PackageControllerError: FatalError, Equatable {
         switch self {
         case let .ungettableProjectName(path):
             return "Couldn't infer the project name from path \(path.pathString)"
-        case let .buildFailed(tool):
-            return "Building \(tool) failed - try running `swift run --package-path Tapestries \(tool)` to debug"
         }
     }
     
@@ -24,10 +21,6 @@ public enum PackageControllerError: FatalError, Equatable {
         switch (lhs, rhs) {
         case let (.ungettableProjectName(lhsPath), .ungettableProjectName(rhsPath)):
             return lhsPath == rhsPath
-        case let (.buildFailed(lhsTool), .buildFailed(rhsTool)):
-            return lhsTool == rhsTool
-        default:
-            return false
         }
     }
 }

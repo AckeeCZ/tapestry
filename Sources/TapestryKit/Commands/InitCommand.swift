@@ -42,12 +42,12 @@ final class InitCommand: NSObject, Command {
     required convenience init(parser: ArgumentParser) {
         self.init(parser: parser,
                   exampleGenerator: ExampleGenerator(),
-                  tapestriesGenerator: TapestryConfigGenerator())
+                  tapestryConfigGenerator: TapestryConfigGenerator())
     }
 
     init(parser: ArgumentParser,
          exampleGenerator: ExampleGenerating,
-         tapestriesGenerator: TapestryConfigGenerating) {
+         tapestryConfigGenerator: TapestryConfigGenerating) {
         let subParser = parser.add(subparser: InitCommand.command, overview: InitCommand.overview)
 
         pathArgument = subParser.add(option: "--path",
@@ -57,7 +57,7 @@ final class InitCommand: NSObject, Command {
                                      completion: .filename)
 
         self.exampleGenerator = exampleGenerator
-        self.tapestryConfigGenerator = tapestriesGenerator
+        self.tapestryConfigGenerator = tapestryConfigGenerator
     }
 
     func run(with arguments: ArgumentParser.Result) throws {

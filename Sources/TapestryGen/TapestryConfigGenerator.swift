@@ -4,7 +4,7 @@ import protocol TuistSupport.FatalError
 import enum TuistSupport.ErrorType
 import TapestryCore
 
-/// Interface for generating tapestries folder
+/// Interface for generating tapestry config
 public protocol TapestryConfigGenerating {
     /// Creates initial Tapestry configuration
     func generateTapestryConfig(at path: AbsolutePath) throws

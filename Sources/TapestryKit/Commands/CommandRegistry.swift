@@ -40,7 +40,6 @@ public final class CommandRegistry {
         register(command: UpCommand.self)
         register(command: ActionCommand.self)
         register(command: ActionsCommand.self)
-        register(command: UpdateCommand.self)
     }
 
     init(errorHandler: ErrorHandling,
