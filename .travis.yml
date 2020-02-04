@@ -9,7 +9,8 @@ before_deploy:
 - swift build --configuration release --product tapestry
 - export BINARY_PATH=`swift build --show-bin-path --configuration release --product tapestry`/$FRAMEWORK_NAME
 - mv "$BINARY_PATH" .
-- zip -r $FRAMEWORK_NAME-$TRAVIS_TAG.zip LICENSE $FRAMEWORK_NAME
+- export FRAMEWORK_PATH=`swift build --show-bin-path --configuration release --product PackageDescription`
+- zip -r $FRAMEWORK_NAME-$TRAVIS_TAG.zip LICENSE $FRAMEWORK_NAME $FRAMEWORK_PATH/PackageDescription.swiftdoc $FRAMEWORK_PATH/PackageDescription.swiftmodule $FRAMEWORK_PATH/libPackageDescription.dylib
 deploy:
   provider: releases
   api_key:
