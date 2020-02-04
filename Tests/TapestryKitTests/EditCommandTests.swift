@@ -14,20 +14,4 @@ final class EditCommandTests: TapestryUnitTestCase {
         parser = ArgumentParser.test()
         subject = EditCommand(parser: parser)
     }
-    
-    func test_opens_project_succeeds() throws {
-        // Given
-        var openedPath: AbsolutePath?
-        xcodeController.openStub = {
-            openedPath = $0
-        }
-        
-        let result = try parser.parse(["edit"])
-        
-        // When
-        try subject.run(with: result)
-        
-        // Then
-        XCTAssertEqual(fileHandler.currentPath.appending(component: Constants.tapestriesName), openedPath)
-    }
 }

@@ -7,7 +7,6 @@ import TapestryCore
 
 protocol ResourceLocating: AnyObject {
     func projectDescription() throws -> AbsolutePath
-    func cliPath() throws -> AbsolutePath
 }
 
 enum ResourceLocatingError: FatalError {
@@ -42,10 +41,6 @@ final class ResourceLocator: ResourceLocating {
         return try frameworkPath("PackageDescription")
     }
 
-    func cliPath() throws -> AbsolutePath {
-        return try toolPath("tuist")
-    }
-
     // MARK: - Fileprivate
 
     private func frameworkPath(_ name: String) throws -> AbsolutePath {
@@ -63,15 +58,5 @@ final class ResourceLocator: ResourceLocating {
             throw ResourceLocatingError.notFound(name)
         }
         return frameworkPath
-    }
-
-    private func toolPath(_ name: String) throws -> AbsolutePath {
-        let bundlePath = AbsolutePath(Bundle(for: GraphManifestLoader.self).bundleURL.path)
-        let paths = [bundlePath, bundlePath.parentDirectory]
-        let candidates = paths.map { $0.appending(component: name) }
-        guard let path = candidates.first(where: { FileHandler.shared.exists($0) }) else {
-            throw ResourceLocatingError.notFound(name)
-        }
-        return path
     }
 }

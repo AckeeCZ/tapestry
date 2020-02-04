@@ -48,13 +48,12 @@ final class ProjectEditor: ProjectEditing {
         let xcodeprojPath = dstDirectory.appending(component: "Tapestry.xcodeproj")
 
         let projectDesciptionPath = try resourceLocator.projectDescription()
-        let projectDescriptionPath = at.appending(component: "TapestryConfig.swift")
+        let tapestryConfigPath = at.appending(component: "TapestryConfig.swift")
 
-        // TODO: Error!
-        /// We error if the user tries to edit a project in a directory where there are no editable files.
-//        if manifests.isEmpty, helpers.isEmpty {
-//            throw ProjectEditorError.noEditableFiles(at)
-//        }
+        /// We error if the user tries to edit a project in a directory where there is not `TapestryConfig`
+        if !FileHandler.shared.exists(tapestryConfigPath) {
+            throw ProjectEditorError.noEditableFiles(at)
+        }
         
         return try configEditorGenerator.generateProject(path: xcodeprojPath, rootPath: at, projectDescriptionPath: projectDesciptionPath)
     }
