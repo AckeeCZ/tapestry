@@ -35,19 +35,8 @@ final class ProjectEditor: ProjectEditing {
     /// Project generator.
     private let configEditorGenerator: ConfigEditorGenerating
     
+    /// Utility to locate Tapestry's resources
     private let resourceLocator: ResourceLocating
-
-//    /// Project editor mapper.
-//    let projectEditorMapper: ProjectEditorMapping
-
-//    /// Utility to locate Tuist's resources.
-//    let resourceLocator: ResourceLocating
-
-//    /// Utility to locate manifest files.
-//    let manifestFilesLocator: ManifestFilesLocating
-
-//    /// Utility to locate the helpers directory.
-//    let helpersDirectoryLocator: HelpersDirectoryLocating
 
     init(configEditorGenerator: ConfigEditorGenerating = ConfigEditorGenerator(),
          resourceLocator: ResourceLocating = ResourceLocator()) {
@@ -60,11 +49,6 @@ final class ProjectEditor: ProjectEditing {
 
         let projectDesciptionPath = try resourceLocator.projectDescription()
         let projectDescriptionPath = at.appending(component: "TapestryConfig.swift")
-//        let manifests = manifestFilesLocator.locate(at: at)
-//        var helpers: [AbsolutePath] = []
-//        if let helpersDirectory = helpersDirectoryLocator.locate(at: at) {
-//            helpers = FileHandler.shared.glob(helpersDirectory, glob: "**/*.swift")
-//        }
 
         // TODO: Error!
         /// We error if the user tries to edit a project in a directory where there are no editable files.

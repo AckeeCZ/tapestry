@@ -28,14 +28,12 @@ public final class CommandRegistry {
     var hiddenCommands: [String: HiddenCommand] = [:]
     private let errorHandler: ErrorHandling
     private let processArguments: () -> [String]
-    private let processAllArguments: () -> [String]
 
     // MARK: - Init
 
     public convenience init() {
         self.init(errorHandler: ErrorHandler(),
-                  processArguments: CommandRegistry.processArguments,
-                  processAllArguments: CommandRegistry.processAllArguments)
+                  processArguments: CommandRegistry.processArguments)
         register(command: InitCommand.self)
         register(command: ReleaseCommand.self)
         register(command: EditCommand.self)
@@ -47,25 +45,19 @@ public final class CommandRegistry {
     }
 
     init(errorHandler: ErrorHandling,
-         processArguments: @escaping () -> [String],
-         processAllArguments: @escaping () -> [String]) {
+         processArguments: @escaping () -> [String]) {
         self.errorHandler = errorHandler
         parser = ArgumentParser(commandName: "tapestry",
                                 usage: "<command> <options>",
                                 overview: "Generate and maintain your package projects.")
         self.processArguments = processArguments
-        self.processAllArguments = processAllArguments
     }
 
     public static func processArguments() -> [String] {
-        return Array(ProcessInfo.processInfo.arguments).filter { $0 != "--current" }
+        return Array(ProcessInfo.processInfo.arguments)
     }
 
     // MARK: - Internal
-    
-    static func processAllArguments() -> [String] {
-        return Array(ProcessInfo.processInfo.arguments)
-    }
 
     func register(command: Command.Type) {
         commands.append(command.init(parser: parser))
@@ -84,29 +76,8 @@ public final class CommandRegistry {
 
     public func run() {
         do {
-            // Run local version
-            let tapestriesPath = FileHandler.shared.currentPath.appending(component: Constants.tapestriesName)
-            let processedArguments = processAllArguments()
-            if !processArguments().contains(EditCommand.command),
-                !processArguments().contains(UpCommand.command),
-                !processArguments().contains(UpdateCommand.command),
-                !processedArguments.contains("--current"),
-                FileHandler.shared.exists(tapestriesPath) {
-                do {
-                    try PackageController.shared.run("tapestry", arguments: ["--current"] + processedArguments.dropFirst(), path: FileHandler.shared.currentPath)
-                } catch let error as PackageControllerError {
-                    switch error {
-                    case .buildFailed:
-                        throw PackageControllerError.buildFailed("tapestry")
-                    default:
-                        return
-                    }
-                } catch {
-                    
-                }
-            }
             // Hidden command
-            else if let hiddenCommand = hiddenCommand() {
+            if let hiddenCommand = hiddenCommand() {
                 try hiddenCommand.run(arguments: argumentsDroppingCommand())
 
                 // Raw command
