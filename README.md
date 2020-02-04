@@ -86,14 +86,14 @@ To get you started with tapestry (if you did not generate your framework with it
 tapestry up
 ```
 
-This will create a `tapestries` folder in your repository - it will also from now use `tapestry` version that is defined in `tapestries/Package.swift`. You can add option `--current` to force running your installed version.
+This will create a `TapestryConfig.swift` that you can then customize per your needs
 
 To configure your release steps, run:
 ```bash
 tapestry edit
 ```
 
-This opens Xcode, so you just have to navigate to `TapestryConfig.swift`.
+This opens Xcode with easily editable `TapestryConfig.swift`.
 
 The generated file will look like this:
 ```swift
@@ -146,7 +146,6 @@ This is a set of predefined actions.
 | Case        | Description           | 
 | ------------- |:-------------:|
 | `docsUpdate`      | Updates version in your `.podspec, README.md` and adds it in `CHANGELOG.md`
-| `run(tool: String, arguments: [String])`     | You can run defined dev dependencies in `tapestries/Package.swift`
 |  `dependenciesCompatibility([DependenciesManager])` |  Checks compatibility with given `DependenciesManager`s
 
 Note that for `docsUpdate` your changelog must be in this format:
@@ -188,20 +187,6 @@ Let's you say what dependency managers you want to check compatibility for.
 | `cocoapods`      | Runs compatibility check for [Cocoapods][cocoapods]
 | `carthage`     | Runs compatibility check for [Carthage][carthage]
 | `spm(Platform)` |  Runs compatibility check for [SPM][spm] - define platform if you are using platform-specific libraries (eg `UIKit`)
-
-### Run developer dependencies
-
-If you want to use developer dependencies using [SPM][spm], but don't want the users to download them since they are not essential to the project, you can add them to `Tapestries/Package.swift`.
-
-If you then want to run it, just type:
-```bash
-tapestry run name-of-tool its-arguments
-```
-And it will run the tool you have previously defined - which means all the project's contributors can use the same version of your tooling!
-
-### Update local tapestry developer dependencies
-
-To update local tapestry version and dependencies defined in `Tapestries/Package.swift`, you can simply run `tapestry update`.
 
 ### Inspiration and thanks
 
