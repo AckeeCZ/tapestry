@@ -63,8 +63,6 @@ public struct ReleaseAction: Equatable, Codable {
                 return true
             case let (.dependenciesCompatibility(lhsManagers), .dependenciesCompatibility(rhsManagers)):
                 return lhsManagers == rhsManagers
-            case let (.run(tool: lhsTool, arguments: lhsArguments), .run(tool: rhsTool, arguments: rhsArguments)):
-                return lhsTool == rhsTool && lhsArguments == rhsArguments
             default:
                 return false
             }

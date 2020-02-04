@@ -69,8 +69,6 @@ extension TapestryGen.ReleaseAction {
                 switch predefinedAction {
                 case .docsUpdate:
                     action = .predefined(.docsUpdate)
-                case let .run(tool: tool, arguments: arguments):
-                    action = .predefined(.run(tool: tool, arguments: arguments))
                 case let .dependenciesCompatibility(dependenciesManagers):
                     action = .predefined(.dependenciesCompatibility(dependenciesManagers.compactMap {
                         switch $0 {

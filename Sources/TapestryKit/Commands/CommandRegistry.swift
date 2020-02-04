@@ -38,7 +38,6 @@ public final class CommandRegistry {
         register(command: ReleaseCommand.self)
         register(command: EditCommand.self)
         register(command: UpCommand.self)
-        register(command: RunCommand.self)
         register(command: ActionCommand.self)
         register(command: ActionsCommand.self)
         register(command: UpdateCommand.self)
