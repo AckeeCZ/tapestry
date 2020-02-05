@@ -17,7 +17,7 @@ final class InitCommandTests: TapestryUnitTestCase {
         parser = ArgumentParser.test()
         subject = InitCommand(parser: parser,
                               exampleGenerator: exampleGenerator,
-                              tapestriesGenerator: MockTapestriesGenerator())
+                              tapestryConfigGenerator: MocktapestryConfigGenerator())
     }
     
     func test_run_when_the_directory_is_not_empty() throws {

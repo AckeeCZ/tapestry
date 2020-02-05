@@ -37,6 +37,8 @@ public final class InputReader: InputReading {
     /// Shared instance
     public static var shared: InputReading = InputReader()
     
+    public init() {}
+    
     public func readString(options: [String], question: String) throws -> String {
         let acho = Acho<String>()
         guard let answer = acho.ask(question: question, options: options) else { throw InputError.failedReading }

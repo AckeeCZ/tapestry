@@ -133,7 +133,7 @@ class GraphManifestLoader: GraphManifestLoading {
     }
 
     private func loadManifestData(at path: AbsolutePath) throws -> Data {
-        let projectDescriptionPath = try resourceLocator.projectDescription(path: path)
+        let projectDescriptionPath = try resourceLocator.projectDescription()
         var arguments: [String] = [
             "/usr/bin/xcrun",
             "swiftc",

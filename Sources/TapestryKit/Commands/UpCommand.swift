@@ -11,15 +11,15 @@ final class UpCommand: NSObject, Command {
     static var overview: String = "Sets up tapestry in given directory"
 
     let pathArgument: OptionArgument<String>
-    private let tapestriesGenerator: TapestriesGenerating
+    private let tapestryConfigGenerator: TapestryConfigGenerating
     
     required convenience init(parser: ArgumentParser) {
         self.init(parser: parser,
-                  tapestriesGenerator: TapestriesGenerator())
+                  tapestryConfigGenerator: TapestryConfigGenerator())
     }
     
     init(parser: ArgumentParser,
-         tapestriesGenerator: TapestriesGenerating) {
+         tapestryConfigGenerator: TapestryConfigGenerating) {
         let subParser = parser.add(subparser: UpCommand.command, overview: UpCommand.overview)
         
         pathArgument = subParser.add(option: "--path",
@@ -28,15 +28,15 @@ final class UpCommand: NSObject, Command {
                                      usage: "The path to your Swift framework",
                                      completion: .filename)
         
-        self.tapestriesGenerator = tapestriesGenerator
+        self.tapestryConfigGenerator = tapestryConfigGenerator
     }
     
     func run(with arguments: ArgumentParser.Result) throws {
         let path = try self.path(arguments: arguments)
         
-        Printer.shared.print("Generating tapestry 🎨")
+        Printer.shared.print("Generating tapestry config 🎨")
         
-        try tapestriesGenerator.generateTapestries(at: path)
+        try tapestryConfigGenerator.generateTapestryConfig(at: path)
         
         Printer.shared.print(success: "Generation succeeded! ✅")
     }

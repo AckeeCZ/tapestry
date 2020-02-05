@@ -6,8 +6,7 @@ import Foundation
 import TapestryCore
 
 protocol ResourceLocating: AnyObject {
-    func projectDescription(path: AbsolutePath) throws -> AbsolutePath
-    func cliPath() throws -> AbsolutePath
+    func projectDescription() throws -> AbsolutePath
 }
 
 enum ResourceLocatingError: FatalError {
@@ -38,41 +37,25 @@ enum ResourceLocatingError: FatalError {
 final class ResourceLocator: ResourceLocating {
     // MARK: - ResourceLocating
 
-    func projectDescription(path: AbsolutePath) throws -> AbsolutePath {
-        return try frameworkPath("PackageDescription", path: path)
-    }
-
-    func cliPath() throws -> AbsolutePath {
-        return try toolPath("tuist")
+    func projectDescription() throws -> AbsolutePath {
+        return try frameworkPath("PackageDescription")
     }
 
     // MARK: - Fileprivate
 
-    private func frameworkPath(_ name: String, path: AbsolutePath) throws -> AbsolutePath {
-        let pathComponents = path.pathString.components(separatedBy: "/")
-        guard
-            let tapestriesIndex = path.pathString.components(separatedBy: "/").firstIndex(where: { $0 == Constants.tapestriesName })
-        else {
-            throw ResourceLocatingError.notFound(name)
+    private func frameworkPath(_ name: String) throws -> AbsolutePath {
+        let frameworkNames = ["\(name).framework", "lib\(name).dylib"]
+        let bundlePath = AbsolutePath(Bundle(for: GraphManifestLoader.self).bundleURL.path)
+        let paths = [
+            bundlePath,
+            bundlePath.parentDirectory,
+        ]
+        let candidates = paths.flatMap { path in
+            frameworkNames.map { path.appending(component: $0) }
         }
-        
-        let tapestriesPath = AbsolutePath(pathComponents.prefix(through: tapestriesIndex).joined(separator: "/"))
-        
-        // TODO: Candidates
-        let frameworkPath = tapestriesPath.appending(RelativePath(".build/debug/lib\(name).dylib"))
-        guard FileHandler.shared.exists(frameworkPath) else {
+        guard let frameworkPath = candidates.first(where: { FileHandler.shared.exists($0) }) else {
             throw ResourceLocatingError.notFound(name)
         }
         return frameworkPath
-    }
-
-    private func toolPath(_ name: String) throws -> AbsolutePath {
-        let bundlePath = AbsolutePath(Bundle(for: GraphManifestLoader.self).bundleURL.path)
-        let paths = [bundlePath, bundlePath.parentDirectory]
-        let candidates = paths.map { $0.appending(component: name) }
-        guard let path = candidates.first(where: { FileHandler.shared.exists($0) }) else {
-            throw ResourceLocatingError.notFound(name)
-        }
-        return path
     }
 }

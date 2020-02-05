@@ -51,8 +51,6 @@ public struct ReleaseAction {
     public enum PredefinedAction {
         /// Updates version in `README.md` and `YourLibrary.podspec`
         case docsUpdate
-        /// Runs `tool` with given `arguments` from `Tapestries/Package.swift`
-        case run(tool: String, arguments: [String])
         /// Checks compatibility of your library with given dependencies managers
         case dependenciesCompatibility([DependenciesManager])
     }

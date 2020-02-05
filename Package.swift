@@ -18,6 +18,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/fortmarek/tuist.git", .branch("master")),
         .package(url: "https://github.com/fortmarek/acho", .branch("spm_bump")),
+        .package(url: "https://github.com/IBM-Swift/BlueSignals", .upToNextMajor(from: "1.0.21")),
     ],
     targets: [
         .target(
@@ -30,6 +31,7 @@ let package = Package(
                     "TapestryGen",
                     "TapestryCore",
                     "PackageDescription",
+                    "Signals",
             ]),
         .target(name: "TapestryCore",
                 dependencies: [

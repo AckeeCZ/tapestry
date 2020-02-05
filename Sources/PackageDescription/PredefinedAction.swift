@@ -3,14 +3,11 @@
 public enum PredefinedAction: Codable {
     /// Updates version in `README.md` and `YourLibrary.podspec`
     case docsUpdate
-    /// Runs `tool` with given `arguments` from `Tapestries/Package.swift`
-    case run(tool: String, arguments: [String])
     /// Checks compatibility of your library with given dependencies managers
     case dependenciesCompatibility([DependenciesManager])
 
     private enum Kind: String, Codable {
         case docsUpdate
-        case run
         case dependenciesCompatibility
     }
     
@@ -27,10 +24,6 @@ public enum PredefinedAction: Codable {
         switch kind {
         case .docsUpdate:
             self = .docsUpdate
-        case .run:
-            let tool = try container.decode(String.self, forKey: .tool)
-            let arguments = try container.decode([String].self, forKey: .arguments)
-            self = .run(tool: tool, arguments: arguments)
         case .dependenciesCompatibility:
             let dependenciesManagers = try container.decode([DependenciesManager].self, forKey: .dependenciesManagers)
             self = .dependenciesCompatibility(dependenciesManagers)
@@ -42,10 +35,6 @@ public enum PredefinedAction: Codable {
         switch self {
         case .docsUpdate:
             try container.encode(Kind.docsUpdate, forKey: .kind)
-        case let .run(tool: tool, arguments: arguments):
-            try container.encode(Kind.run, forKey: .kind)
-            try container.encode(tool, forKey: .tool)
-            try container.encode(arguments, forKey: .arguments)
         case let .dependenciesCompatibility(dependenciesManagers):
             try container.encode(Kind.dependenciesCompatibility, forKey: .kind)
             try container.encode(dependenciesManagers, forKey: .dependenciesManagers)

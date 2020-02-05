@@ -7,20 +7,20 @@ import SPMUtility
 final class UpCommandTests: TapestryUnitTestCase {
     private var subject: UpCommand!
     private var parser: ArgumentParser!
-    private var tapestriesGenerator: MockTapestriesGenerator!
+    private var tapestryConfigGenerator: MocktapestryConfigGenerator!
     
     override func setUp() {
         super.setUp()
         parser = ArgumentParser.test()
-        tapestriesGenerator = MockTapestriesGenerator()
+        tapestryConfigGenerator = MocktapestryConfigGenerator()
         subject = UpCommand(parser: parser,
-                            tapestriesGenerator: tapestriesGenerator)
+                            tapestryConfigGenerator: tapestryConfigGenerator)
     }
     
     func test_opens_project_succeeds() throws {
         // Given
         var generatedPath: AbsolutePath?
-        tapestriesGenerator.generateTapestriesStub = {
+        tapestryConfigGenerator.generateTapestryConfigStub = {
             generatedPath = $0
         }
         

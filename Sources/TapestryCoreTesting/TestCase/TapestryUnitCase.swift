@@ -1,6 +1,6 @@
 import Foundation
 import XCTest
-@testable import TapestryCore
+import TapestryCore
 
 public class TapestryUnitTestCase: TapestryTestCase {
     public var system: MockSystem!
