@@ -32,6 +32,12 @@ $ brew install tapestry
 $ tapestry
 ```
 
+### Using [mint](https://github.com/yonaskolb/mint)
+
+```bash
+$ mint install AckeeCZ/tapestry
+```
+
 ### Using [SPM][spm]
 
 Add this to your `Package.swift`:
