@@ -14,4 +14,4 @@ let config = TapestryConfig(
                            "PackageDescription.swiftmodule",
                            "PackageDescription.swiftdoc",],
                      commitMessage: "Version \(Argument.version)",
-                     push: false))
+                     push: true))
