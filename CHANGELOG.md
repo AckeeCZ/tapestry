@@ -1,6 +1,9 @@
 
 ## Next
 
+### Changed
+- Better performance https://github.com/AckeeCZ/tapestry/pull/10 by @fortmarek
+
 ## 0.0.4
 
 ### Added
