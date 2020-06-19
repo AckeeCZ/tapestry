@@ -1,4 +1,4 @@
-# Tapestry
+![ackee|Tapestry](Resources/cover-image.png)
 [![Build Status](https://travis-ci.com/AckeeCZ/tapestry.svg?branch=master)](https://travis-ci.com/AckeeCZ/tapestry)
 
 ## What's Tapestry 🤔
