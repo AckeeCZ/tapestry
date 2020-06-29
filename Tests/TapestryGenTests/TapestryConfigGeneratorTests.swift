@@ -1,5 +1,5 @@
 import XCTest
-import Basic
+import TSCBasic
 @testable import TapestryCore
 @testable import TapestryCoreTesting
 @testable import TapestryGen
@@ -19,7 +19,7 @@ final class TapestryConfigGeneratorTests: TapestryUnitTestCase {
         }
         let tapestryConfigPath = fileHandler.currentPath.appending(component: "TapestryConfig.swift")
         let expectedContents = """
-        import PackageDescription
+        import TapestryDescription
 
         let config = TapestryConfig(release: Release(actions: [.pre(.docsUpdate),
                                                                .pre(.dependenciesCompatibility([.cocoapods, .carthage, .spm(.all)]))],

@@ -1,4 +1,4 @@
-import Basic
+import TSCBasic
 @testable import TapestryKit
 
 final class MockConfigEditorGenerator: ConfigEditorGenerating {

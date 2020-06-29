@@ -1,5 +1,5 @@
 import XCTest
-import Basic
+import TSCBasic
 @testable import TapestryCoreTesting
 @testable import TapestryGen
 

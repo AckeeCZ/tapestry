@@ -1,11 +1,10 @@
 import Foundation
 import protocol TuistSupport.FatalError
-import protocol TuistSupport.Command
 import enum TuistSupport.ErrorType
 import TapestryCore
 import TapestryGen
-import Basic
-import SPMUtility
+import TSCBasic
+import TSCUtility
 
 enum ReleaseError: FatalError, Equatable {
     case noVersion, ungettableProjectName(AbsolutePath), tagExists(Version)

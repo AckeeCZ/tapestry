@@ -1,5 +1,5 @@
 import TapestryGen
-import Basic
+import TSCBasic
 
 final class MockExampleGenerator: ExampleGenerating {
     var generateProjectStub: ((AbsolutePath, String, String) throws -> ())?

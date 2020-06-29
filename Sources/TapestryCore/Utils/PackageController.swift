@@ -1,9 +1,9 @@
-import Basic
+import TSCBasic
 import protocol TuistSupport.FatalError
 import enum TuistSupport.ErrorType
 import struct TuistSupport.Constants
 import Foundation
-import SPMUtility
+import TSCUtility
 
 public enum PackageControllerError: FatalError, Equatable {
     case ungettableProjectName(AbsolutePath)

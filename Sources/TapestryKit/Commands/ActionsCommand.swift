@@ -1,7 +1,6 @@
-import SPMUtility
-import Basic
-import class TuistSupport.Printer
-import protocol TuistSupport.Command
+import TSCUtility
+import TSCBasic
+import TapestryCore
 import Foundation
 
 /// List all available actions

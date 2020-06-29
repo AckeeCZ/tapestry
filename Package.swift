@@ -5,19 +5,20 @@ import PackageDescription
 
 let package = Package(
     name: "tapestry",
+    platforms: [.macOS(.v10_12)],
     products: [
         .library(name: "TapestryGen",
                  targets: ["TapestryGen"]),
-        .library(name: "PackageDescription",
+        .library(name: "TapestryDescription",
                  type: .dynamic,
-                 targets: ["PackageDescription"]),
+                 targets: ["TapestryDescription"]),
         .executable(
             name: "tapestry",
             targets: ["tapestry"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/fortmarek/tuist.git", .branch("master")),
-        .package(url: "https://github.com/fortmarek/acho", .branch("spm_bump")),
+        .package(url: "https://github.com/tuist/tuist.git", .branch("rxblocking")),
+        .package(url: "https://github.com/apple/swift-argument-parser", .upToNextMajor(from: "0.0.6")),
         .package(url: "https://github.com/IBM-Swift/BlueSignals", .upToNextMajor(from: "1.0.21")),
     ],
     targets: [
@@ -25,34 +26,40 @@ let package = Package(
             name: "tapestry",
             dependencies: [
                 "TapestryKit",
-            ]),
+        ]),
         .target(name: "TapestryKit",
                 dependencies: [
                     "TapestryGen",
                     "TapestryCore",
-                    "PackageDescription",
+                    "TapestryDescription",
                     "Signals",
-            ]),
+                    "ArgumentParser",
+        ]),
         .target(name: "TapestryCore",
                 dependencies: [
-                    "acho",
                     "TuistGenerator",
-            ]),
+        ]),
         .target(
             name: "TapestryGen",
             dependencies: [
                 "TapestryCore",
-            ]),
+        ]),
         .target(
-            name: "PackageDescription"
+            name: "TapestryDescription"
         ),
         .target(name: "TapestryCoreTesting",
                 dependencies: [
                     "TapestryCore",
-            ]),
+        ]),
         .testTarget(
             name: "TapestryKitTests",
-            dependencies: ["TapestryKit", "TapestryCoreTesting"]),
+            dependencies: [
+                "TapestryKit",
+                "TapestryCoreTesting",
+                "TuistGenerator",
+                "Signals"
+            ]
+        ),
         .testTarget(
             name: "TapestryCoreTests",
             dependencies: ["TapestryCore", "TapestryCoreTesting"]),
@@ -60,7 +67,7 @@ let package = Package(
             name: "TapestryGenTests",
             dependencies: ["TapestryGen", "TapestryCoreTesting"]),
         .testTarget(
-            name: "PackageDescriptionTests",
-            dependencies: ["PackageDescription", "TapestryCoreTesting"]),
+            name: "TapestryDescriptionTests",
+            dependencies: ["TapestryDescription", "TapestryCoreTesting"]),
     ]
 )

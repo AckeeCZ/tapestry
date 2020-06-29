@@ -3,9 +3,8 @@ import TapestryCore
 import TapestryGen
 import protocol TuistSupport.FatalError
 import enum TuistSupport.ErrorType
-import protocol TuistSupport.Command
-import SPMUtility
-import Basic
+import TSCUtility
+import TSCBasic
 
 enum InitCommandError: FatalError, Equatable {
     case nonEmptyDirectory(AbsolutePath)

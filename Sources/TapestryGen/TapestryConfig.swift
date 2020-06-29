@@ -1,4 +1,4 @@
-import Basic
+import TSCBasic
 
 /// Describes Tapestry configuration
 public struct TapestryConfig {

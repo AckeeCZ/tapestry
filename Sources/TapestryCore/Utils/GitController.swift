@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import Basic
-import SPMUtility
+import TSCBasic
+import TSCUtility
 import protocol TuistSupport.FatalError
 import enum TuistSupport.ErrorType
 

@@ -1,4 +1,4 @@
-import Basic
+import TSCBasic
 import protocol TuistSupport.FatalError
 import class TuistSupport.FileHandler
 import enum TuistSupport.ErrorType
@@ -38,7 +38,7 @@ final class ResourceLocator: ResourceLocating {
     // MARK: - ResourceLocating
 
     func projectDescription() throws -> AbsolutePath {
-        return try frameworkPath("PackageDescription")
+        return try frameworkPath("TapestryDescription")
     }
 
     // MARK: - Fileprivate

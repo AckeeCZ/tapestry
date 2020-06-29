@@ -1,4 +1,4 @@
-import Basic
+import TSCBasic
 import Foundation
 import protocol TuistSupport.FatalError
 import enum TuistSupport.ErrorType
@@ -71,13 +71,6 @@ public protocol FileHandling: AnyObject {
     /// - Throws: An error if the file doesn't exist or it's not a valid text file.
     func readTextFile(_ at: AbsolutePath) throws -> String
 
-    /// Runs the given closure passing a temporary directory to it. When the closure
-    /// finishes its execution, the temporary directory gets destroyed.
-    ///
-    /// - Parameter closure: Closure to be executed with the temporary directory.
-    /// - Throws: An error if the temporary directory cannot be created or the closure throws.
-    func inTemporaryDirectory(_ closure: (AbsolutePath) throws -> Void) throws
-    
     /// Runs the given closure in a given directory
     ///
     /// - Parameters:
@@ -143,16 +136,6 @@ public final class FileHandler: FileHandling {
         defer { try? fileManager.removeItem(at: rootTempDir) }
         try fileManager.copyItem(at: with.url, to: tempUrl)
         _ = try fileManager.replaceItemAt(to.url, withItemAt: tempUrl)
-    }
-
-    /// Runs the given closure passing a temporary directory to it. When the closure
-    /// finishes its execution, the temporary directory gets destroyed.
-    ///
-    /// - Parameter closure: Closure to be executed with the temporary directory.
-    /// - Throws: An error if the temporary directory cannot be created or the closure throws.
-    public func inTemporaryDirectory(_ closure: (AbsolutePath) throws -> Void) throws {
-        let directory = try TemporaryDirectory(removeTreeOnDeinit: true)
-        try closure(directory.path)
     }
     
     public func inDirectory<T>(_ directory: AbsolutePath, closure: () throws -> T) throws -> T {

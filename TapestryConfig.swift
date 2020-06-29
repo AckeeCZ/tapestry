@@ -1,17 +1,17 @@
-import PackageDescription
+import TapestryDescription
 
 let config = TapestryConfig(
     release: Release(actions: [.pre(.docsUpdate),
                                .pre(.dependenciesCompatibility([.spm(.all)])),
                                // Mint support
-                                .pre(tool: "swift", arguments: ["build", "-c", "release", "--product", "PackageDescription"]),
-                                .pre(tool: "cp", arguments: ["-rf", ".build/release/libPackageDescription.dylib", "libPackageDescription.dylib"]),
-                                .pre(tool: "cp", arguments: [".build/release/PackageDescription.swiftmodule", "PackageDescription.swiftmodule"]),
-                                .pre(tool: "cp", arguments: [".build/release/PackageDescription.swiftdoc", "PackageDescription.swiftdoc"])],
+                                .pre(tool: "swift", arguments: ["build", "-c", "release", "--product", "TapestryDescription"]),
+                                .pre(tool: "cp", arguments: ["-rf", ".build/release/libTapestryDescription.dylib", "libTapestryDescription.dylib"]),
+                                .pre(tool: "cp", arguments: [".build/release/TapestryDescription.swiftmodule", "TapestryDescription.swiftmodule"]),
+                                .pre(tool: "cp", arguments: [".build/release/TapestryDescription.swiftdoc", "TapestryDescription.swiftdoc"])],
                      add: ["README.md",
                            "CHANGELOG.md",
-                           "libPackageDescription.dylib",
-                           "PackageDescription.swiftmodule",
-                           "PackageDescription.swiftdoc",],
+                           "libTapestryDescription.dylib",
+                           "TapestryDescription.swiftmodule",
+                           "TapestryDescription.swiftdoc",],
                      commitMessage: "Version \(Argument.version)",
                      push: true))

@@ -1,4 +1,4 @@
-import Basic
+import TSCBasic
 import class TuistSupport.FileHandler
 import protocol TuistSupport.FatalError
 import enum TuistSupport.ErrorType
@@ -23,7 +23,7 @@ public final class TapestryConfigGenerator: TapestryConfigGenerating {
     
     private func generateTapestryConfig(path: AbsolutePath, name: String) throws {
         let contents = """
-        import PackageDescription
+        import TapestryDescription
 
         let config = TapestryConfig(release: Release(actions: [.pre(.docsUpdate),
                                                                .pre(.dependenciesCompatibility([.cocoapods, .carthage, .spm(.all)]))],

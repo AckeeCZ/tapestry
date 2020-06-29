@@ -103,7 +103,7 @@ This opens Xcode with easily editable `TapestryConfig.swift`.
 
 The generated file will look like this:
 ```swift
-import PackageDescription
+import TapestryDescription
 
 let config = TapestryConfig(release: Release(actions: [.pre(.docsUpdate),
                                                        .pre(.dependenciesCompatibility([.cocoapods, .carthage, .spm(.all)]))],

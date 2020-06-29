@@ -1,4 +1,4 @@
-import Basic
+import TSCBasic
 import Foundation
 import protocol TuistSupport.FatalError
 import enum TuistSupport.ErrorType
@@ -95,7 +95,7 @@ public protocol Systeming {
     ///   - environment: Environment that should be used when running the task.
     ///   - redirection: Instance through which the output will be redirected.
     /// - Throws: An error if the command fails.
-    func runAndPrint(_ arguments: [String], verbose: Bool, environment: [String: String], redirection: Basic.Process.OutputRedirection) throws
+    func runAndPrint(_ arguments: [String], verbose: Bool, environment: [String: String], redirection: TSCBasic.Process.OutputRedirection) throws
 
     /// Runs a command in the shell asynchronously.
     /// When the process that triggers the command gets killed, the command continues its execution.
@@ -339,7 +339,7 @@ public final class System: Systeming {
     public func runAndPrint(_ arguments: [String],
                             verbose: Bool,
                             environment: [String: String],
-                            redirection: Basic.Process.OutputRedirection) throws {
+                            redirection: TSCBasic.Process.OutputRedirection) throws {
         let process = Process(arguments: arguments,
                               environment: environment,
                               outputRedirection: .stream(stdout: { bytes in
