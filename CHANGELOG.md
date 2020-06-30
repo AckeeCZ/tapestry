@@ -3,6 +3,7 @@
 
 ### Changed
 
+- Migrate to new `ArgumentParser` [#13](https://github.com/AckeeCZ/tapestry/pull/13) by [@fortmarek](https://github.com/fortmarek).
 - Update dependencies [#12](https://github.com/AckeeCZ/tapestry/pull/12) by [@fortmarek](https://github.com/fortmarek).
 
 ## 0.0.5
