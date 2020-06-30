@@ -1,17 +1,13 @@
 import XCTest
 import TSCBasic
-import TSCUtility
 import TapestryCore
 @testable import TapestryCoreTesting
 @testable import TapestryKit
 
 final class EditCommandTests: TapestryUnitTestCase {
-    private var subject: EditCommand!
-    private var parser: ArgumentParser!
+    private var subject: EditService!
     
     override func setUp() {
         super.setUp()
-        parser = ArgumentParser.test()
-        subject = EditCommand(parser: parser)
     }
 }
