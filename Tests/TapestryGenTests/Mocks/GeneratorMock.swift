@@ -10,13 +10,13 @@ final class MockDescriptorGenerator: DescriptorGenerating {
         try generateProjectStub?(project, graph) ?? ProjectDescriptor.test()
     }
     
-    var generateProjectStub: ((Project, Graph, ProjectGenerationConfig) throws -> ProjectDescriptor)
+    var generateProjectConfigStub: ((Project, Graph, ProjectGenerationConfig) throws -> ProjectDescriptor)?
     func generateProject(project: Project, graph: Graph, config: ProjectGenerationConfig) throws -> ProjectDescriptor {
-        try generateProjectStub?(project, graph, config) ?? ProjectDescriptor.test()
+        try generateProjectConfigStub?(project, graph, config) ?? ProjectDescriptor.test()
     }
     
-    var generateProjectStub: ((Workspace, Graph) throws -> ProjectDescriptor)
+    var generateWorkspaceStub: ((Workspace, Graph) throws -> WorkspaceDescriptor)?
     func generateWorkspace(workspace: Workspace, graph: Graph) throws -> WorkspaceDescriptor {
-        try generateProjectStub?(workspace, graph) ?? ProjectDescriptor.test()
+        try generateWorkspaceStub?(workspace, graph) ?? WorkspaceDescriptor.test()
     }
 }
