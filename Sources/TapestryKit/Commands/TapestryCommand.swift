@@ -19,9 +19,9 @@ public struct TapestryCommand: ParsableCommand {
                 //                                InitCommand.self
                 //                                ReleaseCommand.self
                 //                                EditCommand.self
-                //                                UpCommand.self
+                UpCommand.self,
                 ActionCommand.self,
-                ActionsCommand.self
+                ActionsCommand.self,
             ]
         )
     }
