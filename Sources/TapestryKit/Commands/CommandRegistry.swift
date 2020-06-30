@@ -5,17 +5,13 @@
 //  Created by Marek Fořt on 8/22/19.
 //
 
-import SPMUtility
+import TSCUtility
 import Foundation
-import protocol TuistSupport.Command
-import protocol TuistSupport.RawCommand
-import protocol TuistSupport.HiddenCommand
 import protocol TuistSupport.ErrorHandling
 import protocol TuistSupport.FatalError
 import struct TuistSupport.UnhandledError
 import class TuistSupport.ErrorHandler
-import class TuistSupport.Printer
-import Basic
+import TSCBasic
 import TapestryGen
 import TapestryCore
 

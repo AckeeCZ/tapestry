@@ -1,4 +1,4 @@
-import Basic
+import TSCBasic
 import TapestryGen
 @testable import TapestryKit
 

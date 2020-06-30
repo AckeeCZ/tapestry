@@ -1,6 +1,6 @@
 import XCTest
 @testable import TapestryCoreTesting
-@testable import PackageDescription
+@testable import TapestryDescription
 
 final class ReleaseTests: TapestryUnitTestCase {
     func test_release() {

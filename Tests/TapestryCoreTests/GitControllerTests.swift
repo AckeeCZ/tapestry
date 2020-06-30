@@ -1,6 +1,6 @@
 import XCTest
-import Basic
-import SPMUtility
+import TSCBasic
+import TSCUtility
 @testable import TapestryCore
 @testable import TapestryCoreTesting
 

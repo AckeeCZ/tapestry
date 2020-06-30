@@ -1,5 +1,5 @@
 import TapestryCore
-import Basic
+import TSCBasic
 
 public final class MockXcodeController: XcodeControlling {
     public var openStub: ((AbsolutePath) throws -> ())?

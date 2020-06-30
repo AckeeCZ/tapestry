@@ -1,6 +1,6 @@
 import TapestryCore
-import Basic
-import SPMUtility
+import TSCBasic
+import TSCUtility
 
 public final class MockGitController: GitControlling {
     public var initGitStub: ((AbsolutePath) throws -> ())?

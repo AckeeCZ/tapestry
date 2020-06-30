@@ -1,4 +1,4 @@
-import Basic
+import TSCBasic
 
 /// Platform for building
 public enum Platform {

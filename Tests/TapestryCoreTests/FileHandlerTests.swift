@@ -1,4 +1,4 @@
-import Basic
+import TSCBasic
 import Foundation
 import XCTest
 @testable import TapestryCore
@@ -27,15 +27,16 @@ final class FileHandlerTests: TapestryUnitTestCase {
 
     func test_replace() throws {
         // Given
-        let tempFile = try TemporaryFile()
-        let destFile = try TemporaryFile()
-        try "content".write(to: tempFile.path.asURL, atomically: true, encoding: .utf8)
+        let tempDirectory = try temporaryPath()
+        let tempFile = tempDirectory.appending(component: "file")
+        let destFile = try temporaryPath()
+        try "content".write(to: tempFile.url, atomically: true, encoding: .utf8)
 
         // When
-        try subject.replace(destFile.path, with: tempFile.path)
+        try subject.replace(destFile, with: tempFile)
 
         // Then
-        let content = try String(contentsOf: destFile.path.asURL)
+        let content = try String(contentsOf: destFile.url)
         XCTAssertEqual(content, "content")
     }
 

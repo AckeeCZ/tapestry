@@ -1,7 +1,7 @@
 import TapestryGen
-import PackageDescription
+import TapestryDescription
 import TapestryCore
-import Basic
+import TSCBasic
 import class TuistSupport.Glob
 
 /// Entity responsible for package configuration
@@ -36,7 +36,7 @@ class ConfigModelLoader: ConfigModelLoading {
 
 
 extension TapestryGen.TapestryConfig {
-    static func from(manifest: PackageDescription.TapestryConfig,
+    static func from(manifest: TapestryDescription.TapestryConfig,
                      path: AbsolutePath) throws -> TapestryGen.TapestryConfig {
         guard let releaseManifest = manifest.release else {
             // Provide default
@@ -48,7 +48,7 @@ extension TapestryGen.TapestryConfig {
 }
 
 extension TapestryGen.Release {
-    static func from(manifest: PackageDescription.Release) -> TapestryGen.Release {
+    static func from(manifest: TapestryDescription.Release) -> TapestryGen.Release {
         let actions = manifest.actions.map(TapestryGen.ReleaseAction.from)
         let add: [String] = manifest.add?.globs.map { $0.glob } ?? []
         return TapestryGen.Release(actions: actions,
@@ -59,7 +59,7 @@ extension TapestryGen.Release {
 }
 
 extension TapestryGen.ReleaseAction {
-        static func from(manifest: PackageDescription.ReleaseAction) -> TapestryGen.ReleaseAction {
+        static func from(manifest: TapestryDescription.ReleaseAction) -> TapestryGen.ReleaseAction {
             let order = TapestryGen.ReleaseAction.Order.from(manifest: manifest.order)
             let action: Action
             switch manifest.action {
@@ -93,7 +93,7 @@ extension TapestryGen.ReleaseAction {
 }
 
 extension TapestryGen.ReleaseAction.Order {
-    static func from(manifest: PackageDescription.Order) -> TapestryGen.ReleaseAction.Order {
+    static func from(manifest: TapestryDescription.Order) -> TapestryGen.ReleaseAction.Order {
         switch manifest {
         case .pre:
             return .pre

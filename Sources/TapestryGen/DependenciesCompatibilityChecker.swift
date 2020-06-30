@@ -1,4 +1,4 @@
-import Basic
+import TSCBasic
 import TapestryCore
 import protocol TuistSupport.FatalError
 import enum TuistSupport.ErrorType

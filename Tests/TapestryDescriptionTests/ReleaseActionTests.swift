@@ -1,6 +1,6 @@
 import XCTest
 @testable import TapestryCoreTesting
-@testable import PackageDescription
+@testable import TapestryDescription
 
 final class ReleaseActionTests: TapestryUnitTestCase {
     func test_releaseAction_when_pre_and_custom() {

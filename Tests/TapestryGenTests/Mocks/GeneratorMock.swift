@@ -1,18 +1,22 @@
+import TuistCore
 import TuistGenerator
-import Basic
+import XcodeProj
+import TSCBasic
+import PathKit
 
-final class MockGenerator: Generating {
-    var generateProjectStub: ((AbsolutePath) throws -> AbsolutePath)?
-    
-    func generateProject(at path: AbsolutePath) throws -> AbsolutePath {
-        return try generateProjectStub?(path) ?? path
+final class MockDescriptorGenerator: DescriptorGenerating {
+    var generateProjectStub: ((Project, Graph) throws -> ProjectDescriptor)?
+    func generateProject(project: Project, graph: Graph) throws -> ProjectDescriptor {
+        try generateProjectStub?(project, graph) ?? ProjectDescriptor.test()
     }
     
-    func generateProjectWorkspace(at path: AbsolutePath, workspaceFiles: [AbsolutePath]) throws -> AbsolutePath {
-        return path
+    var generateProjectConfigStub: ((Project, Graph, ProjectGenerationConfig) throws -> ProjectDescriptor)?
+    func generateProject(project: Project, graph: Graph, config: ProjectGenerationConfig) throws -> ProjectDescriptor {
+        try generateProjectConfigStub?(project, graph, config) ?? ProjectDescriptor.test()
     }
     
-    func generateWorkspace(at path: AbsolutePath, workspaceFiles: [AbsolutePath]) throws -> AbsolutePath {
-        return path
+    var generateWorkspaceStub: ((Workspace, Graph) throws -> WorkspaceDescriptor)?
+    func generateWorkspace(workspace: Workspace, graph: Graph) throws -> WorkspaceDescriptor {
+        try generateWorkspaceStub?(workspace, graph) ?? WorkspaceDescriptor.test()
     }
 }

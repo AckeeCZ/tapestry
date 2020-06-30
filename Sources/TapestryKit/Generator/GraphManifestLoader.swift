@@ -1,6 +1,6 @@
-import Basic
+import TSCBasic
 import Foundation
-import PackageDescription
+import TapestryDescription
 import protocol TuistSupport.FatalError
 import enum TuistSupport.ErrorType
 import TapestryCore
@@ -70,7 +70,7 @@ protocol GraphManifestLoading {
     /// - Parameter path: Path to the directory that contains the TapestryConfig.swift file.
     /// - Returns: Loaded TapestryConfig.swift file.
     /// - Throws: An error if the file has a syntax error.
-    func loadTapestryConfig(at path: AbsolutePath) throws -> PackageDescription.TapestryConfig
+    func loadTapestryConfig(at path: AbsolutePath) throws -> TapestryDescription.TapestryConfig
 
     func manifests(at path: AbsolutePath) -> Set<Manifest>
     func manifestPath(at path: AbsolutePath, manifest: Manifest) throws -> AbsolutePath
@@ -117,7 +117,7 @@ class GraphManifestLoader: GraphManifestLoading {
     /// - Parameter path: Path to the directory that contains the TapestryConfig.swift file.
     /// - Returns: Loaded TapestryConfig.swift file.
     /// - Throws: An error if the file has a syntax error.
-    func loadTapestryConfig(at path: AbsolutePath) throws -> PackageDescription.TapestryConfig {
+    func loadTapestryConfig(at path: AbsolutePath) throws -> TapestryDescription.TapestryConfig {
         return try loadManifest(.tapestryConfig, at: path)
     }
 
@@ -142,7 +142,7 @@ class GraphManifestLoader: GraphManifestLoading {
             "-I", projectDescriptionPath.parentDirectory.pathString,
             "-L", projectDescriptionPath.parentDirectory.pathString,
             "-F", projectDescriptionPath.parentDirectory.pathString,
-            "-lPackageDescription",
+            "-lTapestryDescription",
         ]
         arguments.append(path.pathString)
         arguments.append("--dump")

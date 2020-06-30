@@ -1,8 +1,7 @@
-import Basic
-import protocol TuistSupport.Command
+import TSCBasic
 import Foundation
 import TapestryGen
-import SPMUtility
+import TSCUtility
 import TapestryCore
 
 /// This command initializes Swift package with example in current empty directory

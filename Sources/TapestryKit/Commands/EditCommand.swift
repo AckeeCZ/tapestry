@@ -1,10 +1,9 @@
-import Basic
+import TSCBasic
 import Foundation
 import Signals
-import SPMUtility
+import TSCUtility
 import TuistGenerator
 import TapestryCore
-import protocol TuistSupport.Command
 
 class EditCommand: NSObject, Command {
     // MARK: - Static

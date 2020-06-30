@@ -1,4 +1,4 @@
-import Basic
+import TSCBasic
 import TapestryCore
 
 public final class MockPackageController: PackageControlling {

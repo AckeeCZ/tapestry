@@ -1,9 +1,8 @@
-import Basic
+import TSCBasic
 import TapestryCore
-import protocol TuistSupport.Command
 import protocol TuistSupport.FatalError
 import enum TuistSupport.ErrorType
-import SPMUtility
+import TSCUtility
 import Foundation
 import TapestryGen
 

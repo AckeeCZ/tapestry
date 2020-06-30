@@ -1,6 +1,10 @@
 
 ## Next
 
+### Changed
+
+- Update dependencies [#12](https://github.com/AckeeCZ/tapestry/pull/12) by [@fortmarek](https://github.com/fortmarek).
+
 ## 0.0.5
 
 ### Changed

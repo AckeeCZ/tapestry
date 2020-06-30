@@ -1,5 +1,5 @@
-import Basic
-import SPMUtility
+import TSCBasic
+import TSCUtility
 import TapestryCore
 
 final class MockDocsUpdater: DocsUpdating {

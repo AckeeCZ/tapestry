@@ -1,4 +1,4 @@
-import Basic
+import TSCBasic
 import Foundation
 import XCTest
 import TapestryCore
@@ -86,7 +86,7 @@ public final class MockSystem: Systeming {
         _ arguments: [String],
         verbose _: Bool,
         environment _: [String: String],
-        redirection: Basic.Process.OutputRedirection
+        redirection: TSCBasic.Process.OutputRedirection
     ) throws {
         let command = arguments.joined(separator: " ")
         guard let stub = self.stubs[command] else {
