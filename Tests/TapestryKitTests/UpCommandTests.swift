@@ -5,11 +5,11 @@ import TSCBasic
 
 final class UpServiceTests: TapestryUnitTestCase {
     private var subject: UpService!
-    private var tapestryConfigGenerator: MocktapestryConfigGenerator!
+    private var tapestryConfigGenerator: MockTapestryConfigGenerator!
     
     override func setUp() {
         super.setUp()
-        tapestryConfigGenerator = MocktapestryConfigGenerator()
+        tapestryConfigGenerator = MockTapestryConfigGenerator()
         subject = UpService(
             tapestryConfigGenerator: tapestryConfigGenerator
         )

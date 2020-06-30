@@ -1,4 +1,3 @@
-import TSCUtility
 import TSCBasic
 import TapestryCore
 import XCTest
@@ -6,27 +5,31 @@ import XCTest
 @testable import TapestryCoreTesting
 @testable import TapestryKit
 
-final class InitCommandTests: TapestryUnitTestCase {
-    private var subject: InitCommand!
+final class InitServiceTests: TapestryUnitTestCase {
+    private var subject: InitService!
     private var exampleGenerator: MockExampleGenerator!
-    private var parser: ArgumentParser!
     
     override func setUp() {
         super.setUp()
         exampleGenerator = MockExampleGenerator()
-        parser = ArgumentParser.test()
-        subject = InitCommand(parser: parser,
-                              exampleGenerator: exampleGenerator,
-                              tapestryConfigGenerator: MocktapestryConfigGenerator())
+        subject = InitService(
+            exampleGenerator: exampleGenerator,
+            tapestryConfigGenerator: MockTapestryConfigGenerator()
+        )
     }
     
     func test_run_when_the_directory_is_not_empty() throws {
+        // Given
         let path = fileHandler.currentPath
         try fileHandler.touch(path.appending(component: "dummy"))
 
-        let result = try parser.parse(["init", "--path", path.pathString])
-
-        XCTAssertThrowsSpecific(try subject.run(with: result), InitCommandError.nonEmptyDirectory(path))
+        // Then
+        XCTAssertThrowsSpecific(
+            try subject.run(
+                path: path.pathString
+            ),
+            InitServiceError.nonEmptyDirectory(path)
+        )
     }
     
     func test_package_initialized_with_name_from_path() throws {
@@ -34,8 +37,6 @@ final class InitCommandTests: TapestryUnitTestCase {
         let name = "test"
         let path = fileHandler.currentPath.appending(component: name)
         try fileHandler.createFolder(path)
-        
-        let result = try parser.parse(["init", "--path", path.pathString])
         
         var initializedPackageName: String?
         packageController.initPackageStub = { _, packageName in
@@ -48,7 +49,7 @@ final class InitCommandTests: TapestryUnitTestCase {
         }
         
         // When
-        try subject.run(with: result)
+        try subject.run(path: path.pathString)
         
         // Then
         XCTAssertEqual(name, initializedPackageName)
@@ -61,10 +62,8 @@ final class InitCommandTests: TapestryUnitTestCase {
             initGitPath = $0
         }
         
-        let result = try parser.parse(["init"])
-        
         // When
-        try subject.run(with: result)
+        try subject.run(path: nil)
         
         // Then
         XCTAssertEqual(initGitPath, fileHandler.currentPath)
@@ -96,10 +95,8 @@ final class InitCommandTests: TapestryUnitTestCase {
             exampleBundleId = bundleId
         }
         
-        let result = try parser.parse(["init", "--path", path.pathString])
-        
         // When
-        try subject.run(with: result)
+        try subject.run(path: path.pathString)
         
         // Then
         XCTAssertEqual(examplePath, path)
@@ -117,10 +114,8 @@ final class InitCommandTests: TapestryUnitTestCase {
             exampleWasGenerated = true
         }
         
-        let result = try parser.parse(["init"])
-        
         // When
-        try subject.run(with: result)
+        try subject.run(path: nil)
         
         // Then
         XCTAssertFalse(exampleWasGenerated)
@@ -128,14 +123,13 @@ final class InitCommandTests: TapestryUnitTestCase {
     
     func test_license_is_generated() throws {
         // Given
-        let result = try parser.parse(["init"])
         let expectedAuthorName = "Test Name"
         let expectedEmail = "test@test.com"
         inputReader.promptCommand("👋 Author name", output: expectedAuthorName)
         inputReader.promptCommand("💌 Email", output: expectedEmail)
         
         // When
-        try subject.run(with: result)
+        try subject.run(path: nil)
         
         // Then
         let licenseContent = try fileHandler.readTextFile(fileHandler.currentPath.appending(component: "LICENSE"))
@@ -144,11 +138,8 @@ final class InitCommandTests: TapestryUnitTestCase {
     }
     
     func test_gitignore_is_generated() throws {
-        // Given
-        let result = try parser.parse(["init"])
-        
         // When
-        try subject.run(with: result)
+        try subject.run(path: nil)
         
         // Then
         XCTAssertTrue(fileHandler.exists(fileHandler.currentPath.appending(component: ".gitignore")))
@@ -159,7 +150,6 @@ final class InitCommandTests: TapestryUnitTestCase {
         let expectedName = "testPackage"
         let path = fileHandler.currentPath.appending(component: expectedName)
         try fileHandler.createFolder(path)
-        let result = try parser.parse(["init", "--path", path.pathString])
         let expectedUsername = "testname"
         inputReader.promptCommand("🍷 Username", output: expectedUsername)
         
@@ -168,7 +158,7 @@ final class InitCommandTests: TapestryUnitTestCase {
         }
         
         // When
-        try subject.run(with: result)
+        try subject.run(path: path.pathString)
         
         // Then
         let readmeContent = try fileHandler.readTextFile(path.appending(component: "README.md"))
@@ -184,14 +174,13 @@ final class InitCommandTests: TapestryUnitTestCase {
         packageController.initPackageStub = { _, _ in
             .library
         }
-        let result = try parser.parse(["init", "--path", path.pathString])
-        
+
         packageController.nameStub = { _ in
             expectedName
         }
         
         // When
-        try subject.run(with: result)
+        try subject.run(path: path.pathString)
         
         // Then
         let travisContent = try fileHandler.readTextFile(path.appending(component: ".travis.yml"))
@@ -207,14 +196,13 @@ final class InitCommandTests: TapestryUnitTestCase {
         packageController.initPackageStub = { _, _ in
             .executable
         }
-        let result = try parser.parse(["init", "--path", path.pathString])
         
         packageController.nameStub = { _ in
             expectedName
         }
         
         // When
-        try subject.run(with: result)
+        try subject.run(path: path.pathString)
         
         // Then
         let travisContent = try fileHandler.readTextFile(path.appending(component: ".travis.yml"))
@@ -231,10 +219,8 @@ final class InitCommandTests: TapestryUnitTestCase {
         packageController.initPackageStub = { _, _ in
             .library
         }
-        let result = try parser.parse(["init"])
-        
         // When
-        try subject.run(with: result)
+        try subject.run(path: nil)
         
         // Then
         XCTAssertEqual(fileHandler.currentPath, path)
@@ -249,10 +235,9 @@ final class InitCommandTests: TapestryUnitTestCase {
         packageController.initPackageStub = { _, _ in
             .executable
         }
-        let result = try parser.parse(["init"])
-        
+
         // When
-        try subject.run(with: result)
+        try subject.run(path: nil)
         
         // Then
         XCTAssertNil(path)

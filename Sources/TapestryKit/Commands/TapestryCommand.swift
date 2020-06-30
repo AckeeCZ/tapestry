@@ -16,7 +16,7 @@ public struct TapestryCommand: ParsableCommand {
             commandName: "tapestry",
             abstract: "Generate and maintain your swift package projects.",
             subcommands: [
-                //                                InitCommand.self
+                InitCommand.self,
                 ReleaseCommand.self,
                 EditCommand.self,
                 UpCommand.self,

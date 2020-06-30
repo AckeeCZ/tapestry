@@ -1,7 +1,7 @@
 import TapestryGen
 import TSCBasic
 
-final class MocktapestryConfigGenerator: TapestryConfigGenerating {
+final class MockTapestryConfigGenerator: TapestryConfigGenerating {
     var generateTapestryConfigStub: ((AbsolutePath) throws -> ())?
     
     func generateTapestryConfig(at path: AbsolutePath) throws {
