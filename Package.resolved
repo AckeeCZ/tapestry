@@ -149,8 +149,8 @@
         "package": "tuist",
         "repositoryURL": "https://github.com/tuist/tuist.git",
         "state": {
-          "branch": "rxblocking",
-          "revision": "879d5e11f1d44a75f38833d4bfb43500772a54aa",
+          "branch": "master",
+          "revision": "c03381ebfa57a27307dda453007f28e03ea27ea6",
           "version": null
         }
       },

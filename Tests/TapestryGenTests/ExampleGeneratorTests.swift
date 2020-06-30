@@ -15,12 +15,16 @@ final class ExampleGeneratorTests: TapestryUnitTestCase {
     
     func test_folder_for_example_is_created() throws {
         // When
-        try subject.generateProject(path: fileHandler.currentPath,
-                                    name: "test",
-                                    bundleId: "testBundleId")
+        let temporaryPath = try self.temporaryPath()
+        
+        try subject.generateProject(
+            path: temporaryPath,
+            name: "test",
+            bundleId: "testBundleId"
+        )
         
         // Then
-        XCTAssertTrue(fileHandler.exists(fileHandler.currentPath.appending(component: ExampleGenerator.exampleAppendix)))
+        XCTAssertTrue(fileHandler.exists(temporaryPath.appending(component: ExampleGenerator.exampleAppendix)))
     }
     
     func test_example_sources_are_generated() throws {
@@ -40,16 +44,16 @@ final class ExampleGeneratorTests: TapestryUnitTestCase {
     
     func test_generator_generates_project() throws {
         // TODO: Fix
-//        // Given
-//        var generatedProjectPath: AbsolutePath?
-//        let subject = ExampleGenerator(descriptorGenerator: MockDescriptorGenerator())
-//
-//        // When
-//        try subject.generateProject(path: fileHandler.currentPath,
-//                                    name: "test",
-//                                    bundleId: "testBundleId")
-//
-//        // Then
-//        XCTAssertEqual(fileHandler.currentPath.appending(RelativePath(ExampleGenerator.exampleAppendix)), generatedProjectPath)
+        //        // Given
+        //        var generatedProjectPath: AbsolutePath?
+        //        let subject = ExampleGenerator(descriptorGenerator: MockDescriptorGenerator())
+        //
+        //        // When
+        //        try subject.generateProject(path: fileHandler.currentPath,
+        //                                    name: "test",
+        //                                    bundleId: "testBundleId")
+        //
+        //        // Then
+        //        XCTAssertEqual(fileHandler.currentPath.appending(RelativePath(ExampleGenerator.exampleAppendix)), generatedProjectPath)
     }
 }

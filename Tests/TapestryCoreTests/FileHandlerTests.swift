@@ -27,7 +27,8 @@ final class FileHandlerTests: TapestryUnitTestCase {
 
     func test_replace() throws {
         // Given
-        let tempFile = try temporaryPath()
+        let tempDirectory = try temporaryPath()
+        let tempFile = tempDirectory.appending(component: "file")
         let destFile = try temporaryPath()
         try "content".write(to: tempFile.url, atomically: true, encoding: .utf8)
 

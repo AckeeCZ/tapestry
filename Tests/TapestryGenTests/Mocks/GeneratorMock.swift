@@ -7,13 +7,7 @@ import PathKit
 final class MockDescriptorGenerator: DescriptorGenerating {
     var generateProjectStub: ((Project, Graph) throws -> ProjectDescriptor)?
     func generateProject(project: Project, graph: Graph) throws -> ProjectDescriptor {
-        try generateProjectStub?(project, graph) ?? ProjectDescriptor(
-            path: AbsolutePath("/test"),
-            xcodeprojPath: AbsolutePath("/test"),
-            xcodeProj: XcodeProj(path: Path("/test")),
-            schemeDescriptors: [],
-            sideEffectDescriptors: []
-        )
+        try generateProjectStub?(project, graph) ?? ProjectDescriptor.test()
     }
     
     func generateProject(project: Project, graph: Graph, config: ProjectGenerationConfig) throws -> ProjectDescriptor {
