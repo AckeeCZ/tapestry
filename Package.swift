@@ -18,7 +18,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/tuist/tuist.git", .branch("master")),
-        .package(url: "https://github.com/apple/swift-argument-parser", .upToNextMajor(from: "0.0.6")),
+        .package(url: "https://github.com/apple/swift-argument-parser", .upToNextMajor(from: "0.2.0")),
         .package(url: "https://github.com/IBM-Swift/BlueSignals", .upToNextMajor(from: "1.0.21")),
     ],
     targets: [
