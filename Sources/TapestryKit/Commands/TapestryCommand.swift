@@ -10,20 +10,22 @@ import ArgumentParser
 
 public struct TapestryCommand: ParsableCommand {
     public init() {}
-
+    
     public static var configuration: CommandConfiguration {
-        CommandConfiguration(commandName: "tapestry",
-                             abstract: "Generate and maintain your swift package projects.",
-                             subcommands: [
-//                                InitCommand.self
-//                                ReleaseCommand.self
-//                                EditCommand.self
-//                                UpCommand.self
-//                                ActionCommand.self
-//                                ActionsCommand.self
-                             ])
+        CommandConfiguration(
+            commandName: "tapestry",
+            abstract: "Generate and maintain your swift package projects.",
+            subcommands: [
+                //                                InitCommand.self
+                //                                ReleaseCommand.self
+                //                                EditCommand.self
+                //                                UpCommand.self
+                ActionCommand.self,
+                ActionsCommand.self
+            ]
+        )
     }
-
+    
     public static func main(_ arguments: [String]? = nil) -> Never {
         let errorHandler = ErrorHandler()
         var command: ParsableCommand
@@ -50,9 +52,9 @@ public struct TapestryCommand: ParsableCommand {
             }
         }
     }
-
+    
     // MARK: - Helpers
-
+    
     static func processArguments(_ arguments: [String]? = nil) -> [String]? {
         let arguments = arguments ?? Array(ProcessInfo.processInfo.arguments)
         return arguments.filter { $0 != "--verbose" }
