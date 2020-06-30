@@ -12,8 +12,6 @@ public protocol ConfigEditorGenerating {
 public final class ConfigEditorGenerator: ConfigEditorGenerating {
     private let descriptorGenerator: DescriptorGenerating
     
-    /// - Parameters:
-    //    public init(generatorInit: @escaping GeneratorInit = { Generator(modelLoader: ConfigEditorModelLoader(rootPath: $0, projectDescriptionPath: $1)) }) {
     public init(
         descriptorGenerator: DescriptorGenerating = DescriptorGenerator()
     ) {
@@ -22,9 +20,12 @@ public final class ConfigEditorGenerator: ConfigEditorGenerating {
     
     // MARK: - Public methods
     public func generateProject(path: AbsolutePath, rootPath: AbsolutePath, projectDescriptionPath: AbsolutePath) throws -> AbsolutePath {
-        //        let generator = generatorInit(rootPath, projectDescriptionPath)
-        //        return try generator.generateProject(at: path)
-        fatalError()
+        let (project, graph) = try projectWithGraph(
+            at: path,
+            rootPath: rootPath,
+            projectDescriptionPath: projectDescriptionPath
+        )
+        return try descriptorGenerator.generateProject(project: project, graph: graph).path
     }
     
     // MARK: - Helpers
@@ -97,7 +98,6 @@ public final class ConfigEditorGenerator: ConfigEditorGenerating {
         buildSettings["FRAMEWORK_SEARCH_PATHS"] = .string(frameworkParentDirectory.pathString)
         buildSettings["LIBRARY_SEARCH_PATHS"] = .string(frameworkParentDirectory.pathString)
         buildSettings["SWIFT_INCLUDE_PATHS"] = .string(frameworkParentDirectory.pathString)
-        //        buildSettings["SWIFT_VERSION"] = .string(Constants.swiftVersion)
         return buildSettings
     }
 }

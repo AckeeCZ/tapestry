@@ -41,19 +41,4 @@ final class ExampleGeneratorTests: TapestryUnitTestCase {
         let exampleContents = try fileHandler.readTextFile(sourcesPath.appending(component: "\(name).swift"))
         XCTAssertTrue(exampleContents.contains(name))
     }
-    
-    func test_generator_generates_project() throws {
-        // TODO: Fix
-        //        // Given
-        //        var generatedProjectPath: AbsolutePath?
-        //        let subject = ExampleGenerator(descriptorGenerator: MockDescriptorGenerator())
-        //
-        //        // When
-        //        try subject.generateProject(path: fileHandler.currentPath,
-        //                                    name: "test",
-        //                                    bundleId: "testBundleId")
-        //
-        //        // Then
-        //        XCTAssertEqual(fileHandler.currentPath.appending(RelativePath(ExampleGenerator.exampleAppendix)), generatedProjectPath)
-    }
 }
