@@ -92,8 +92,10 @@ public final class DocsUpdater: DocsUpdating {
         )
 
         if let lastVersion = lastVersion {
-            content = content.replacingOccurrences(of: lastVersion.description,
-                                         with: version.description)
+            content = content.replacingOccurrences(
+                of: lastVersion.description,
+                with: version.description
+            )
         }
         
         try content.write(to: readmePath.url, atomically: true, encoding: .utf8)

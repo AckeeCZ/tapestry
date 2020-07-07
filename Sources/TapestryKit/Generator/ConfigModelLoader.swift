@@ -67,6 +67,8 @@ extension TapestryGen.ReleaseAction {
                 action = .custom(tool: tool, arguments: arguments)
             case let .predefined(predefinedAction):
                 switch predefinedAction {
+                case let .githubRelease(url: githubURL):
+                    action = .predefined(.githubRelease(url: githubURL))
                 case .docsUpdate:
                     action = .predefined(.docsUpdate)
                 case let .dependenciesCompatibility(dependenciesManagers):

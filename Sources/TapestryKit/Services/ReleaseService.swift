@@ -26,6 +26,7 @@ enum ReleaseError: FatalError, Equatable {
 final class ReleaseService {
     private let configModelLoader: ConfigModelLoading
     private let docsUpdater: DocsUpdating
+    private let changelogGenerator: Changelog
     private let dependenciesCompatibilityChecker: DependenciesCompatibilityChecking
     
     init(
@@ -100,6 +101,8 @@ final class ReleaseService {
             try System.shared.runAndPrint([tool] + arguments)
         case let .predefined(action):
             switch action {
+            case let .githubRelease(url: url):
+                
             case .docsUpdate:
                 try docsUpdater.updateDocs(path: path, version: version)
             case let .dependenciesCompatibility(dependenciesManagers):
