@@ -51,9 +51,10 @@ public enum PredefinedAction: Codable {
         case let .dependenciesCompatibility(dependenciesManagers):
             try container.encode(Kind.dependenciesCompatibility, forKey: .kind)
             try container.encode(dependenciesManagers, forKey: .dependenciesManagers)
-        case let .githubRelease(url: githubURL):
+        case let .githubRelease(owner: owner, repository: repository):
             try container.encode(Kind.githubRelease, forKey: .kind)
-            try container.encode(githubURL, forKey: .githubURL)
+            try container.encode(owner, forKey: .githubOwner)
+            try container.encode(repository, forKey: .githubRepository)
         }
     }
 }

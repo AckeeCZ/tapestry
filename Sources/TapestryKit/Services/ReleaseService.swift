@@ -26,17 +26,19 @@ enum ReleaseError: FatalError, Equatable {
 final class ReleaseService {
     private let configModelLoader: ConfigModelLoading
     private let docsUpdater: DocsUpdating
-    private let changelogGenerator: Changelog
     private let dependenciesCompatibilityChecker: DependenciesCompatibilityChecking
+    private let releaseController: ReleaseControlling
     
     init(
         configModelLoader: ConfigModelLoading = ConfigModelLoader(manifestLoader: GraphManifestLoader()),
         docsUpdater: DocsUpdating = DocsUpdater(),
-        dependenciesCompatibilityChecker: DependenciesCompatibilityChecking = DependenciesCompatibilityChecker()
+        dependenciesCompatibilityChecker: DependenciesCompatibilityChecking = DependenciesCompatibilityChecker(),
+        releaseController: ReleaseControlling = ReleaseController()
     ) {
         self.configModelLoader = configModelLoader
         self.docsUpdater = docsUpdater
         self.dependenciesCompatibilityChecker = dependenciesCompatibilityChecker
+        self.releaseController = releaseController
     }
     
     func run(
@@ -101,8 +103,13 @@ final class ReleaseService {
             try System.shared.runAndPrint([tool] + arguments)
         case let .predefined(action):
             switch action {
-            case let .githubRelease(url: url):
-                
+            case let .githubRelease(owner: owner, repository: repository):
+                try releaseController.release(
+                    version,
+                    path: path,
+                    owner: owner,
+                    repository: repository
+                )
             case .docsUpdate:
                 try docsUpdater.updateDocs(path: path, version: version)
             case let .dependenciesCompatibility(dependenciesManagers):

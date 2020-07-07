@@ -79,7 +79,8 @@ public struct ReleaseAction {
     
     public init(
         order: Order,
-        action: Action) {
+        action: Action
+    ) {
         self.order = order
         self.action = action
     }
