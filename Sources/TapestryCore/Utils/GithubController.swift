@@ -9,6 +9,12 @@ protocol GithubControlling {
         version: Version,
         changelogDescription: String
     ) throws -> Foundation.URL
+    
+    func uploadAsset(
+        url: Foundation.URL,
+        assetData: Data,
+        name: String
+    ) throws
 }
 
 final class GithubController: GithubControlling {
@@ -40,7 +46,7 @@ final class GithubController: GithubControlling {
             completion: { releaseResult in
                 switch releaseResult {
                 case let .success(release):
-                    result = .success(release.url)
+                    result = .success(release.assetsURL)
                 case let .failure(error):
                     result = .failure(error)
                 }
@@ -48,6 +54,58 @@ final class GithubController: GithubControlling {
             }
         )
         
+        group.wait()
+        return try result.get()
+    }
+    
+    func uploadAsset(
+        url: Foundation.URL,
+        assetData: Data,
+        name: String
+    ) throws {
+        Printer.shared.print("Uploading \(name) asset 📦")
+        
+        guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { fatalError() }
+        components.host = "uploads.github.com"
+        components.queryItems = [
+            URLQueryItem(name: "name", value: name)
+        ]
+
+        guard let uploadURL = components.url else { fatalError() }
+        
+        let group = DispatchGroup()
+        group.enter()
+        
+        var result: Result<Void, Error>!
+        
+        var request = URLRequest(url: uploadURL)
+        request.httpMethod = "POST"
+        request.setValue("application/zip", forHTTPHeaderField: "Content-Type")
+        
+        let task = try authenticate().uploadTask(with: request, from: assetData) { data, response, error in
+            if let response = response as? HTTPURLResponse {
+                if !(200..<300).contains(response.statusCode) {
+                    var userInfo = [String: Any]()
+                    if let data = data, let json = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String: Any] {
+                        userInfo["TapestryErrorKey"] = json as Any?
+                    }
+                    let error = NSError(domain: "tapestry.domain", code: response.statusCode, userInfo: userInfo)
+                    result = .failure(error)
+                    group.leave()
+                    return
+                }
+            }
+
+            if let error = error {
+                result = .failure(error)
+            } else {
+                result = .success(())
+            }
+            
+            group.leave()
+        }
+        task.resume()
+
         group.wait()
         return try result.get()
     }

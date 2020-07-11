@@ -1,3 +1,5 @@
+import TSCBasic
+
 /// Describes individual release action
 public struct ReleaseAction {
     /// Order when the action gets executed.
@@ -57,7 +59,7 @@ public struct ReleaseAction {
         /// - Parameters:
         ///     - owner: Owner of the repository
         ///     - repository: Name of the repository
-        case githubRelease(owner: String, repository: String)
+        case githubRelease(owner: String, repository: String, assetPaths: [RelativePath])
     }
     
     /// Describes what should be run

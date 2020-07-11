@@ -103,12 +103,13 @@ final class ReleaseService {
             try System.shared.runAndPrint([tool] + arguments)
         case let .predefined(action):
             switch action {
-            case let .githubRelease(owner: owner, repository: repository):
+            case let .githubRelease(owner: owner, repository: repository, assetPaths: assetPaths):
                 try releaseController.release(
                     version,
                     path: path,
                     owner: owner,
-                    repository: repository
+                    repository: repository,
+                    assetPaths: assetPaths
                 )
             case .docsUpdate:
                 try docsUpdater.updateDocs(path: path, version: version)

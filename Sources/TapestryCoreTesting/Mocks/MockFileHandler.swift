@@ -60,6 +60,10 @@ public final class MockFileHandler: FileHandling {
         try fileHandler.touch(path)
     }
 
+    public func readFile(_ at: AbsolutePath) throws -> Data {
+        try fileHandler.readFile(at)
+    }
+    
     public func readTextFile(_ at: AbsolutePath) throws -> String {
         return try fileHandler.readTextFile(at)
     }

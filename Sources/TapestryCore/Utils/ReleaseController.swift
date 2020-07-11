@@ -7,7 +7,8 @@ public protocol ReleaseControlling {
         _ version: Version,
         path: AbsolutePath,
         owner: String,
-        repository: String
+        repository: String,
+        assetPaths: [RelativePath]
     ) throws
 }
 
@@ -34,19 +35,32 @@ public final class ReleaseController: ReleaseControlling {
         _ version: Version,
         path: AbsolutePath,
         owner: String,
-        repository: String
+        repository: String,
+        assetPaths: [RelativePath]
     ) throws {
         let changelogDescription = try changelogGenerator.generateChangelog(
             for: version,
             path: path
         )
-        _ = try githubController.release(
+        
+        Printer.shared.print("Creating new Github release ✨")
+        
+        let uploadAssetURL = try githubController.release(
             owner: owner,
             repository: repository,
             version: version,
             changelogDescription: changelogDescription
         )
         
-        Printer.shared.print("Creating new Github release ✨")
+        try assetPaths
+            .map { (AbsolutePath(path, $0), $0.basename) }
+            .map { (try FileHandler.shared.readFile($0.0), $0.1) }
+            .forEach { assetData, name in
+                try githubController.uploadAsset(
+                    url: uploadAssetURL,
+                    assetData: assetData,
+                    name: name
+                )
+            }
     }
 }
