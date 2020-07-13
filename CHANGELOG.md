@@ -1,6 +1,10 @@
 
 ## Next
 
+### Added
+
+- Add `githubRelease` [#14](https://github.com/AckeeCZ/tapestry/pull/14) by [@fortmarek](https://github.com/fortmarek).
+
 ### Changed
 
 - Migrate to new `ArgumentParser` [#13](https://github.com/AckeeCZ/tapestry/pull/13) by [@fortmarek](https://github.com/fortmarek).
