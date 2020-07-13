@@ -6,27 +6,14 @@ on:
     - '*'
 
 jobs:
-  upload:
-    name: Upload binary
+  build:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: AckeeCZ/load-xcode-version@1.0
-      - name: Build
-        run: swift build --configuration release --product tapestry
-      - name: Get tag name
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-      - name: Archive
-        run: | 
-          mv "`swift build --show-bin-path --configuration release --product tapestry`/tapestry" .
-          export FRAMEWORK_PATH=`swift build --show-bin-path --configuration release --product PackageDescription`
-          zip -r tapestry-${{ steps.get_version.outputs.VERSION }}.zip LICENSE tapestry $FRAMEWORK_PATH/PackageDescription.swiftdoc $FRAMEWORK_PATH/PackageDescription.swiftmodule $FRAMEWORK_PATH/libPackageDescription.dylib
-      - uses: xresloader/upload-to-github-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          ref: master
+          fetch-depth: 0
+      - name: Create a new release
+        uses: fortmarek/tapestry-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          file: tapestry-${{ steps.get_version.outputs.VERSION }}.zip
-          tags: true
-          draft: false
