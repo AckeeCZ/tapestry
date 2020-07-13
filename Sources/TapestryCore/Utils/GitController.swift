@@ -70,7 +70,7 @@ public protocol GitControlling {
     ///     - path: Path of the git directory
     func push(path: AbsolutePath?) throws
     /// Push tags to the remote repository
-    /// - Parameters:
+        /// - Parameters:
     ///     - path: Path of the git directory
     func pushTags(path: AbsolutePath?) throws
     /// - Parameters:

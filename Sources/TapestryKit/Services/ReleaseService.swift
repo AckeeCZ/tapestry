@@ -82,7 +82,7 @@ final class ReleaseService {
         if config.release.push {
             Printer.shared.print("Pushing...")
             try GitController.shared.push(path: path)
-//            try GitController.shared.pushTags(path: path)
+            try GitController.shared.pushTags(path: path)
         }
     }
     
