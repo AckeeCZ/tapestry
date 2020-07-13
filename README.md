@@ -24,14 +24,6 @@ These repositories can also serve as a great example configuration for your own 
 
 ## Installation
 
-### Using [Homebrew](https://brew.sh)
-
-```bash
-$ brew tap AckeeCZ/tapestry
-$ brew install tapestry
-$ tapestry
-```
-
 ### Using [mint](https://github.com/yonaskolb/mint)
 
 ```bash
@@ -53,37 +45,6 @@ $ git clone https://github.com/AckeeCZ/tapestry.git
 $ cd tapestry
 $ swift run tapestry
 ```
-
-# Generating project
-
-<img alt="Screenshot" src="Resources/tapestry.gif" width="700">
-
-
-To generate your project, simply run: 
-```bash
-tapestry init --path TapestryProject
-```
-
-You can omit `--path` argument and it will generate your framework in the current directory.
-
-It uses [tuist][tuist] and [SPM][spm] tools, so it's very easy to adjust it to your needs (no complicated template structure, all code is generated from the **ground up**!)
-
-You can change the generated files in `InitCommand` and your example project in `ExampleModelLoader`. In the future, I'd like to make this customization even easier, so watch this space 👀
-
-## Generated project features
-
-- [x] `CocoaPods`, `Carthage` and `Swift Package Manager` compatibility
-- [x] `README.md` template
-- [x] `travis` to automate your builds
-- [x] `Library` support
-- [x] `Executable` support for your CLI tools
-- [ ] more and even more to come!
-
-You can check out an example project that was generated with `tapestry` [here](https://github.com/fortmarek/TapestryDemo).
-
-# Releasing project
-
-<img alt="Screenshot" src="Resources/release.gif" width="700">
 
 ## Setup release steps
 
@@ -133,6 +94,11 @@ The main component of the release process.
 
 Running `tapestry release 0.0.5` also automatically tags the latest commit.
 
+# Release Action
+
+Just by adding a simple tapestry step `.post(.githubRelease(owner: "owner", repository: "repository", assetPaths: ["build.zip"]))`
+you can automate your whole release process with Github actions. If that sounds interesting to you, check out the [action here](https://github.com/fortmarek/tapestry-action)
+
 ## ReleaseAction
 
 This type lets you define the individual actions. 
@@ -151,6 +117,7 @@ This is a set of predefined actions.
 
 | Case        | Description           | 
 | ------------- |:-------------:|
+| `githubRelease`   | Creates a new release on github. If you specify `assetPaths`, the files at the paths will be uploaded along with the new Github release.
 | `docsUpdate`      | Updates version in your `.podspec, README.md` and adds it in `CHANGELOG.md`
 |  `dependenciesCompatibility([DependenciesManager])` |  Checks compatibility with given `DependenciesManager`s
 
@@ -193,6 +160,37 @@ Let's you say what dependency managers you want to check compatibility for.
 | `cocoapods`      | Runs compatibility check for [Cocoapods][cocoapods]
 | `carthage`     | Runs compatibility check for [Carthage][carthage]
 | `spm(Platform)` |  Runs compatibility check for [SPM][spm] - define platform if you are using platform-specific libraries (eg `UIKit`)
+
+# Generating project
+
+<img alt="Screenshot" src="Resources/tapestry.gif" width="700">
+
+
+To generate your project, simply run: 
+```bash
+tapestry init --path TapestryProject
+```
+
+You can omit `--path` argument and it will generate your framework in the current directory.
+
+It uses [tuist][tuist] and [SPM][spm] tools, so it's very easy to adjust it to your needs (no complicated template structure, all code is generated from the **ground up**!)
+
+You can change the generated files in `InitCommand` and your example project in `ExampleModelLoader`. In the future, I'd like to make this customization even easier, so watch this space 👀
+
+## Generated project features
+
+- [x] `CocoaPods`, `Carthage` and `Swift Package Manager` compatibility
+- [x] `README.md` template
+- [x] `travis` to automate your builds
+- [x] `Library` support
+- [x] `Executable` support for your CLI tools
+- [ ] more and even more to come!
+
+You can check out an example project that was generated with `tapestry` [here](https://github.com/fortmarek/TapestryDemo).
+
+# Releasing project
+
+<img alt="Screenshot" src="Resources/release.gif" width="700">
 
 ### Inspiration and thanks
 
