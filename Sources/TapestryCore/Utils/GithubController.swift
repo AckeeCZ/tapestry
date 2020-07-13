@@ -1,6 +1,26 @@
 import Foundation
 import OctoKit
 import TSCUtility
+import protocol TuistSupport.FatalError
+import enum TuistSupport.ErrorType
+
+enum GithubControllerError: FatalError {
+    case invalidURL(Foundation.URL)
+    
+    var type: ErrorType {
+        switch self {
+        case .invalidURL:
+            return .bug
+        }
+    }
+    
+    var description: String {
+        switch self {
+        case let .invalidURL(url):
+            return "\(url.absoluteString) is invalid."
+        }
+    }
+}
 
 protocol GithubControlling {
     func release(
@@ -65,7 +85,7 @@ final class GithubController: GithubControlling {
     ) throws {
         Printer.shared.print("Uploading \(name) asset 📦")
         
-        guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { fatalError() }
+        guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { throw GithubControllerError.invalidURL(url) }
         components.host = "uploads.github.com"
         components.queryItems = [
             URLQueryItem(name: "name", value: name)
