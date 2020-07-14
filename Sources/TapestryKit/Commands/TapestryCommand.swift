@@ -22,6 +22,7 @@ public struct TapestryCommand: ParsableCommand {
                 UpCommand.self,
                 ActionCommand.self,
                 ActionsCommand.self,
+                GithubReleaseCommand.self,
             ]
         )
     }

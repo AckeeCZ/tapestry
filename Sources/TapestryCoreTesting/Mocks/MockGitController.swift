@@ -14,6 +14,11 @@ public final class MockGitController: GitControlling {
     public var pushTagsStub: ((AbsolutePath?) throws -> ())?
     public var allTagsStub: ((AbsolutePath?) throws -> [Version])?
     
+    public var deleteTagStub: ((Version, AbsolutePath?) throws -> Void)?
+    public func deleteTagVersion(_ version: Version, path: AbsolutePath?) throws {
+        try deleteTagStub?(version, path)
+    }
+    
     public func initGit(path: AbsolutePath) throws {
         try initGitStub?(path)
     }

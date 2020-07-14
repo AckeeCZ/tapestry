@@ -13,6 +13,7 @@ import enum TuistSupport.ErrorType
 
 enum GitError: FatalError, Equatable {
     case tagExists(Version)
+    case tagNotExists(Version)
     
     var type: ErrorType { .abort }
     
@@ -20,13 +21,8 @@ enum GitError: FatalError, Equatable {
         switch self {
         case let .tagExists(version):
             return "Version tag \(version) already exists."
-        }
-    }
-    
-    static func == (lhs: GitError, rhs: GitError) -> Bool {
-        switch (lhs, rhs) {
-        case let (.tagExists(lhsVersion), .tagExists(rhsVersion)):
-            return lhsVersion == rhsVersion
+        case let .tagNotExists(version):
+            return "Can not delete tag \(version) that does not exist"
         }
     }
 }
@@ -48,6 +44,11 @@ public protocol GitControlling {
     ///     - message: Commit message
     ///     - path: Path of the git directory
     func commit(_ message: String, path: AbsolutePath?) throws
+    /// Deletes a tag
+    /// - Parameters:
+    ///     - version: Tag version to delete
+    ///     - path: Path of the git directory
+    func deleteTagVersion(_ version: Version, path: AbsolutePath?) throws
     /// Creates new tag
     /// - Parameters:
     ///     - version: New tag version
@@ -97,6 +98,19 @@ public final class GitController: GitControlling {
         return try System.shared.capture("git", "config", "user.email").replacingOccurrences(of: "\n", with: "")
     }
     
+    public func deleteTagVersion(_ version: Version, path: AbsolutePath?) throws {
+        guard try tagExists(version, path: path) else { throw GitError.tagNotExists(version) }
+        try FileHandler.shared.inDirectory(path ?? FileHandler.shared.currentPath) {
+            try System.shared.run("git", "tag", "-d", version.description)
+        }
+    }
+    
+    public func pushTags(path: AbsolutePath?) throws {
+        try FileHandler.shared.inDirectory(path ?? FileHandler.shared.currentPath) {
+            try System.shared.run("git", "push", "--tags")
+        }
+    }
+    
     public func tagVersion(_ version: Version, path: AbsolutePath?) throws {
         guard try !tagExists(version, path: path) else { throw GitError.tagExists(version) }
         try FileHandler.shared.inDirectory(path ?? FileHandler.shared.currentPath) {
@@ -121,12 +135,6 @@ public final class GitController: GitControlling {
     public func push(path: AbsolutePath?) throws {
         try FileHandler.shared.inDirectory(path ?? FileHandler.shared.currentPath) {
             try System.shared.run("git", "push")
-        }
-    }
-    
-    public func pushTags(path: AbsolutePath?) throws {
-        try FileHandler.shared.inDirectory(path ?? FileHandler.shared.currentPath) {
-            try System.shared.run("git", "push", "--tags")
         }
     }
     

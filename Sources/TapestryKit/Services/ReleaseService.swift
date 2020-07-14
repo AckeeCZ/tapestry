@@ -7,7 +7,7 @@ import protocol TuistSupport.FatalError
 import enum TuistSupport.ErrorType
 
 enum ReleaseError: FatalError, Equatable {
-    case ungettableProjectName(AbsolutePath), tagExists(Version)
+    case tagExists(Version)
 
     var type: ErrorType {
         return .abort
@@ -15,8 +15,6 @@ enum ReleaseError: FatalError, Equatable {
 
     var description: String {
         switch self {
-        case let .ungettableProjectName(path):
-            return "Couldn't infer the project name from path \(path.pathString)."
         case let .tagExists(version):
             return "Version tag \(version) already exists."
         }

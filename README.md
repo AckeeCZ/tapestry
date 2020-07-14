@@ -94,10 +94,12 @@ The main component of the release process.
 
 Running `tapestry release 0.0.5` also automatically tags the latest commit.
 
-# Release Action
+# Release Github Action
 
 Just by adding a simple tapestry step `.post(.githubRelease(owner: "owner", repository: "repository", assetPaths: ["build.zip"]))`
 you can automate your whole release process with Github actions. If that sounds interesting to you, check out the [action here](https://github.com/fortmarek/tapestry-action)
+
+To then create a new release with github action, simply run `tapestry github-release 0.0.1` and ... that's all! 🙂
 
 ## ReleaseAction
 
