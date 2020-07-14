@@ -29,7 +29,7 @@ struct Token: CustomStringConvertible {
     let accessToken: String
 
     var base64Encoded: String {
-        "\(username):\(accessToken)".data(using: .utf8)!.base64EncodedString()
+        "\(accessToken)".data(using: .utf8)!.base64EncodedString()
     }
 
     var description: String {

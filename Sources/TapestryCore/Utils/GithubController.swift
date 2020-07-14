@@ -136,7 +136,7 @@ final class GithubController: GithubControlling {
     private func authenticate() throws -> URLSession {
         let token = try Token(environment: ProcessInfo.processInfo.environment)
         let configuration = URLSessionConfiguration.default
-        configuration.httpAdditionalHeaders = ["Authorization": "Basic \(token.base64Encoded)"]
+        configuration.httpAdditionalHeaders = ["Authorization": "Bearer \(token.base64Encoded)"]
         return URLSession(configuration: configuration, delegate: nil, delegateQueue: nil)
     }
 }
