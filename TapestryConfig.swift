@@ -10,7 +10,7 @@ let config = TapestryConfig(
             // .pre(tool: "cp", arguments: ["-rf", ".build/release/libTapestryDescription.dylib", "libTapestryDescription.dylib"]),
             // .pre(tool: "cp", arguments: [".build/release/TapestryDescription.swiftmodule", "TapestryDescription.swiftmodule"]),
             // .pre(tool: "cp", arguments: [".build/release/TapestryDescription.swiftdoc", "TapestryDescription.swiftdoc"]),
-            .post(.githubRelease(owner: "AckeeCZ", repository: "tapestry")),
+            // .post(.githubRelease(owner: "AckeeCZ", repository: "tapestry")),
         ],
         add: [
             "README.md",
@@ -20,6 +20,7 @@ let config = TapestryConfig(
             "TapestryDescription.swiftdoc",
         ],
         commitMessage: "Version \(Argument.version)",
-        push: true)
+        push: false
+    )
 )
 
