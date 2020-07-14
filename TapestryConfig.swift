@@ -20,7 +20,7 @@ let config = TapestryConfig(
             "TapestryDescription.swiftdoc",
         ],
         commitMessage: "Version \(Argument.version)",
-        push: false
+        push: true
     )
 )
 
