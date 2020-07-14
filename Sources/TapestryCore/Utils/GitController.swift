@@ -107,7 +107,7 @@ public final class GitController: GitControlling {
     
     public func pushTags(path: AbsolutePath?) throws {
         try FileHandler.shared.inDirectory(path ?? FileHandler.shared.currentPath) {
-            try System.shared.run("git", "push", "--tags")
+            try System.shared.runAndPrint("git", "push", "--tags")
         }
     }
     
@@ -134,7 +134,7 @@ public final class GitController: GitControlling {
     
     public func push(path: AbsolutePath?) throws {
         try FileHandler.shared.inDirectory(path ?? FileHandler.shared.currentPath) {
-            try System.shared.run("git", "push")
+            try System.shared.runAndPrint("git", "push")
         }
     }
     
