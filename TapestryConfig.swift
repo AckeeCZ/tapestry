@@ -11,7 +11,7 @@ let config = TapestryConfig(
             .pre(tool: "cp", arguments: [".build/release/TapestryDescription.swiftmodule", "TapestryDescription.swiftmodule"]),
             .pre(tool: "cp", arguments: [".build/release/TapestryDescription.swiftdoc", "TapestryDescription.swiftdoc"]),
             .post(.githubRelease(owner: "AckeeCZ", repository: "tapestry")),
-        ]
+        ],
         add: [
             "README.md",
             "CHANGELOG.md",
