@@ -25,7 +25,7 @@ struct Token: CustomStringConvertible {
         }
     }
 
-//    let username: String
+    let username: String
     let accessToken: String
 
     var base64Encoded: String {
@@ -40,12 +40,12 @@ struct Token: CustomStringConvertible {
         guard let githubAccessToken = environment["TAPESTRY_ACCESS_TOKEN"] else {
             throw Error.missingAccessToken
         }
-//        let tokenParts = githubAccessToken.split(separator: ":")
-//        guard tokenParts.count == 2, let username = tokenParts.first, let accessToken = tokenParts.last else {
-//            throw Error.invalidAccessToken
-//        }
+        let tokenParts = githubAccessToken.split(separator: ":")
+        guard tokenParts.count == 2, let username = tokenParts.first, let accessToken = tokenParts.last else {
+            throw Error.invalidAccessToken
+        }
 
-//        self.username = String(username)
+        self.username = String(username)
         self.accessToken = String(accessToken)
     }
 }
