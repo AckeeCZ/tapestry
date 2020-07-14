@@ -11,11 +11,14 @@ public protocol ConfigEditorGenerating {
 
 public final class ConfigEditorGenerator: ConfigEditorGenerating {
     private let descriptorGenerator: DescriptorGenerating
+    private let writer: XcodeProjWriting
     
     public init(
-        descriptorGenerator: DescriptorGenerating = DescriptorGenerator()
+        descriptorGenerator: DescriptorGenerating = DescriptorGenerator(),
+        writer: XcodeProjWriting = XcodeProjWriter()
     ) {
         self.descriptorGenerator = descriptorGenerator
+        self.writer = writer
     }
     
     // MARK: - Public methods
@@ -25,7 +28,13 @@ public final class ConfigEditorGenerator: ConfigEditorGenerating {
             rootPath: rootPath,
             projectDescriptionPath: projectDescriptionPath
         )
-        return try descriptorGenerator.generateProject(project: project, graph: graph).path
+        
+        let descriptor = try descriptorGenerator.generateProject(
+            project: project,
+            graph: graph
+        )
+        try writer.write(project: descriptor)
+        return descriptor.xcodeprojPath
     }
     
     // MARK: - Helpers

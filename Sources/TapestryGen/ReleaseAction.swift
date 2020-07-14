@@ -1,3 +1,5 @@
+import TSCBasic
+
 /// Describes individual release action
 public struct ReleaseAction {
     /// Order when the action gets executed.
@@ -53,6 +55,11 @@ public struct ReleaseAction {
         case docsUpdate
         /// Checks compatibility of your library with given dependencies managers
         case dependenciesCompatibility([DependenciesManager])
+        /// Creates new release with changelog on Github
+        /// - Parameters:
+        ///     - owner: Owner of the repository
+        ///     - repository: Name of the repository
+        case githubRelease(owner: String, repository: String, assetPaths: [RelativePath])
     }
     
     /// Describes what should be run
@@ -72,8 +79,10 @@ public struct ReleaseAction {
     /// Action to run
     public let action: Action
     
-    public init(order: Order,
-                action: Action) {
+    public init(
+        order: Order,
+        action: Action
+    ) {
         self.order = order
         self.action = action
     }

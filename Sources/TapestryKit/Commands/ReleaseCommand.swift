@@ -4,11 +4,11 @@ import TSCBasic
 import ArgumentParser
 
 /// Only used to provide custom `ExpressibleByArgument` implementation for `TSCUtility.Version`
-private struct Version: ExpressibleByArgument {
+struct TapestryVersion: ExpressibleByArgument {
     let version: TSCUtility.Version
     
     init?(argument: String) {
-        guard let version = TSCUtility.Version(string: argument) else { return nil }
+        guard let version = Version(string: argument) else { return nil }
         self.version = version
     }
 }
@@ -23,11 +23,11 @@ struct ReleaseCommand: ParsableCommand {
     }
     
     @Argument()
-    fileprivate var version: Version
+    fileprivate var version: TapestryVersion
     
     @Option(
         name: .shortAndLong,
-        help: "The path to the folder where the project will be generated (Default: Current directory)."
+        help: "The path to the folder where the release project is located (Default: Current directory)."
     )
     var path: String?
     

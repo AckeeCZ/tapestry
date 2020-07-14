@@ -7,7 +7,7 @@ import protocol TuistSupport.FatalError
 import enum TuistSupport.ErrorType
 
 enum ReleaseError: FatalError, Equatable {
-    case ungettableProjectName(AbsolutePath), tagExists(Version)
+    case tagExists(Version)
 
     var type: ErrorType {
         return .abort
@@ -15,8 +15,6 @@ enum ReleaseError: FatalError, Equatable {
 
     var description: String {
         switch self {
-        case let .ungettableProjectName(path):
-            return "Couldn't infer the project name from path \(path.pathString)."
         case let .tagExists(version):
             return "Version tag \(version) already exists."
         }
@@ -27,15 +25,18 @@ final class ReleaseService {
     private let configModelLoader: ConfigModelLoading
     private let docsUpdater: DocsUpdating
     private let dependenciesCompatibilityChecker: DependenciesCompatibilityChecking
+    private let releaseController: ReleaseControlling
     
     init(
         configModelLoader: ConfigModelLoading = ConfigModelLoader(manifestLoader: GraphManifestLoader()),
         docsUpdater: DocsUpdating = DocsUpdater(),
-        dependenciesCompatibilityChecker: DependenciesCompatibilityChecking = DependenciesCompatibilityChecker()
+        dependenciesCompatibilityChecker: DependenciesCompatibilityChecking = DependenciesCompatibilityChecker(),
+        releaseController: ReleaseControlling = ReleaseController()
     ) {
         self.configModelLoader = configModelLoader
         self.docsUpdater = docsUpdater
         self.dependenciesCompatibilityChecker = dependenciesCompatibilityChecker
+        self.releaseController = releaseController
     }
     
     func run(
@@ -100,6 +101,14 @@ final class ReleaseService {
             try System.shared.runAndPrint([tool] + arguments)
         case let .predefined(action):
             switch action {
+            case let .githubRelease(owner: owner, repository: repository, assetPaths: assetPaths):
+                try releaseController.release(
+                    version,
+                    path: path,
+                    owner: owner,
+                    repository: repository,
+                    assetPaths: assetPaths
+                )
             case .docsUpdate:
                 try docsUpdater.updateDocs(path: path, version: version)
             case let .dependenciesCompatibility(dependenciesManagers):
