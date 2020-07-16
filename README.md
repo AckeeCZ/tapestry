@@ -92,7 +92,7 @@ The main component of the release process.
 | commitMessage |  Commit message - use `Argument.version` in your string which will translate to the version you are releasing   |  String |  No
 | push      | This option determines if the changes are committed at the end | Bool | No | 
 
-Running `tapestry release 0.0.5` also automatically tags the latest commit.
+Running `tapestry release 0.0.6` also automatically tags the latest commit.
 
 # Release Github Action
 
