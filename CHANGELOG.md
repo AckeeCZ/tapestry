@@ -3,6 +3,8 @@
 
 ## 0.0.6
 
+## 0.0.6
+
 ### Added
 
 - Add `githubRelease` [#14](https://github.com/AckeeCZ/tapestry/pull/14) by [@fortmarek](https://github.com/fortmarek).
