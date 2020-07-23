@@ -77,6 +77,15 @@ let config = TapestryConfig(release: Release(actions: [.pre(.docsUpdate),
 
 Let's see how you can edit this by yourself to get the result you want.
 
+# Release Github Action
+
+Just by adding a simple tapestry step `.post(.githubRelease(owner: "owner", repository: "repository", assetPaths: ["build.zip"]))`
+you can automate your whole release process with Github actions. If that sounds interesting to you, check out the [action here](https://github.com/fortmarek/tapestry-action)
+
+To then create a new release with github action, simply run `tapestry github-release 0.0.1` and ... that's all! 🙂
+
+# TapestryConfig.swift Manifest Documentation
+
 ## TapestryConfig
 
 This currently only has one argument `release`, more will be added here
@@ -93,13 +102,6 @@ The main component of the release process.
 | push      | This option determines if the changes are committed at the end | Bool | No | 
 
 Running `tapestry release 0.0.6` also automatically tags the latest commit.
-
-# Release Github Action
-
-Just by adding a simple tapestry step `.post(.githubRelease(owner: "owner", repository: "repository", assetPaths: ["build.zip"]))`
-you can automate your whole release process with Github actions. If that sounds interesting to you, check out the [action here](https://github.com/fortmarek/tapestry-action)
-
-To then create a new release with github action, simply run `tapestry github-release 0.0.1` and ... that's all! 🙂
 
 ## ReleaseAction
 
