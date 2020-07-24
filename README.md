@@ -75,7 +75,7 @@ let config = TapestryConfig(release: Release(actions: [.pre(.docsUpdate),
                                              push: false))
 ```
 
-Let's see how you can edit this by yourself to get the result you want.
+You can see lower below how to configure the manifest to your needs.
 
 # Release Github Action
 
@@ -84,7 +84,11 @@ you can automate your whole release process with Github actions. If that sounds 
 
 To then create a new release with github action, simply run `tapestry github-release 0.0.1` and ... that's all! 🙂
 
-# TapestryConfig.swift Manifest Documentation
+# Editing `TapestryConfig`
+
+To edit the manifest, simply run `tapestry edit`.
+That will open Xcode project with that manifest, so you can easily edit the Swift file.
+You can use the documentation right in the new Xcode project or you can use the documentation below 👇
 
 ## TapestryConfig
 
