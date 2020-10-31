@@ -93,7 +93,10 @@ public final class ExampleGenerator: ExampleGenerating {
         bundleId: String,
         packageName: String
     ) throws -> (Project, Graph) {
-        let sources = try Target.sources(sources: [(glob: path.pathString + "/Sources/**", excluding: [], compilerFlags: nil)])
+        let sources = try Target.sources(
+            targetName: name,
+            sources: [(glob: path.pathString + "/Sources/**", excluding: [], compilerFlags: nil)]
+        )
         let target = Target(
             name: name,
             platform: .iOS,
@@ -110,9 +113,11 @@ public final class ExampleGenerator: ExampleGenerating {
         
         let project = Project(
             path: path,
+            sourceRootPath: path,
+            xcodeProjPath: path,
             name: name,
             organizationName: "tapestry.io",
-            fileName: nil,
+            developmentRegion: nil,
             settings: .default,
             filesGroup: .group(name: name),
             targets: [
@@ -129,6 +134,11 @@ public final class ExampleGenerator: ExampleGenerating {
             name: name,
             entryPath: path,
             entryNodes: [GraphNode(path: path, name: name)],
+            workspace: Workspace(
+                path: path,
+                name: name,
+                projects: [path]
+            ),
             projects: [project],
             cocoapods: [],
             packages: [PackageNode(package: package, path: packagePath)],

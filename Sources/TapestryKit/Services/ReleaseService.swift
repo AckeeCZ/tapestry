@@ -87,7 +87,7 @@ final class ReleaseService {
     private func updateArguments(for releaseAction: ReleaseAction, version: Version) -> ReleaseAction.Action {
         switch releaseAction.action {
         case let .custom(tool: tool, arguments: arguments):
-            let actionArguments = arguments.map { $0 == Argument.version.rawValue ? version.description : $0 }
+            let actionArguments = arguments.map { $0.replacingOccurrences(of: Argument.version.rawValue, with: version.description) }
             return .custom(tool: tool,
                            arguments: actionArguments)
         case let .predefined(action):
@@ -98,7 +98,7 @@ final class ReleaseService {
     private func runReleaseAction(_ action: ReleaseAction.Action, path: AbsolutePath, version: Version) throws {
         switch action {
         case let .custom(tool: tool, arguments: arguments):
-            try System.shared.runAndPrint([tool] + arguments)
+            try System.shared.runAndPrint([tool] + arguments, verbose: false, environment: ProcessInfo.processInfo.environment)
         case let .predefined(action):
             switch action {
             case let .githubRelease(owner: owner, repository: repository, assetPaths: assetPaths):

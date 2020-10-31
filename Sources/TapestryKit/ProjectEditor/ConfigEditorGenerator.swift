@@ -44,7 +44,12 @@ public final class ConfigEditorGenerator: ConfigEditorGenerating {
         rootPath: AbsolutePath,
         projectDescriptionPath: AbsolutePath
     ) throws -> (Project, Graph) {
-        let sources = try Target.sources(sources: [(glob: rootPath.pathString + "/TapestryConfig.swift", excluding: [], compilerFlags: nil)])
+        let sources = try Target.sources(
+            targetName: "Tapestry",
+            sources: [
+                (glob: rootPath.pathString + "/TapestryConfig.swift", excluding: [], compilerFlags: nil)
+            ]
+        )
         
         let targetSettings = Settings(base: settings(projectDescriptionPath: projectDescriptionPath),
                                       configurations: Settings.default.configurations,
@@ -64,9 +69,11 @@ public final class ConfigEditorGenerator: ConfigEditorGenerating {
         
         let project = Project(
             path: path,
+            sourceRootPath: path,
+            xcodeProjPath: path,
             name: "Tapestry",
             organizationName: "ackee",
-            fileName: nil,
+            developmentRegion: nil,
             settings: .default,
             filesGroup: .group(name: "TapestryConfig"),
             targets: [
@@ -81,6 +88,11 @@ public final class ConfigEditorGenerator: ConfigEditorGenerating {
             name: "Tapestry",
             entryPath: path,
             entryNodes: [GraphNode(path: path, name: "Tapestry")],
+            workspace: Workspace(
+                path: path,
+                name: "Tapestry",
+                projects: [path]
+            ),
             projects: [project],
             cocoapods: [],
             packages: [],
