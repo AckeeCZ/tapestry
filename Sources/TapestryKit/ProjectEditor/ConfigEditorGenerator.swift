@@ -47,7 +47,7 @@ public final class ConfigEditorGenerator: ConfigEditorGenerating {
         let sources = try Target.sources(
             targetName: "Tapestry",
             sources: [
-                (glob: rootPath.pathString + "/TapestryConfig.swift", excluding: [], compilerFlags: nil)
+                SourceFileGlob(glob: rootPath.pathString + "/TapestryConfig.swift", excluding: [], compilerFlags: nil)
             ]
         )
         

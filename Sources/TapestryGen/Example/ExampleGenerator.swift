@@ -95,7 +95,9 @@ public final class ExampleGenerator: ExampleGenerating {
     ) throws -> (Project, Graph) {
         let sources = try Target.sources(
             targetName: name,
-            sources: [(glob: path.pathString + "/Sources/**", excluding: [], compilerFlags: nil)]
+            sources: [
+                SourceFileGlob(glob: path.pathString + "/Sources/**", excluding: [], compilerFlags: nil),
+            ]
         )
         let target = Target(
             name: name,

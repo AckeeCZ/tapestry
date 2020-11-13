@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/tadija/AEXML",
         "state": {
           "branch": null,
-          "revision": "e4d517844dd03dac557e35d77a8e9ab438de91a6",
-          "version": "4.4.0"
+          "revision": "8623e73b193386909566a9ca20203e33a09af142",
+          "version": "4.5.0"
         }
       },
       {
@@ -110,6 +110,15 @@
         }
       },
       {
+        "package": "Queuer",
+        "repositoryURL": "https://github.com/FabrizioBrancati/Queuer.git",
+        "state": {
+          "branch": null,
+          "revision": "52515108d0ac4616d9e15ffcc7ad986e300d31ff",
+          "version": "2.1.1"
+        }
+      },
+      {
         "package": "RequestKit",
         "repositoryURL": "https://github.com/fortmarek/RequestKit.git",
         "state": {
@@ -134,15 +143,6 @@
           "branch": null,
           "revision": "f717bbce0e19f0129fc001b2b6bed43b70fd8b87",
           "version": "0.9.1"
-        }
-      },
-      {
-        "package": "Stencil",
-        "repositoryURL": "https://github.com/stencilproject/Stencil",
-        "state": {
-          "branch": "master",
-          "revision": "22440c53690c84603cea018a5204c0f1e770461d",
-          "version": null
         }
       },
       {
@@ -203,8 +203,8 @@
         "package": "SwiftGen",
         "repositoryURL": "https://github.com/fortmarek/SwiftGen",
         "state": {
-          "branch": "stable",
-          "revision": "db5c510ab89be880b5d7f9d6d43a19faa5f172de",
+          "branch": null,
+          "revision": "ef8d6b186a03622cec8d228b18f0e2b3bb20b81c",
           "version": null
         }
       },
@@ -213,7 +213,7 @@
         "repositoryURL": "https://github.com/tuist/tuist.git",
         "state": {
           "branch": "main",
-          "revision": "051145a0fcd1dd5ffef03d8796d5665a6516710f",
+          "revision": "df20e154d744c02cc26bea9de62eb3c23f5cb451",
           "version": null
         }
       },
@@ -231,17 +231,8 @@
         "repositoryURL": "https://github.com/tuist/XcodeProj",
         "state": {
           "branch": null,
-          "revision": "2ae8e322ddbed99655802533441bc52f9ae76f24",
-          "version": "7.17.0"
-        }
-      },
-      {
-        "package": "XcodeProjCExt",
-        "repositoryURL": "https://github.com/tuist/XcodeProjCExt",
-        "state": {
-          "branch": null,
-          "revision": "21a510c225ff2bc83d5920a21d902af4b1e7e218",
-          "version": "0.1.0"
+          "revision": "82bf5efcaa27e94ed8c761c1eb3e397b6dea82b9",
+          "version": "7.18.0"
         }
       },
       {
@@ -249,8 +240,8 @@
         "repositoryURL": "https://github.com/jpsim/Yams.git",
         "state": {
           "branch": null,
-          "revision": "81a65c4069c28011ee432f2858ba0de49b086677",
-          "version": "3.0.1"
+          "revision": "138cf1b701cf825233b92ceac919152d5aba8a3f",
+          "version": "4.0.1"
         }
       },
       {
