@@ -1,0 +1,141 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.3.1 (swiftlang-1200.0.41 clang-1200.0.32.8)
+// swift-module-flags: -target x86_64-apple-macosx10.12 -enable-objc-interop -enable-library-evolution -swift-version 5 -O -module-name TapestryDescription
+import Foundation
+import Swift
+public enum Action : Swift.Codable {
+  case custom(tool: Swift.String, arguments: [Swift.String])
+  case predefined(TapestryDescription.PredefinedAction)
+  public init(from decoder: Swift.Decoder) throws
+  public func encode(to encoder: Swift.Encoder) throws
+}
+public enum Argument : Swift.String, Swift.CustomStringConvertible {
+  case version
+  public var description: Swift.String {
+    get
+  }
+  public typealias RawValue = Swift.String
+  public init?(rawValue: Swift.String)
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public enum DependenciesManager : Swift.Codable, Swift.Equatable {
+  case cocoapods
+  case carthage
+  case spm(TapestryDescription.Platform)
+  public init(from decoder: Swift.Decoder) throws
+  public func encode(to encoder: Swift.Encoder) throws
+  public static func == (lhs: TapestryDescription.DependenciesManager, rhs: TapestryDescription.DependenciesManager) -> Swift.Bool
+}
+public enum Order : Swift.String, Swift.Codable {
+  case pre
+  case post
+  public typealias RawValue = Swift.String
+  public init?(rawValue: Swift.String)
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public enum Platform : Swift.String, Swift.Codable, Swift.Equatable {
+  case iOS
+  case all
+  public typealias RawValue = Swift.String
+  public init?(rawValue: Swift.String)
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public enum PredefinedAction : Swift.Codable {
+  case docsUpdate
+  case dependenciesCompatibility([TapestryDescription.DependenciesManager])
+  case githubRelease(owner: Swift.String, repository: Swift.String, assetPaths: [Swift.String])
+  public static func githubRelease(owner: Swift.String, repository: Swift.String) -> TapestryDescription.PredefinedAction
+  public init(from decoder: Swift.Decoder) throws
+  public func encode(to encoder: Swift.Encoder) throws
+}
+public struct Release : Swift.Equatable, Swift.Codable {
+  public let actions: [TapestryDescription.ReleaseAction]
+  public let add: TapestryDescription.SourceFilesList?
+  public let commitMessage: Swift.String
+  public let push: Swift.Bool
+  public init(actions: [TapestryDescription.ReleaseAction] = [], add: TapestryDescription.SourceFilesList? = nil, commitMessage: Swift.String, push: Swift.Bool = false)
+  public init(from decoder: Swift.Decoder) throws
+  public static func == (a: TapestryDescription.Release, b: TapestryDescription.Release) -> Swift.Bool
+  public func encode(to encoder: Swift.Encoder) throws
+}
+public struct ReleaseAction : Swift.Equatable, Swift.Codable {
+  public let order: TapestryDescription.Order
+  public let action: TapestryDescription.Action
+  public static func pre(tool: Swift.String, arguments: [Swift.String] = []) -> TapestryDescription.ReleaseAction
+  public static func post(tool: Swift.String, arguments: [Swift.String] = []) -> TapestryDescription.ReleaseAction
+  public static func pre(_ predefinedAction: TapestryDescription.PredefinedAction) -> TapestryDescription.ReleaseAction
+  public static func post(_ predefinedAction: TapestryDescription.PredefinedAction) -> TapestryDescription.ReleaseAction
+  public static func == (lhs: TapestryDescription.ReleaseAction, rhs: TapestryDescription.ReleaseAction) -> Swift.Bool
+  public init(from decoder: Swift.Decoder) throws
+  public func encode(to encoder: Swift.Encoder) throws
+}
+final public class SourceFileGlob : Swift.Equatable, Swift.ExpressibleByStringLiteral, Swift.Codable {
+  final public let glob: Swift.String
+  public init(_ glob: Swift.String)
+  convenience public init(stringLiteral value: Swift.String)
+  public static func == (lhs: TapestryDescription.SourceFileGlob, rhs: TapestryDescription.SourceFileGlob) -> Swift.Bool
+  @objc deinit
+  public init(from decoder: Swift.Decoder) throws
+  final public func encode(to encoder: Swift.Encoder) throws
+  public typealias StringLiteralType = Swift.String
+  public typealias ExtendedGraphemeClusterLiteralType = Swift.String
+  public typealias UnicodeScalarLiteralType = Swift.String
+}
+final public class SourceFilesList : Swift.Equatable, Swift.Codable {
+  public enum CodingKeys : Swift.String, Swift.CodingKey {
+    case globs
+    public typealias RawValue = Swift.String
+    public init?(rawValue: Swift.String)
+    public var rawValue: Swift.String {
+      get
+    }
+    public var stringValue: Swift.String {
+      get
+    }
+    public init?(stringValue: Swift.String)
+    public var intValue: Swift.Int? {
+      get
+    }
+    public init?(intValue: Swift.Int)
+  }
+  final public let globs: [TapestryDescription.SourceFileGlob]
+  public init(globs: [TapestryDescription.SourceFileGlob])
+  public init(globs: [Swift.String])
+  public init(from decoder: Swift.Decoder) throws
+  final public func encode(to encoder: Swift.Encoder) throws
+  public static func == (lhs: TapestryDescription.SourceFilesList, rhs: TapestryDescription.SourceFilesList) -> Swift.Bool
+  @objc deinit
+}
+extension SourceFilesList : Swift.ExpressibleByStringLiteral {
+  convenience public init(stringLiteral value: Swift.String)
+  public typealias StringLiteralType = Swift.String
+  public typealias ExtendedGraphemeClusterLiteralType = Swift.String
+  public typealias UnicodeScalarLiteralType = Swift.String
+}
+extension SourceFilesList : Swift.ExpressibleByArrayLiteral {
+  convenience public init(arrayLiteral elements: TapestryDescription.SourceFileGlob...)
+  public typealias ArrayLiteralElement = TapestryDescription.SourceFileGlob
+}
+public struct TapestryConfig : Swift.Codable {
+  public let release: TapestryDescription.Release?
+  public init(release: TapestryDescription.Release? = nil)
+  public init(from decoder: Swift.Decoder) throws
+  public func encode(to encoder: Swift.Encoder) throws
+}
+extension TapestryDescription.Argument : Swift.Equatable {}
+extension TapestryDescription.Argument : Swift.Hashable {}
+extension TapestryDescription.Argument : Swift.RawRepresentable {}
+extension TapestryDescription.Order : Swift.Equatable {}
+extension TapestryDescription.Order : Swift.Hashable {}
+extension TapestryDescription.Order : Swift.RawRepresentable {}
+extension TapestryDescription.Platform : Swift.Hashable {}
+extension TapestryDescription.Platform : Swift.RawRepresentable {}
+extension TapestryDescription.SourceFilesList.CodingKeys : Swift.Equatable {}
+extension TapestryDescription.SourceFilesList.CodingKeys : Swift.Hashable {}
+extension TapestryDescription.SourceFilesList.CodingKeys : Swift.RawRepresentable {}
