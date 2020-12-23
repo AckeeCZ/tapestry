@@ -128,7 +128,7 @@ final class ReleaseServiceTests: TapestryUnitTestCase {
         }
 
         var pushTagsWasCalled: Bool = false
-        gitController.pushTagsStub = { _ in
+        gitController.pushTagStub = { _, _ in
             pushTagsWasCalled = true
         }
 
@@ -155,7 +155,7 @@ final class ReleaseServiceTests: TapestryUnitTestCase {
         }
 
         var pushTagsWasCalled: Bool = false
-        gitController.pushTagsStub = { _ in
+        gitController.pushTagStub = { _, _ in
             pushTagsWasCalled = true
         }
 

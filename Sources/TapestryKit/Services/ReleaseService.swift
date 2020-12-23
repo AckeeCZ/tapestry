@@ -74,13 +74,18 @@ final class ReleaseService {
         
         Printer.shared.print("Updating version 🚀")
         
-        try GitController.shared.tagVersion(version,
-                                            path: path)
+        try GitController.shared.tagVersion(
+            version,
+            path: path
+        )
         
         if config.release.push {
             Printer.shared.print("Pushing...")
             try GitController.shared.push(path: path)
-            try GitController.shared.pushTags(path: path)
+            try GitController.shared.pushTag(
+                version.description,
+                path: path
+            )
         }
     }
     

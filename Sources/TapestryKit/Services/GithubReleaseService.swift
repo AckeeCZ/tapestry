@@ -12,7 +12,7 @@ final class GithubReleaseService {
         
         try GitController.shared.tagVersion(version, path: path)
         
-        try GitController.shared.pushTags(path: path)
+        try GitController.shared.pushTag(version.description, path: path)
         
         try GitController.shared.deleteTagVersion(version, path: path)
         
