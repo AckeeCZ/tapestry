@@ -27,6 +27,7 @@ let config = TapestryConfig(
             .pre(tool: "cp", arguments: [".build/release/TapestryDescription.swiftinterface", "TapestryDescription.swiftinteface"]),
             .pre(tool: "cp", arguments: [".build/release/TapestryDescription.swiftmodule", "TapestryDescription.swiftmodule"]),
             .pre(tool: "cp", arguments: [".build/release/TapestryDescription.swiftdoc", "TapestryDescription.swiftdoc"]),
+            .pre(tool: "cp", arguments: [".build/release/libTapestryDescription.dylib", "libTapestryDescription.dylib"]),
             .post(.githubRelease(owner: "AckeeCZ", repository: "tapestry")),
         ],
         add: [
@@ -35,6 +36,7 @@ let config = TapestryConfig(
             "TapestryDescription.swiftinterface",
             "TapestryDescription.swiftmodule",
             "TapestryDescription.swiftdoc",
+            "libTapestryDescription.dylib",
         ],
         commitMessage: "Version \(Argument.version)",
         push: true
