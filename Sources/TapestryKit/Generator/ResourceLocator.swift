@@ -44,7 +44,7 @@ final class ResourceLocator: ResourceLocating {
     // MARK: - Fileprivate
 
     private func frameworkPath(_ name: String) throws -> AbsolutePath {
-        let frameworkNames = ["\(name).framework", "lib\(name).dylib", \()]
+        let frameworkNames = ["\(name).framework", "lib\(name).dylib"]
         let bundlePath = AbsolutePath(Bundle(for: GraphManifestLoader.self).bundleURL.path)
         let paths = [
             bundlePath,
