@@ -10,6 +10,16 @@ let config = TapestryConfig(
                 tool: "swift",
                 arguments: [
                     "build",
+                    "--product",
+                    "tapestry",
+                    "--configuration",
+                    "release",
+                ]
+            ),
+            .pre(
+                tool: "swift",
+                arguments: [
+                    "build",
                     "-c",
                     "release",
                     "--product",
