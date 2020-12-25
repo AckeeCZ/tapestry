@@ -47,13 +47,19 @@ public final class ConfigEditorGenerator: ConfigEditorGenerating {
         let sources = try Target.sources(
             targetName: "Tapestry",
             sources: [
-                SourceFileGlob(glob: rootPath.pathString + "/TapestryConfig.swift", excluding: [], compilerFlags: nil)
+                SourceFileGlob(
+                    glob: rootPath.pathString + "/TapestryConfig.swift",
+                    excluding: [],
+                    compilerFlags: nil
+                )
             ]
         )
         
-        let targetSettings = Settings(base: settings(projectDescriptionPath: projectDescriptionPath),
-                                      configurations: Settings.default.configurations,
-                                      defaultSettings: .recommended)
+        let targetSettings = Settings(
+            base: settings(projectDescriptionPath: projectDescriptionPath),
+            configurations: Settings.default.configurations,
+            defaultSettings: .recommended
+        )
         
         let target = Target(
             name: "Tapestry",
@@ -70,7 +76,7 @@ public final class ConfigEditorGenerator: ConfigEditorGenerating {
         let project = Project(
             path: path,
             sourceRootPath: path,
-            xcodeProjPath: path,
+            xcodeProjPath: path.appending(component: "Tapestry.xcodeproj"),
             name: "Tapestry",
             organizationName: "ackee",
             developmentRegion: nil,

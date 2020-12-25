@@ -52,7 +52,7 @@ final class ProjectEditor: ProjectEditing {
         if !FileHandler.shared.exists(tapestryConfigPath) {
             throw ProjectEditorError.noEditableFiles(at)
         }
-        
+
         return try configEditorGenerator.generateProject(path: dstDirectory, rootPath: at, projectDescriptionPath: projectDesciptionPath)
     }
 }
